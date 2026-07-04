@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" font-family="IBM Plex Sans, system-ui, sans-serif">
+<defs><clipPath id="plot"><rect x="70.0" y="58.0" width="475.0" height="362.0"/></clipPath>
+<marker id="aw" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#20232a"/></marker></defs>
+<rect x="70.0" y="58.0" width="475.0" height="362.0" fill="none" stroke="#e7e7e1"/>
+<g clip-path="url(#plot)">
+<line x1="1232.5" y1="43.0" x2="-578.6" y2="295.7" stroke="#2a5fd6" stroke-width="1" stroke-dasharray="1 4" opacity="0.9"/>
+<line x1="1247.8" y1="83.0" x2="-563.3" y2="335.8" stroke="#2a5fd6" stroke-width="1" stroke-dasharray="1 4" opacity="0.9"/>
+<line x1="1240.1" y1="63.0" x2="-570.9" y2="315.7" stroke="#2a5fd6" stroke-width="1.8"/>
+<line x1="1038.0" y1="-154.1" x2="-446.5" y2="522.0" stroke="#c2410c" stroke-width="1" stroke-dasharray="1 4" opacity="0.9"/>
+<line x1="1078.9" y1="-121.3" x2="-405.5" y2="554.9" stroke="#c2410c" stroke-width="1" stroke-dasharray="1 4" opacity="0.9"/>
+<line x1="1058.4" y1="-137.7" x2="-426.0" y2="538.4" stroke="#c2410c" stroke-width="1.8"/>
+<line x1="852.5" y1="-247.4" x2="-266.1" y2="649.8" stroke="#15803d" stroke-width="1" stroke-dasharray="1 4" opacity="0.9"/>
+<line x1="906.8" y1="-222.7" x2="-211.7" y2="674.6" stroke="#15803d" stroke-width="1" stroke-dasharray="1 4" opacity="0.9"/>
+<line x1="879.7" y1="-235.0" x2="-238.9" y2="662.2" stroke="#15803d" stroke-width="1.8"/>
+<line x1="1131.6" y1="-78.5" x2="-494.0" y2="466.1" stroke="#20232a" stroke-width="2.4"/>
+</g>
+<line x1="318.8" y1="193.8" x2="273.7" y2="144.7" stroke="#20232a" stroke-width="1.6" marker-end="url(#aw)"/>
+<text x="277.7" y="144.7" font-size="12" font-style="italic" fill="#20232a">w*</text>
+<circle cx="253.1" cy="116.2" r="5.5" fill="#20232a"/>
+<circle cx="255.5" cy="156.4" r="5.5" fill="#20232a"/>
+<circle cx="198.8" cy="151.5" r="5.5" fill="#20232a"/>
+<circle cx="363.2" cy="120.5" r="5.5" fill="#20232a"/>
+<circle cx="357.2" cy="129.0" r="5.5" fill="#20232a"/>
+<circle cx="305.5" cy="132.1" r="5.5" fill="#20232a"/>
+<circle cx="139.5" cy="99.5" r="5.5" fill="#20232a"/>
+<circle cx="464.7" cy="287.7" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<circle cx="287.7" cy="396.8" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<circle cx="352.3" cy="334.7" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<circle cx="448.5" cy="314.2" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<circle cx="465.9" cy="343.2" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<circle cx="448.8" cy="292.7" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<circle cx="370.7" cy="228.3" r="5.5" fill="#ffffff" stroke="#20232a" stroke-width="1.4"/>
+<text x="519.0" y="174.0" font-size="13" fill="#2a5fd6">&#963;<tspan baseline-shift="super" font-size="9">1</tspan></text>
+<text x="519.0" y="110.2" font-size="13" fill="#c2410c">&#963;<tspan baseline-shift="super" font-size="9">2</tspan></text>
+<text x="514.4" y="74.0" font-size="13" fill="#15803d">&#963;<tspan baseline-shift="super" font-size="9">3</tspan></text>
+<text x="491.0" y="132.0" font-size="12.5" fill="#20232a">teacher</text>
+<circle cx="590.0" cy="92.0" r="5.5" fill="#20232a"/><text x="604.0" y="96.0" font-size="12" fill="#20232a">+1 example</text>
+<circle cx="590.0" cy="118.0" r="5.5" fill="#fff" stroke="#20232a" stroke-width="1.4"/><text x="604.0" y="122.0" font-size="12" fill="#20232a">&#8722;1 example</text>
+<line x1="584.0" y1="146.0" x2="602.0" y2="146.0" stroke="#20232a" stroke-width="2.4"/><text x="610.0" y="150.0" font-size="12" fill="#20232a">teacher w*</text>
+<line x1="584.0" y1="172.0" x2="602.0" y2="172.0" stroke="#2a5fd6" stroke-width="1.8"/><text x="610.0" y="176.0" font-size="12" fill="#20232a">replica &#963;<tspan baseline-shift="super" font-size="9">a</tspan></text>
+<line x1="584.0" y1="198.0" x2="602.0" y2="198.0" stroke="#585e69" stroke-width="1" stroke-dasharray="1 4"/><text x="610.0" y="202.0" font-size="12" fill="#20232a">margin &#954;</text>
+<text x="70.0" y="450.0" font-size="12.5" fill="#585e69">Each replica is an independent perceptron solution consistent with every example &#8212; a sample from the version space.</text>
+<text x="70.0" y="470.0" font-size="12.5" fill="#585e69">The teacher-labelled data is the quenched disorder; the replica method averages over it for the typical overlap q<tspan baseline-shift="sub" font-size="9">ab</tspan> = (1/N) w<tspan baseline-shift="super" font-size="9">a</tspan>&#183;w<tspan baseline-shift="super" font-size="9">b</tspan>.</text>
+</svg>

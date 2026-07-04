@@ -1,0 +1,28 @@
+title: Julia Steinberg
+description: >-
+  Physics PhD working on mechanistic interpretability and alignment.
+theme: minima
+
+header_pages:
+  - research.md
+  - blog.md
+  - publications.md
+
+# Math is rendered client-side by MathJax (see _includes/custom-head.html).
+# Disable kramdown's own math engine so ALL $...$ / $$...$$ are passed
+# through verbatim for MathJax to parse uniformly in the browser.
+kramdown:
+  math_engine: false
+
+permalink: /blog/:year/:title/
+
+# Silence Dart Sass deprecation warnings originating in the minima
+# theme's internals (old @import syntax, lighten()/darken()). Cosmetic
+# only; the build is unaffected.
+sass:
+  quiet_deps: true
+  silence_deprecations: ["import"]
+
+exclude:
+  - preview.py
+  - README.md

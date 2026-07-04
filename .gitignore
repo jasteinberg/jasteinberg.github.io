@@ -1,0 +1,7 @@
+_site/
+_preview.html
+.DS_Store
+.jekyll-cache/
+ROADMAP.md
+Gemfile.lock
+.bundle/

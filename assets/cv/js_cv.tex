@@ -1,0 +1,351 @@
+%% Julia Steinberg — Curriculum Vitae
+%% Compiled with XeLaTeX or pdfLaTeX
+%% Fonts: requires lmodern; swap  for any preferred font
+
+\documentclass[11pt, letterpaper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[margin=1in, top=0.85in, bottom=0.85in]{geometry}
+\usepackage{draftwatermark}
+\SetWatermarkScale{3}
+\SetWatermarkText{Draft}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{parskip}
+
+% ── Colors ────────────────────────────────────────────────────────────────────
+\definecolor{accentblue}{RGB}{26, 86, 160}   % section header color
+\definecolor{darkgray}{RGB}{55, 65, 81}      % body text
+\definecolor{midgray}{RGB}{107, 114, 128}    % secondary info
+
+% ── Hyperlink style ───────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks = true,
+  urlcolor   = accentblue,
+  linkcolor  = accentblue,
+  pdfauthor  = {Julia Steinberg},
+  pdftitle   = {Julia Steinberg — CV}
+}
+
+% ── Section formatting ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{accentblue}}   % format
+  {}                                     % label
+  {0em}                                  % sep
+  {}                                     % before-code
+  [\vspace{-4pt}\textcolor{accentblue}{\rule{\linewidth}{0.6pt}}\vspace{2pt}]
+
+\titlespacing{\section}{0pt}{14pt}{4pt}
+
+% ── List style ────────────────────────────────────────────────────────────────
+\setlist[itemize]{
+  leftmargin = 1.4em,
+  itemsep    = 1pt,
+  topsep     = 2pt,
+  parsep     = 0pt,
+  label      = \textbullet
+}
+
+% ── Helper: dated entry ───────────────────────────────────────────────────────
+% Usage: \entry{Title · Organization, Location}{Date(s)}
+\newcommand{\entry}[2]{%
+  \noindent
+  \begin{tabularx}{\linewidth}{@{}X@{\hspace{4pt}}r@{}}
+    \textbf{#1} & \textcolor{midgray}{\small #2}
+  \end{tabularx}\vspace{1pt}%
+}
+
+% ── Helper: publication entry ─────────────────────────────────────────────────
+\newcommand{\pub}[2]{%
+  \noindent\hangindent=2em\hangafter=1
+  \textbf{#1.}\enspace #2\par\vspace{3pt}%
+}
+
+% ── No page numbers ───────────────────────────────────────────────────────────
+\pagestyle{empty}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+% ══════════════════════════════════════════════════════════════════════════════
+
+% ── Header ────────────────────────────────────────────────────────────────────
+\begin{center}
+  {\LARGE\bfseries Julia Steinberg}\\[5pt]
+  {\small
+    New York, NY\enspace·\enspace
+    \href{mailto:jasteinberg24@gmail.com}{jasteinberg24@gmail.com}\enspace·\enspace
+    +1\,(847)\,507--7468\\[2pt]
+    \href{https://scholar.google.com}{Google Scholar}\enspace·\enspace
+    \href{https://linkedin.com}{LinkedIn}
+    \enspace·\enspace
+    \href{https://jasteinberg.github.io}{GitHub}
+  }
+\end{center}
+
+\vspace{4pt}
+\section{Background}
+
+Harvard Physics PhD with a track record of research in quantum condensed matter and computational neuroscience, including work at the intersection of statistical physics, machine learning, and neural computation. Most recently, three years as a quantitative researcher in high-frequency trading, designing and running large-scale experiments to evaluate forecast models and trading strategies, and contributing to the deployment of these models into live trading systems.
+
+% ── Technical Skills ──────────────────────────────────────────────────────────
+\section{Technical Skills}
+
+\noindent\textbf{Programming:} Python (NumPy, SciPy), C++, MATLAB\\
+\textbf{Research areas:} Computational neuroscience, Statistical physics of learning and disordered systems, Quantum condensed matter
+
+% ── Research Interests ────────────────────────────────────────────────────────
+%\section{Research Interests}
+%Computational neuroscience\enspace·\enspace
+%Statistical physics of learning and disordered %systems\enspace·\enspace
+%Associative memory\enspace·\enspace
+%Representation of structured knowledge\enspace·\enspace
+%Quantum condensed matter\enspace·\enspace
+
+% ── Education ─────────────────────────────────────────────────────────────────
+\section{Education}
+
+\entry{Ph.D., Physics · Harvard University}{2020}
+\begin{itemize}
+  \item Thesis: \href{http://140.247.122.253/theses/Julia_Steinberg_thesis.pdf}{\textit{Universal Aspects of Quantum-Critical Dynamics In and Out of
+        Equilibrium}} · Advisor: Subir Sachdev
+\end{itemize}
+
+\vspace{4pt}
+\entry{A.M., Physics · Harvard University}{2019}
+
+\vspace{4pt}
+\entry{M.S., Physics · University of Pennsylvania}{2014}
+\vspace{4pt}\entry{B.A., Physics · University of Pennsylvania}{2014}
+\begin{itemize}
+  \item Magna cum laude with distinction in physics · Minor in mathematics
+\end{itemize}
+
+% ── Experience ────────────────────────────────────────────────────────────────
+\section{Experience}
+
+\entry{Quantitative Researcher · Radix Trading LLC, New York, NY}{Mar 2023 – Mar 2026}
+\begin{itemize}
+  \item Researcher on the core quant team designing and running large-scale, multi-stage experiments for forecast model development and strategy optimization
+  \item Responsible for deploying models into live production systems; contributed to
+        shared C++ production codebase with commits to core
+        trading binaries.
+  \item Research on forecasting/latency tradeoffs and development of latency models for research simulation.
+\end{itemize}
+
+\vspace{6pt}
+\entry{Associate Research Scholar / CPBF Fellow · Center for the Physics of Biological
+Function, Princeton University, Princeton, NJ}{Aug 2020 – Mar 2023}
+\begin{itemize}
+  \item Independent postdoctoral researcher at the CUNY/Princeton Center for the
+        Physics of Biological Function
+  \item Developed a theoretical model of associative memory for structured knowledge
+        (episodic memories, cognitive maps, semantic structures) — work bearing directly
+        on how neural networks represent, store, and retrieve relational and hierarchical information.
+  \item Periodic visiting researcher, Simons Center for Systems Biology, Institute for
+        Advanced Study (2020–2022).
+  \item Invited speaker: APS March Meeting, Les Houches School of Physics, van
+        Vreeswijk Theoretical Neuroscience Seminar Series, Context and Episodic Memory
+        Symposium, Flatiron Institute NeuroAI group, and others.
+\end{itemize}
+
+\vspace{6pt}
+\entry{Postdoctoral Fellow, Swartz Program in Theoretical Neuroscience · Center for
+Brain Science, Harvard University, Cambridge, MA}{Jun 2020 – Aug 2020}
+\begin{itemize}
+  \item Developed theories of learning and long-term memory using minimal neural network
+        models, using tools and techniques from physics of disordered systems and statistical learning theory, combining analytical theory and numerical simulation.
+\end{itemize}
+
+\vspace{6pt}
+\entry{Graduate Researcher · Department of Physics, Harvard University, Cambridge, MA}{Aug 2014 – May 2020}
+\begin{itemize}
+  \item Studied dynamical properties of strongly correlated quantum systems:
+        relaxation and thermalization rates, transport coefficients, and onset of
+        many-body quantum chaos, using tools from statistical physics, quantum field theory, and
+        gauge-gravity duality .
+  \item Swartz Program in Theoretical Neuroscience: extended graduate research into
+        neural computation and learning theory.
+\end{itemize}
+
+\vspace{6pt}
+\entry{Teaching Fellow · Harvard University, Cambridge, MA}{Sep 2019 – May 2020}
+\begin{itemize}
+  \item Physics 232 (Advanced Electromagnetism, grad), AM 226 (Neural Computation,
+        grad), Physics 15A (Intro Mechanics, undergrad), AP 284 (Statistical Mechanics,
+        grad).
+  \item Derek Bok Certificate of Distinction in Teaching, Fall 2019.
+\end{itemize}
+
+\vspace{6pt}
+\entry{Undergraduate Researcher · University of Pennsylvania \& University of Michigan}{2011 – 2014}
+\begin{itemize}
+  \item Rappe Group (Penn Chemistry): Electronic structure calculations using DFT to
+        propose materials with novel band topology; collaboration with Kane and Mele
+        (Penn Physics) on topological insulators as part of the Penn LRSM topological insulator seed.
+  \item NSF Physics REU, University of Michigan (Summer 2013): Edge states in lattice
+        models of 2D/3D topological semimetals.
+  \item A.T.\ Johnson Group, Penn Physics (Summer 2011): Fabrication of graphene
+        transistors using CVD and mechanical exfoliation.
+\end{itemize}
+
+% ── Publications ──────────────────────────────────────────────────────────────
+\section{Peer-Reviewed Publications and Review Articles}
+
+\textbf{\textcolor{accentblue}{Neural Networks, Learning Theory \& Statistical Physics of Machine Learning}}
+
+\vspace{4pt}
+
+\pub{10}{J.\ Steinberg, U.\ Adomaityt, A.\ Fachech, P.\ Mergny, D.\ Barbier, and
+  R.\ Monasson. Replica method for computational problems with randomness: principles
+  and illustrations. \textit{Journal of Statistical Mechanics: Theory and Experiment}
+  2024\,(10), 104002.}
+
+\pub{9}{J.\ Steinberg. Performance Capacity of a Complex Neural Network.
+  \textit{Physics} 16, 108 (2023).}
+
+\pub{8}{J.\ Steinberg and H.\ Sompolinsky. Associative memory of structured knowledge.
+  \textit{Scientific Reports} 12, 21808 (2022). bioRxiv: 2022.02.22.481380.}
+
+\pub{7}{J.\ Steinberg, M.\ Advani, and H.\ Sompolinsky. New role for circuit expansion
+  for learning in neural networks. \textit{Physical Review E} 103, 022404 (2021).
+  \textbf{[Editors' Suggestion]} arXiv:2008.08653.}
+
+\vspace{6pt}
+\textbf{\textcolor{accentblue}{Quantum Many-Body Physics \& Holography}}
+
+\vspace{4pt}
+
+\pub{6}{J.\ Steinberg and B.\ Swingle. Thermalization and many-body chaos in QED3.
+  \textit{Physical Review D} 99, 076007 (2019). arXiv:1901.04984.}
+
+\pub{5}{J.\ Steinberg, N.P.\ Armitage, F.H.L.\ Essler, and S.\ Sachdev. NMR
+  relaxation in Ising spin chains. \textit{Physical Review B} 99, 035156 (2019).
+  \textbf{[Editors' Suggestion]} arXiv:1810.11466.}
+
+\pub{4}{A.\ Eberlein, V.\ Kasper, S.\ Sachdev, and J.\ Steinberg. Quantum quench of
+  the Sachdev-Ye-Kitaev Model. \textit{Physical Review B} 96, 205123 (2017).
+  arXiv:1706.07803.}
+
+\pub{3}{A.\ Lucas and J.\ Steinberg. Charge diffusion and the butterfly effect in
+  striped holographic matter. \textit{Journal of High Energy Physics} 10, 143 (2016).
+  arXiv:1608.03286.}
+
+\pub{2}{S.\ Chatterjee, Y.\ Qi, S.\ Sachdev, and J.\ Steinberg. Superconductivity
+  from a confinement transition out of a FL* metal. \textit{Physical Review B} 94,
+  024502 (2016). \textbf{[Editors' Suggestion]} arXiv:1603.03041.}
+
+\pub{1}{J.\ Steinberg, S.M.\ Young, S.\ Zaheer, C.L.\ Kane, E.J.\ Mele, and
+  A.M.\ Rappe. Bulk Dirac Points in Distorted Spinels. \textit{Physical Review
+  Letters} 112, 036403 (2014). arXiv:1309.5967.}
+
+% ── Invited Talks ─────────────────────────────────────────────────────────────
+\section{Selected Invited Talks \& Seminars}
+\vspace{-\parskip}
+\begin{longtable}{@{}lp{5.2in}@{}}
+  \textcolor{midgray}{Mar 2023} &
+    Neural Networks: Insights from Physics to Models of Learning and Memory
+    · \textit{Physics Colloquium, The College of New Jersey} \\[3pt]
+  \textcolor{midgray}{Feb 2023} & Associative memory of structured knowledge
+    · \href{https://statphysneuro.github.io}{\textit{Towards a Theory of Artificial and Biological Neural Networks Workshop, Les Houches School of Physics}} \\[3pt]
+  \textcolor{midgray}{Oct 2022} &
+    Associative memory of structured knowledge
+    · \href{https://www.youtube.com/watch?v=rh_-Vh9CGbg}{\textit{van Vreeswijk Theoretical Neuroscience Seminar Series}} \\[3pt]
+  \textcolor{midgray}{May 2022} &
+    Associative memory of structured knowledge
+    · \href{https://memory.psych.upenn.edu/CEMS_2022}{\textit{Context and Episodic Memory Symposium}} \\[3pt]
+  \textcolor{midgray}{Mar 2022} &
+    Associative memory of structured knowledge
+    · \textit{APS March Meeting, Neural Systems III Focus Session} \\[3pt]
+  \textcolor{midgray}{Mar 2022} &
+    Associative memory of structured knowledge
+    · \textit{NeuroAI Theory \& Manifolds Reading Group, Flatiron Institute} \\[3pt]
+  \textcolor{midgray}{Sep 2021} &
+    Associative memory of structured knowledge
+    · \textit{Saxe Group, Gatsby Computational Neuroscience Unit /
+    Sainsbury Wellcome Centre, UCL} \\[3pt]
+  \textcolor{midgray}{Feb 2021} &
+    Associative memory of structured knowledge
+    · \textit{Kavli Institute for BioNano Science and Technology, Harvard} \\[3pt]
+  \textcolor{midgray}{Jan 2021} &
+    Associative memory of structured knowledge
+    · \textit{Simons Center for Systems Biology, Institute for Advanced Study} \\[3pt]
+  \textcolor{midgray}{Jan 2020} &
+    A new role for sparse expansion in neural networks
+    · \textit{Theory and Modeling of Living Systems, Emory University} \\[3pt]
+  \textcolor{midgray}{Jan 2020} &
+    A new role for sparse expansion in neural networks
+    · \textit{Santa Fe Institute} \\[3pt]
+  \textcolor{midgray}{Sep 2019} &
+    A new role for sparse expansion in neural networks
+    · \textit{Neuroscience Institute Seminar, NYU Langone Medical Center} \\
+\end{longtable}
+
+% ── Summer Schools ────────────────────────────────────────────────────────────
+\section{Summer Schools \& Workshops}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+  \textcolor{midgray}{Jul 2022} &
+    Statistical Physics of Machine Learning
+    · \textit{Les Houches School of Physics} (Krzakala \& Zdeborova, organizers) \\[3pt]
+  \textcolor{midgray}{Jul 2019} &
+    Theoretical Biophysics
+    · \textit{Boulder School 2019, University of Colorado Boulder} \\[3pt]
+  \textcolor{midgray}{Dec 2016} &
+    34th Jerusalem Winter School: New Horizons in Quantum Matter
+    · \textit{Hebrew University of Jerusalem} \\
+\end{tabularx}
+
+% ── Honors ────────────────────────────────────────────────────────────────────
+\section{Honors, Awards \& Fellowships}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+  \textcolor{midgray}{2020–2023} &
+    CPBF Fellowship, CUNY/Princeton Center for the Physics of Biological Function \\[3pt]
+  \textcolor{midgray}{2015–2020} &
+    NSF Graduate Research Fellowship, National Science Foundation \\[3pt]
+  \textcolor{midgray}{2014–2015} &
+    E.M.\ Purcell Fellowship, Harvard University Physics \\[3pt]
+  \textcolor{midgray}{2014} &
+    James Mills Peirce Fellowship, Harvard Graduate School of Arts \& Sciences \\[3pt]
+  \textcolor{midgray}{2014} &
+    Rose Award for Outstanding Undergraduate Research, University of Pennsylvania \\[3pt]
+    \textcolor{midgray}{Summer 2013} &
+    NSF-REU University of Michigan Physics Summer Research Fellowship \\[3pt]
+  \textcolor{midgray}{2013} &
+    Roy and Diana Vagelos Science Challenge Award, University of Pennsylvania \\[3pt]
+  \textcolor{midgray}{2012–2014} &
+    University Scholar, University of Pennsylvania \\
+    \textcolor{midgray}{Summer 2012} &
+    NSF-REU Penn LRSM Summer Research Fellowship \\[3pt]
+    \textcolor{midgray}{Summer 2011} &
+    Penn Undergraduate Research Mentorship Program \\[3pt]
+\end{tabularx}
+
+% ── Teaching & Service ────────────────────────────────────────────────────────
+\section{Service \& Outreach}
+
+\begin{itemize}
+  \item Referee: \textit{Physics Letters A}, \textit{Physical Review B},
+        \textit{Physical Review Letters}, \textit{Physical Review X}
+  \item Physics of Life Summer School Committee — Center for the Physics of
+        Biological Function, Princeton/CUNY (2022)
+  \item Mentor — Physics Undergraduate Mentoring Program, Princeton University
+        (2021–2022)
+  \item Mentor — UWIP Mentorship Families Program, Princeton Women in Physics (2020)
+  \item GSMI Mentor — Científico Latino, supporting underrepresented graduate school
+        applicants (2020–2021)
+  \item Mentor — WiSTEM Mentorship Program, Harvard College Women's Center
+        (2016–2020)
+  \item Adopt-a-Physicist — American Physical Society, connecting with high school
+        physics students (Fall 2017)
+\end{itemize}
+
+\end{document}

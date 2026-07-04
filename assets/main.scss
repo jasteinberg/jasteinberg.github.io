@@ -1,0 +1,436 @@
+---
+---
+
+@import "minima";
+
+/* ============================================================
+   Julia Steinberg — site theme
+   A light adaptation of the trace-qa technical-reference look:
+   IBM Plex type system · serif headings · mono "eyebrow" labels
+   · hairline section rules · warm-paper palette.
+   Layered on top of minima; later rules override the theme.
+   ============================================================ */
+
+:root {
+  --bg:          #fbfbf9;   /* warm paper            */
+  --surface:     #ffffff;
+  --text:        #20232a;   /* near-black ink        */
+  --text-dim:    #585e69;   /* muted body / captions */
+  --text-dimmer: #9aa0ac;   /* labels, meta          */
+  --border:      #e7e7e1;   /* hairlines             */
+  --border-soft: #f0f0ea;   /* softer hairlines      */
+  --accent:      #2a5fd6;   /* links, eyebrows       */
+  --accent-deep: #1f49a8;   /* hover / headings tick */
+  --accent-soft: rgba(42, 95, 214, 0.06);
+  --gold:        #9d7b34;
+  --code-bg:     #f5f5f1;
+  --green:       #2f8a55;
+  --red:         #c0483f;
+  --wrap:        48rem;
+}
+
+/* ── Base ──────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrapper { max-width: var(--wrap); }
+.page-content .wrapper { max-width: var(--wrap); }
+.page-content { padding: 2.5rem 0 4rem; }
+
+p { margin: 0 0 1rem; }
+strong { font-weight: 600; color: var(--text); }
+em { color: var(--text-dim); }
+small { color: var(--text-dimmer); }
+::selection { background: var(--accent-soft); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+hr { border: 0; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+/* ── Headings: serif display, with hairline section rules ─ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+h1 { font-size: 2.5rem; letter-spacing: -0.012em; margin: 0 0 1rem; }
+
+h2 {
+  font-size: 0.5rem;
+  margin: 2.75rem 0 1.1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* a small accent tick at the start of each major section */
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.6rem;
+  vertical-align: 0.12em;
+  background: var(--accent);
+  border-radius: 1px;
+  opacity: 0.85;
+}
+
+h3 { font-size: 1.18rem; margin: 1.9rem 0 0.55rem; }
+
+/* h4 as a mono uppercase sub-label, matching the reference doc */
+h4 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin: 1.6rem 0 0.5rem;
+}
+
+/* ── Code: light card, IBM Plex Mono ──────────────────── */
+code, pre, kbd, tt {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+p code, li code, td code, h1 code, h2 code, h3 code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.04em 0.4em;
+  font-size: 0.85em;
+  color: var(--accent-deep);
+}
+
+pre, .highlight, figure.highlight {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+pre {
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.highlight pre, figure.highlight pre {
+  border: 0;
+  background: transparent;
+  margin: 0;
+}
+
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--text);
+  font-size: inherit;
+}
+
+/* ── Blockquote → callout ─────────────────────────────── */
+blockquote {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+  margin: 1.4rem 0;
+  padding: 0.8rem 1.1rem;
+  border-radius: 0 6px 6px 0;
+  font-style: normal;
+  font-size: 0.97rem;
+}
+blockquote > :last-child { margin-bottom: 0; }
+
+/* ── TL;DR / summary callout ──────────────────────────── */
+.tldr {
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 1.05rem 1.3rem 0.55rem;
+  margin: 1.7rem 0 2.2rem;
+  font-size: 0.96rem;
+}
+.tldr > :last-child { margin-bottom: 0; }
+/* gray variant: add class "tldr gray" and swap the background */
+.tldr.gray { background: var(--code-bg); border-left-color: var(--text-dimmer); }
+
+/* ── Tables: mono uppercase header, hairline rows ─────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+th {
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dimmer);
+  font-weight: 500;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+td {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-dim);
+  vertical-align: top;
+}
+td:first-child { color: var(--text); }
+tr:last-child td { border-bottom: none; }
+
+/* display math: breathing room, scroll on overflow */
+mjx-container[display="true"] {
+  margin: 1.4rem 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2rem 0;
+}
+
+/* ── Site header / nav ────────────────────────────────── */
+.site-header {
+  border-top: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  min-height: auto;
+}
+.site-header .wrapper { padding-top: 1.3rem; padding-bottom: 1.3rem; }
+
+.site-title,
+.site-title:visited {
+  font-family: 'IBM Plex Serif', serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.site-title:hover { text-decoration: none; color: var(--accent-deep); }
+
+.site-nav { line-height: 1; }
+.site-nav .page-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.site-nav .page-link:not(:last-child) { margin-right: 1.3rem; }
+.site-nav .page-link:hover { color: var(--accent-deep); text-decoration: none; }
+
+/* ── Footer ───────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--text-dimmer);
+  font-size: 0.8rem;
+}
+.site-footer .footer-heading,
+.site-footer .footer-col-wrapper { color: var(--text-dimmer); }
+
+/* ── Homepage profile ─────────────────────────────────── */
+.profile {
+  text-align: center;
+  margin: 0.5rem 0 2.75rem;
+}
+.profile-intro {
+  text-align: left;
+  margin: 0 0 1rem;
+}
+.profile-links {
+  margin: 1.4rem 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  color: var(--text-dimmer);
+}
+.profile-links a { white-space: nowrap; color: var(--accent); }
+.profile-photo {
+  width: 190px;
+  height: 190px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  margin: 0.75rem auto 0;
+  display: block;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Blog index ───────────────────────────────────────── */
+.post-entry {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+.post-entry:last-child { border-bottom: 0; }
+.post-meta {
+  margin: 0 0 0.3rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.post-title {
+  margin: 0 0 0.4rem;
+  font-family: 'IBM Plex Serif', serif;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.3;
+}
+.post-title a { color: var(--text); }
+.post-title a:hover { color: var(--accent-deep); text-decoration: none; }
+.post-desc { margin: 0; color: var(--text-dim); }
+
+/* ── Blog post page ───────────────────────────────────── */
+.post-header { margin-bottom: 2rem; }
+.post-title { word-spacing: normal; }
+.post-content h2 { margin-top: 2.5rem; }
+.post-content { line-height: 1.74; }
+.post .post-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dimmer);
+}
+
+/* ── Research page figures (palette harmonized) ───────── */
+.research-hero {
+  display: block;
+  width: var(--hero-w, 320px);
+  max-width: 70%;
+  height: auto;
+  margin: 2rem auto 0.5rem;
+  mix-blend-mode: multiply;
+}
+.research-hero-caption {
+  text-align: center;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-dim);
+  max-width: 32rem;
+  margin: 0 auto 2.5rem;
+}
+.research-figure { margin: 1.5rem 0 2rem; text-align: center; }
+.research-figure img,
+.fig-cell img {
+  display: block;
+  max-width: var(--fig-w, 100%);
+  height: auto;
+  margin: 0 auto 0.5rem;
+  /* On the warm-paper bg, multiply drops white figure backgrounds into
+     the page while leaving plot content essentially unchanged; harmless
+     for figures that are already transparent. */
+  mix-blend-mode: multiply;
+}
+.research-figure figcaption {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 34rem;
+  margin: 0 auto;
+}
+.fig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2rem;
+  margin: 0 auto 0.5rem;
+  max-width: 46rem;
+}
+.fig-cell { text-align: center; }
+.fig-cell span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.35;
+}
+@media (max-width: 600px) {
+  .fig-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Sidebar table of contents (blog posts) ───────────
+   Lives in the left gutter on wide screens; hidden below
+   1240px so the centered column is untouched.
+   Tunables: the breakpoint, --toc-left, and width below. */
+.post-toc { display: none; }
+.post-main { min-width: 0; }
+
+/* Blog post (wide screens): article stays centered/aligned with the header,
+   with a sticky section sidebar living in the left gutter (cf. reference). */
+@media (min-width: 1100px) {
+  body.layout-post .page-content .wrapper { max-width: 64rem; }
+
+  body.layout-post .post {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 36rem) 1fr;
+    column-gap: 0;
+  }
+  body.layout-post .post-main { grid-column: 2; }
+
+  body.layout-post .post-toc {
+    display: block;
+    grid-column: 1;
+    justify-self: end;
+    box-sizing: border-box;
+    width: 15rem;
+    margin-right: 1.0rem;
+    margin-left: 0.0rem;
+    padding-right: 0.75rem;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+  }
+}
+
+.post-toc-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+.post-toc-list { display: flex; flex-direction: column; }
+.post-toc-a {
+  display: block;
+  padding: 3px 0 3px 12px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  border-left: 2px solid var(--border-soft);
+  transition: color 0.15s, border-color 0.15s;
+}
+.post-toc-a.sub { padding-left: 24px; font-size: 0.75rem; color: var(--text-dimmer); }
+.post-toc-a:hover { color: var(--text); border-left-color: var(--border); }
+.post-toc-a.active { color: var(--accent); border-left-color: var(--accent); }
+
+/* ── Page (research / publications / home) heading sizes ──────────────
+   Larger page titles; smaller section headers. Scoped to the page layout
+   so blog-post headings are unaffected. Tune the two values below. */
+body.layout-page .post-title { font-size: 2.4rem; }
+body.layout-page .post-content h2 { font-size: 1.25rem; }

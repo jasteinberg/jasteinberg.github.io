@@ -1,0 +1,26 @@
+<!-- IBM Plex type system (Sans / Serif / Mono) for the site theme. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<!-- MathJax v3: renders $...$ and $$...$$ in the browser.
+     kramdown's own math engine is disabled (see _config.yml), so all
+     math reaches the browser as raw delimiters. -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      packages: {'[+]': ['ams', 'noerrors', 'noundefined']},
+      macros: {
+        // \mathbb{1} (blackboard digit) is unreliable; provide an indicator.
+        indicator: ['\\mathbf{1}', 0]
+      }
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>

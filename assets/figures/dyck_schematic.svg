@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" font-family="'IBM Plex Sans', system-ui, sans-serif" role="img" aria-label="Two-layer attention-only transformer: embed, layer 0 builds depth, layer 1 type-matches by reading layer 0's depth, unembed to logits">
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#8a8f99"/>
+    </marker>
+  </defs>
+
+  <!-- residual stream spine -->
+  <line x1="96" y1="150" x2="612" y2="150" stroke="#c9c9c2" stroke-width="2"/>
+  <text x="354" y="142" text-anchor="middle" font-size="11" font-style="italic" fill="#9aa0ac">residual stream</text>
+
+  <!-- input tokens -->
+  <g font-family="'IBM Plex Mono', monospace" font-size="15" fill="#20232a">
+    <rect x="20" y="120" width="26" height="26" rx="3" fill="#f1f1ec" stroke="#d8d8d2"/>
+    <text x="33" y="138" text-anchor="middle">(</text>
+    <rect x="20" y="150" width="26" height="26" rx="3" fill="#f1f1ec" stroke="#d8d8d2"/>
+    <text x="33" y="168" text-anchor="middle">[</text>
+    <rect x="20" y="180" width="26" height="26" rx="3" fill="#f1f1ec" stroke="#d8d8d2"/>
+    <text x="33" y="198" text-anchor="middle">]</text>
+  </g>
+  <text x="33" y="226" text-anchor="middle" font-size="10.5" fill="#9aa0ac">tokens</text>
+
+  <!-- embed -->
+  <rect x="60" y="128" width="44" height="44" rx="6" fill="#eef3fc" stroke="#bcd2f2"/>
+  <text x="82" y="146" text-anchor="middle" font-size="11" fill="#1f49a8">embed</text>
+  <text x="82" y="160" text-anchor="middle" font-size="9.5" fill="#587196">+ pos</text>
+
+  <!-- layer 0: depth -->
+  <rect x="150" y="92" width="150" height="116" rx="8" fill="#ffffff" stroke="#cfcfc7"/>
+  <text x="225" y="84" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="10.5" letter-spacing="0.06em" fill="#2a5fd6">LAYER 0</text>
+  <rect x="166" y="106" width="118" height="30" rx="5" fill="#eef3fc" stroke="#bcd2f2"/>
+  <text x="225" y="125" text-anchor="middle" font-size="12" fill="#20232a">attention heads</text>
+  <text x="225" y="158" text-anchor="middle" font-size="12.5" font-weight="500" fill="#1f49a8">builds depth</text>
+  <text x="225" y="176" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="12" fill="#20232a">d&#8348; = #( &#8722; #)</text>
+  <text x="225" y="194" text-anchor="middle" font-size="10" font-style="italic" fill="#9aa0ac">running stack height</text>
+  <circle cx="150" cy="150" r="9" fill="#fff" stroke="#8a8f99"/>
+  <text x="150" y="154" text-anchor="middle" font-size="13" fill="#585e69">+</text>
+
+  <!-- layer 1: type match -->
+  <rect x="340" y="92" width="160" height="116" rx="8" fill="#ffffff" stroke="#cfcfc7"/>
+  <text x="420" y="84" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="10.5" letter-spacing="0.06em" fill="#2a5fd6">LAYER 1</text>
+  <rect x="356" y="106" width="128" height="30" rx="5" fill="#eef3fc" stroke="#bcd2f2"/>
+  <text x="420" y="125" text-anchor="middle" font-size="12" fill="#20232a">attention heads</text>
+  <text x="420" y="158" text-anchor="middle" font-size="12.5" font-weight="500" fill="#1f49a8">type-matches</text>
+  <text x="420" y="176" text-anchor="middle" font-size="11" fill="#20232a">reads layer-0 depth</text>
+  <text x="420" y="193" text-anchor="middle" font-size="10" font-style="italic" fill="#9aa0ac">find matching OPEN of same type</text>
+  <circle cx="340" cy="150" r="9" fill="#fff" stroke="#8a8f99"/>
+  <text x="340" y="154" text-anchor="middle" font-size="13" fill="#585e69">+</text>
+
+  <!-- composition arrow: layer 0 depth feeds layer 1 -->
+  <path d="M225,208 C225,236 420,236 420,208" fill="none" stroke="#2a5fd6" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+  <text x="322" y="250" text-anchor="middle" font-size="10" fill="#2a5fd6">composition: depth &#8594; matching</text>
+
+  <!-- unembed -->
+  <rect x="556" y="128" width="56" height="44" rx="6" fill="#eef3fc" stroke="#bcd2f2"/>
+  <text x="584" y="153" text-anchor="middle" font-size="11" fill="#1f49a8">unembed</text>
+
+  <!-- logits -->
+  <rect x="640" y="120" width="62" height="60" rx="6" fill="#f1f1ec" stroke="#d8d8d2"/>
+  <text x="671" y="146" text-anchor="middle" font-size="11" fill="#20232a">logits</text>
+  <text x="671" y="164" text-anchor="middle" font-size="10" fill="#9aa0ac">next token</text>
+
+  <!-- flow arrows along the spine -->
+  <g stroke="#8a8f99" stroke-width="1.6" marker-end="url(#ah)" fill="none">
+    <line x1="48" y1="150" x2="58" y2="150"/>
+    <line x1="612" y1="150" x2="638" y2="150"/>
+  </g>
+</svg>
