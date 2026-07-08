@@ -156,8 +156,7 @@ My current interests carry the same questions into transformers: what internal s
 
 The binding problem from my associative-memory work reappears in transformers, where current interpretability methods recover a vocabulary of features but not yet the grammar that binds them.
 
-In my current projects, I use mechanistic interpretability to localize the circuits and features that implement a behavior. Alongside this, I have a growing interest in alignment, with a focus on honesty — whether a model's internal representations carry a direction that tracks the truth of a statement independently of what the model asserts, and how that geometry relates to calibration and hallucination. A forthcoming post develops these truth directions in detail.
-My most recent projects are documented in my [blog](/blog/) and include studies on circuit formation in small transformers, the phase structure of grokking, and finite-size-scaling tests of emergence along the parameter and training axes.
+In my current projects, I use mechanistic interpretability to localize the circuits and features that implement a behavior. Alongside this, I have a growing interest in alignment, with a focus on honesty — whether a model's internal representations carry a direction that tracks the truth of a statement independently of what the model asserts, and how that geometry relates to calibration and hallucination. A forthcoming [blog](/blog/) post develops these truth directions in detail.
 
 ---
 

@@ -13,7 +13,7 @@ layout: page
   model development and deploying models into production. I am currently
   focused on AI research, with particular interests in alignment,
   reinforcement learning, and mechanistic interpretability in LLMs and
-  other foundation models.
+  other foundation models. My most recent projects are documented in my <a href="/blog/">blog</a> and include studies on circuit formation in small transformers, the phase structure of grokking, and finite-size-scaling tests of emergence along the parameter and training axes.
   </p>
 
   <p class="profile-links">
@@ -38,5 +38,7 @@ Code for current projects:
   methods and small-scale circuit studies
 - [rl-alignment-repo](https://github.com/jasteinberg/rl-alignment-repo) — RL/alignment building blocks and truth-direction probing
 - [scaling-experiments-repo](https://github.com/jasteinberg/scaling-experiments-repo) — finite-size-scaling tests of "emergent abilities" in LLMs
+
+I welcome correspondence from those working on or interested in these questions.
 
 <small>*Site drafted with the assistance of Claude (Anthropic).*</small>
