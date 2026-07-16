@@ -3,7 +3,10 @@ _preview.html
 .DS_Store
 .jekyll-cache/
 ROADMAP.md
-_drafts/
-assets/figures/drafts/
+_drafts
+assets/figures/drafts
+_reviews/*
+!_reviews/.gitkeep
 Gemfile.lock
 .bundle/
+artifacts_serve.log
