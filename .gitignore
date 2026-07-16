@@ -3,5 +3,7 @@ _preview.html
 .DS_Store
 .jekyll-cache/
 ROADMAP.md
+_drafts/
+assets/figures/drafts/
 Gemfile.lock
 .bundle/

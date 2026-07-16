@@ -376,19 +376,24 @@ mjx-container[display="true"] {
 .post-toc { display: none; }
 .post-main { min-width: 0; }
 
-/* Blog post (wide screens): article stays centered/aligned with the header,
-   with a sticky section sidebar living in the left gutter (cf. reference). */
+/* Blog post and reviews (wide screens): article stays centered/aligned with the
+   header, with a sticky section sidebar living in the left gutter (cf.
+   reference). Reviews share the post format, so both layouts are listed. */
 @media (min-width: 1100px) {
-  body.layout-post .page-content .wrapper { max-width: 64rem; }
+  body.layout-post .page-content .wrapper,
+  body.layout-review .page-content .wrapper { max-width: 64rem; }
 
-  body.layout-post .post {
+  body.layout-post .post,
+  body.layout-review .post {
     display: grid;
     grid-template-columns: 1fr minmax(0, 36rem) 1fr;
     column-gap: 0;
   }
-  body.layout-post .post-main { grid-column: 2; }
+  body.layout-post .post-main,
+  body.layout-review .post-main { grid-column: 2; }
 
-  body.layout-post .post-toc {
+  body.layout-post .post-toc,
+  body.layout-review .post-toc {
     display: block;
     grid-column: 1;
     justify-self: end;

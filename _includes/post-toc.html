@@ -1,0 +1,39 @@
+{%- comment -%}
+Sticky "On this page" sidebar, shared by the post and review layouts so the two
+cannot drift. Builds itself from the h2/h3 of .post-content, highlights the
+section currently in view, and removes itself if there are fewer than three.
+Wrapped in DOMContentLoaded so it works wherever the include is placed.
+{%- endcomment -%}
+<nav class="post-toc" id="post-toc" aria-label="Table of contents">
+  <div class="post-toc-label">On this page</div>
+  <div class="post-toc-list" id="post-toc-list"></div>
+</nav>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var content = document.querySelector('.post-content');
+  var nav = document.getElementById('post-toc');
+  var list = document.getElementById('post-toc-list');
+  if(!content || !nav || !list){ return; }
+  var hs = content.querySelectorAll('h2, h3');
+  if(hs.length < 3){ nav.remove(); return; }
+  var links = {};
+  hs.forEach(function(h){
+    if(!h.id){ h.id = h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    a.className = 'post-toc-a' + (h.tagName === 'H3' ? ' sub' : '');
+    list.appendChild(a);
+    links[h.id] = a;
+  });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        for(var k in links){ links[k].classList.remove('active'); }
+        if(links[e.target.id]){ links[e.target.id].classList.add('active'); }
+      }
+    });
+  }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
+  hs.forEach(function(h){ obs.observe(h); });
+});
+</script>
