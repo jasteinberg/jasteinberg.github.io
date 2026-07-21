@@ -10,3 +10,6 @@ _reviews/*
 Gemfile.lock
 .bundle/
 artifacts_serve.log
+
+# machine-specific local tooling (not deployed)
+scripts/local/
