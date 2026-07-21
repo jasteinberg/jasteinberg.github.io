@@ -6,7 +6,16 @@ theme: minima
 header_pages:
   - research.md
   - blog.md
+  - reviews.md
   - publications.md
+
+# Reviews: living reference/synthesis documents (literature maps, notes suites).
+# A distinct collection rather than posts, so they carry no chronology and read
+# as revisable references. output: true gives each its own page.
+collections:
+  reviews:
+    output: true
+    permalink: /reviews/:name/
 
 # Math is rendered client-side by MathJax (see _includes/custom-head.html).
 # Disable kramdown's own math engine so ALL $...$ / $$...$$ are passed
