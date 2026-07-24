@@ -36,7 +36,7 @@ In this post I examine whether the benchmark's sharp turn-on is a transition
 or an artifact of the metric, along the *training* axis for a
 single model held fixed and the token budget $D$ swept across checkpoints, so
 that accuracy and loss can be tracked together along one trajectory. Rather than looking at the peak in the response $\chi = dA/d\log D$ as the signature of a
-transition, I will look at the behaviour of the
+transition, I will look at the behavior of the
 fluctuation susceptibility and the correlation length under finite-size
 scaling, i.e. the criterion that actually classifies a transition. I find that composition, $A \approx p^{\ell}$, accounts for
 essentially all of the steepness. The only genuine error correlation is a
@@ -358,7 +358,7 @@ toward a divergence under finite-size scaling with definite exponents.
 The discriminator is the singularity structure of the derivatives as the
 system grows, never the continuity of the free energy. Held to that
 standard the rise here is a crossover: the genuine connected correlation
-is small and short-ranged — nearest-neighbour carry coupling, no growth
+is small and short-ranged — nearest-neighbor carry coupling, no growth
 in range — and the response peak is finite.
 
 **The loss-perspective rebuttal.** The strongest counter to the deflationary
