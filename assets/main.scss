@@ -379,14 +379,14 @@ mjx-container[display="true"] {
 /* Blog post and reviews (wide screens): article stays centered/aligned with the
    header, with a sticky section sidebar living in the left gutter (cf.
    reference). Reviews share the post format, so both layouts are listed. */
-@media (min-width: 1100px) {
+@media (min-width: 1280px) {
   body.layout-post .page-content .wrapper,
-  body.layout-review .page-content .wrapper { max-width: 64rem; }
+  body.layout-review .page-content .wrapper { max-width: 80rem; }
 
   body.layout-post .post,
   body.layout-review .post {
     display: grid;
-    grid-template-columns: 1fr minmax(0, 36rem) 1fr;
+    grid-template-columns: 1fr minmax(0, 48rem) 1fr;
     column-gap: 0;
   }
   body.layout-post .post-main,
