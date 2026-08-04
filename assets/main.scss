@@ -358,6 +358,21 @@ mjx-container[display="true"] {
   margin: 0 auto 0.5rem;
   max-width: 46rem;
 }
+/* Single-panel post figures.
+   Minima caps every image at the 48rem column width, so rendered
+   height is set entirely by aspect ratio: a two-panel figure at
+   AR ~ 2.3 comes out ~330px tall, while a one-panel plot at
+   AR ~ 1.5 reaches ~500px and a near-square heatmap ~660px.
+   Capping height rather than width equalizes the optical size
+   across figures and lets the width follow from the aspect ratio.
+   Inert below ~800px viewport, where max-width: 100% binds first. */
+.fig-single {
+  display: block;
+  width: auto;
+  max-height: 22rem;
+  margin: 0 auto;
+}
+
 .fig-cell { text-align: center; }
 .fig-cell span {
   display: block;
