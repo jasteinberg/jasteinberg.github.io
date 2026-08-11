@@ -5,9 +5,7 @@ permalink: /reviews/
 ---
 
 <p class="reviews-intro">
-Living reference documents — syntheses of a literature organized around how the
-results tension against each other, revised as the field moves. Not chronological;
-each is updated in place.
+Living reference documents providing full derivations, geometric interpretations, and synthesis across original sources — updated as understanding in the field evolves.
 </p>
 
 <div class="post-list">
