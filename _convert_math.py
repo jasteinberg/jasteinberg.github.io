@@ -1,7 +1,19 @@
-import re, pathlib, shutil
+"""Convert single-$ inline math to $$...$$ so kramdown treats it as a math span.
 
-p = pathlib.Path('_posts/2026-06-10-dyck-circuits.md')
-shutil.copy(p, pathlib.Path('..') / 'dyck-circuits.md.backup')
+The site sets `kramdown: math_engine: false` and lets MathJax parse in the
+browser, but kramdown only PROTECTS $$...$$. Inside single-$ spans it still
+applies markdown: two subscripted spans in one paragraph pair their underscores
+into <em>, and apostrophes (d') are smart-quoted into d-right-single-quote. Both
+corrupt the math.
+
+Usage:  python _convert_math.py [path-to-markdown]
+Writes <path>.backup next to the file before touching it.
+"""
+import re, sys, pathlib, shutil
+
+p = pathlib.Path(sys.argv[1] if len(sys.argv) > 1
+                 else '_posts/2026-06-10-dyck-circuits.md')
+shutil.copy(p, p.with_suffix(p.suffix + '.backup'))
 s = p.read_text()
 
 assert s.startswith('---')
