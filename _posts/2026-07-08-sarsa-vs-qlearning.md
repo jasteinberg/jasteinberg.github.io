@@ -177,7 +177,7 @@ $\varepsilon = 0$, and the figure code — is in the
 
 ## Results
 
-![Greedy rollouts after training: SARSA along the top row, Q-learning along the cliff edge]({{ site.baseurl }}/assets/figures/cliff_greedy_paths.png)
+![Greedy rollouts after training: SARSA along the top row, Q-learning along the cliff edge]({{ site.baseurl }}/assets/figures/cliff_greedy_paths.png){: .fig-single}
 
 *Greedy policies after 500 episodes (seed 0). Q-learning takes the cliff-edge optimum ($-12$); SARSA backs all the way to the top row and accepts the longer route ($-16$) to stay clear of the $-100$ region. The policies differ exactly where the greedy and $\varepsilon$-soft optima disagree.*
 
