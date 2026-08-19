@@ -311,7 +311,7 @@ gives a two-regime answer:
   Appendix A. Foot-region sharpness should not be taken at face
   value.
 
-![sharpness vs m]({{ site.baseurl }}/assets/figures/sharpness_vs_m.png)
+![sharpness vs m]({{ site.baseurl }}/assets/figures/sharpness_vs_m.png){: .fig-single}
 
 The picture from the two results above is symmetric. Both artifact mechanisms are
 measurably present where they apply:
@@ -579,7 +579,7 @@ size for size. Mechanistically, the model adds place by place with carry
 propagation, its errors riding the carry chain; the apparent single-token
 localization is the tokenizer's signature, not the model's algorithm.
 
-![digit cascade vs N]({{ site.baseurl }}/assets/figures/digit_cascade_vs_N.png)
+![digit cascade vs N]({{ site.baseurl }}/assets/figures/digit_cascade_vs_N.png){: .fig-single}
 
 **The correlation does not reorganize at the transition** This is the
 emergence-relevant result. $\phi(N)$ runs $-0.02,\,-0.05,\,-0.07,\,-0.05,\,

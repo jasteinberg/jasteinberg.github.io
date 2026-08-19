@@ -180,7 +180,7 @@ the two accuracies equalize over training:
 | $2.1\times10^{11}$ | $-0.014$ | $-0.003$ | $-0.011$ | $-0.013\pm.007$ |
 | $3.0\times10^{11}$ | $-0.018$ | $+0.003$ | $-0.020$ | $-0.024\pm.008$ |
 
-![composition residual decomposed]({{ site.baseurl }}/assets/figures/phi_decomposition_d3.png)
+![composition residual decomposed]({{ site.baseurl }}/assets/figures/phi_decomposition_d3.png){: .fig-single}
 
 ### Conditioning the null on length, and the sharpness claim
 
@@ -206,7 +206,7 @@ statement: even length-conditioned, composition overpredicts the joint,
 because $\phi_2$ is genuinely negative ($-0.017 \pm 0.0044$, $3.9\sigma$ at
 the peak). Whether *that* is a correlation is the last question.
 
-![susceptibility, pooled vs length-conditioned null]({{ site.baseurl }}/assets/figures/susceptibility_lengthcond_d3.png)
+![susceptibility, pooled vs length-conditioned null]({{ site.baseurl }}/assets/figures/susceptibility_lengthcond_d3.png){: .fig-single}
 
 ### The carry cascade is real — at the digit level
 
@@ -393,7 +393,7 @@ $A(L)$ curve, but only `pythia-2.8b-deduped` reaches low enough loss to climb it
 `pythia-1b` and `pythia-1.4b` never clear $A \approx 0.01$ and so only pin the
 high-loss foot.
 
-![accuracy vs Pile loss, three training trajectories]({{ site.baseurl }}/assets/figures/loss_collapse_d3.png)
+![accuracy vs Pile loss, three training trajectories]({{ site.baseurl }}/assets/figures/loss_collapse_d3.png){: .fig-single}
 
 *Accuracy versus Pile loss along training ($d = 3$), one curve per size, training
 running left as loss falls. Consistent with a single $A(L)$ curve, but only the
@@ -405,7 +405,7 @@ lower-loss models carrying the turn-on — though the fit is only as clean as th
 suite, with `pythia-6.9b` sitting below trend, the documented anomaly in that
 model.
 
-![accuracy vs final Pile loss across eight sizes]({{ site.baseurl }}/assets/figures/loss_collapse_paramaxis.png)
+![accuracy vs final Pile loss across eight sizes]({{ site.baseurl }}/assets/figures/loss_collapse_paramaxis.png){: .fig-single}
 
 *Teacher-forced accuracy versus final-checkpoint Pile loss across the eight sizes
 (70M–12B). Against pre-training loss rather than parameter count the sizes

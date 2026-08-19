@@ -181,7 +181,7 @@ $\varepsilon = 0$, and the figure code — is in the
 
 *Greedy policies after 500 episodes (seed 0). Q-learning takes the cliff-edge optimum ($-12$); SARSA backs all the way to the top row and accepts the longer route ($-16$) to stay clear of the $-100$ region. The policies differ exactly where the greedy and $\varepsilon$-soft optima disagree.*
 
-![Online-return learning curves: SARSA settles higher than Q-learning]({{ site.baseurl }}/assets/figures/sarsa_learning_curves.png)
+![Online-return learning curves: SARSA settles higher than Q-learning]({{ site.baseurl }}/assets/figures/sarsa_learning_curves.png){: .fig-single}
 
 *Online return during training, mean over 100 CRN-paired seeds with 95% bands. SARSA settles higher (around $-28$) because it rarely falls; Q-learning sits lower (around $-50$) as it walks the edge and occasionally steps off. The dotted and dashed lines mark the two greedy-evaluation returns ($-12$ and $-16$) — far above the behavior return, which carries the cost of exploration.*
 
@@ -199,7 +199,7 @@ before, now paid along the whole edge). The greedy-evaluation return flips the
 ranking: Q-learning wins it because its target values the greedy policy regardless
 of how the agent behaves. Both are correct; they answer different questions.
 
-![Paired difference Delta between SARSA and Q-learning online return]({{ site.baseurl }}/assets/figures/sarsa_delta.png)
+![Paired difference Delta between SARSA and Q-learning online return]({{ site.baseurl }}/assets/figures/sarsa_delta.png){: .fig-single}
 
 *The paired gap $\Delta = R_{\mathrm{S}} - R_{\mathrm{Q}}$ in online return, mean over 100 seeds with a 95% band. It sits above zero through training — SARSA's behavior-return advantage — but the band stays wide: pairing fixes the exploration confound without buying much variance reduction on this quantity, since the per-episode coupling washes out of the run total.*
 
