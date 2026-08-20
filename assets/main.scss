@@ -373,6 +373,16 @@ mjx-container[display="true"] {
   margin: 0 auto;
 }
 
+/* Every figure is saved on a white canvas, which reads as a bright
+   rectangle against the warm-paper --bg. Multiply maps a white source
+   pixel exactly onto the backdrop and scales everything else by
+   ~251/255, so the surround disappears and the plot content is
+   unchanged to the eye. Applies to post and page figures alike;
+   the headshot is excluded so it keeps its own white matte. */
+.post-content img:not(.profile-photo) {
+  mix-blend-mode: multiply;
+}
+
 .fig-cell { text-align: center; }
 .fig-cell span {
   display: block;
