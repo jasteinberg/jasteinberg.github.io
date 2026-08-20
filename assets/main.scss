@@ -192,6 +192,14 @@ th {
   border-bottom: 1px solid var(--border);
   background: transparent;
 }
+/* Header cells are uppercased, which would also uppercase rendered math:
+   $\varepsilon$ became a capital epsilon, indistinguishable from E. Exempt
+   MathJax output (and the raw span before it renders) from the transform. */
+th mjx-container,
+th .kdmath {
+  text-transform: none;
+  letter-spacing: normal;
+}
 td {
   padding: 0.55rem 0.8rem;
   border-bottom: 1px solid var(--border-soft);
