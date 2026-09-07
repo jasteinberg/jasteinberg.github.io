@@ -13,3 +13,4 @@ artifacts_serve.log
 
 # machine-specific local tooling (not deployed)
 scripts/local/
+!_reviews/truth-probes-map.md
