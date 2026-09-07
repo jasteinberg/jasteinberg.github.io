@@ -5,7 +5,7 @@ date: 2026-09-06
 description: "In final revision. When is a linear truth direction in a language model's activations recoverable at all, and what does the estimator return when it is not?"
 ---
 
-This post is in final revision and will appear at this address in the coming days.
+This post is in final revision and will appear at this address in the coming days. Below is a summary of the results.
 
 <div class="tldr gray" markdown="1">
 
