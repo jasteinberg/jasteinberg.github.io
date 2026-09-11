@@ -2025,6 +2025,7 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | rogue-dimension steering and decoding of $$\hat v_1$$, $$\hat\theta_\perp$$ | `check_rogue_dimension.py` | `rogue_dimension.json` |
 | steering sweeps and $$\chi$$ | `steer_confirm2.py`, `chi_whitening_analysis.py` | `steer_ckpt/` |
 | distractor transfer | `transfer_to_likely.py` | `transfer_likely.json` |
+| unsteered judgment readout on `cities`, `common_claim`, `counterfact` | `check_model_verdicts.py` | `check_model_verdicts.json` |
 | score gradient and overlaps | `score_gradient.py` | `score_gradient_*.json` |
 | OLMo cross-family geometry | `geometry_olmo.py` | `geometry_olmo.json` |
 | OLMo decoding, nulls, superposition | `snr_sweep.py` run on OLMo-2-1B | `olmo_goNogo.json` |
