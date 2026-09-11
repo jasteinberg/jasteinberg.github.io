@@ -1885,7 +1885,10 @@ Stripping the leading components *raises* $$d'_{\mathrm{mm}}$$ on `counterfact`
 
 Everything below describes what the code does, not what the method ideally would
 do. Where the two differ the difference is stated. Script names refer to the
-public repository.
+public repository,
+[jasteinberg/rl-alignment-repo](https://github.com/jasteinberg/rl-alignment-repo),
+which holds the scripts below, the shared library they import, and the committed
+artifacts each number is read from.
 
 **Models and activations.** Pythia 70m, 410m, 1.4b and 2.8b, and OLMo-2-1B for the
 cross-family check, run in `float16` on Apple silicon (MPS) through HuggingFace
