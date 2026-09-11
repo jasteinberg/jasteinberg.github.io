@@ -1340,8 +1340,21 @@ at layer $$28$$, $$+0.050$$ $$[+0.032, +0.062]$$, while the whitened direction d
 both datasets the direction that steers correctly is the direction whose overlap with
 $$g$$ is positive, and the overlap is measured without displacing an activation. The
 sign and not the magnitude is what carries this: at `counterfact` layer $$20$$ both
-directions have resolved overlaps, the whitened one positive and the plain one
-negative.
+directions have resolved overlaps, the whitened one positive and the plain one negative.
+
+The rank-one correction gives the sharpest test of this, because
+$$\hat\theta_\perp$$ is exactly $$\hat e_2$$, so its susceptibility is predicted by
+$$\cos(g, \hat e_2)$$ alone, measured before anything is steered. On `counterfact` the
+prediction has the right sign at all six layers of the rogue-dimension sweep, and where
+the overlap is resolved the steering is significant and agrees with it. At layer $$8$$
+the overlap is negative, $$-0.048$$ $$[-0.062, -0.025]$$, the prediction is
+$$c\,(\hat e_2\cdot g) = -0.12$$, and $$\hat\theta_\perp$$ steers significantly
+wrong-signed, $$A(1) = -0.104$$ over three seeds ($$p = 0.02$$ against a $$100$$-draw
+null). At layers $$24$$ and $$28$$ the overlap is positive, $$+0.059$$ and $$+0.073$$,
+and $$\hat\theta_\perp$$ steers correctly, $$+0.032$$ and $$+0.043$$ against a predicted
+$$+0.054$$ at both. At layers $$12$$ through $$20$$ the overlap's interval spans zero and
+the steering stays inside its null. Removing $$\hat v_1$$ corrects the sign only where
+what remains of the class gap overlaps $$g$$ positively.
 
 `cities` also reproduces the mid-depth dip from the other side. Its plain overlap turns
 significantly *negative* at layer $$20$$, $$-0.035$$ $$[-0.041, -0.027]$$, which is the same
@@ -1437,10 +1450,17 @@ Two conditions make the reduction valid, and together they are the criterion for
 failure mode. The spectrum must have one dominant eigenmode, $$\mathrm{PR} \approx 1$$
 with $$\lambda_1/\lambda_2 \gg 1$$, or there is no plane to reduce to. Additionally,
 $$\varphi_{\mathrm{mm}}$$ must be small, or the estimator is not at the foot of the cliff
-and there is nothing to correct. Both are read off the activations and the fitted
-direction, so whether the mass-mean direction will steer with the wrong sign, and
-whether the corrections will restore it, can be predicted before any steering is run.
-The prediction has been tested on one dataset (`counterfact`) that satisfies the criterion, and one (`cities`) that does not, and held in both. Two further main-tier sets,
+and there is nothing to correct. Both are read off the activations and the fitted direction, and together they diagnose
+that the estimator has collapsed onto $$\hat v_1$$. They do not by themselves say which
+way either direction will steer. That is set by the overlaps with the score gradient,
+$$\hat v_1\cdot g$$ for the mass-mean direction and $$\hat e_2\cdot g$$ for the
+correction, which are also measured without displacing an activation. At `counterfact`
+layers $$8$$ through $$16$$ the spectrum meets the criterion more strongly than at layer
+$$28$$, yet the corrections do not restore the sign there, because $$\hat e_2\cdot g$$ is
+negative or unresolved. The diagnosis from the spectrum and the sign from the gradient
+are both available before any steering is run. The diagnosis has been tested on one
+dataset (`counterfact`) that satisfies the criterion, and one (`cities`) that does not,
+and held in both. Two further main-tier sets,
 `companies_true_false` and `common_claim_true_false`, satisfy the criterion at layers
 $$24$$ and $$28$$ but cannot be tested causally with this harness. Their statements
 have no relation structure from which to build a pair of completions, so the
@@ -1580,10 +1600,11 @@ unsteerable end of their scale but steers with a negative mean that clears its n
 that the behavior is linearly represented, since the whitened direction steers it correctly at
 the same layer. What has failed is the estimator. The superposition result above is the
 decoding-side form of the same failure, a high-variance direction interfering with the
-target signal, whose removal improves recovery. The shallow `counterfact` layers,
-$$L \le 16$$, are the regime Braun et al. describe: both corrections leave the effect
-inside the null there, consistent with no recoverable signal under any linear
-correction. The per-sample form of the anomaly is documented by
+target signal, whose removal improves recovery. The shallow `counterfact` layers, $$L \le 16$$, are closer to the regime Braun et al.
+describe, but not the same one. Whitening leaves the effect inside the null there, and
+projecting out $$\hat v_1$$ does not restore the sign: at layer $$8$$ it steers
+significantly wrong-signed. That is not an absence of linear signal. It is the sign of
+$$\hat e_2\cdot g$$, which at that depth is negative, as *What steering measures* shows. The per-sample form of the anomaly is documented by
 [Tan et al. (2024)](https://arxiv.org/abs/2407.12404), who find that for several
 concepts close to half the inputs steer in the direction opposite to the one intended.
 The `counterfact` effect at layers $$24$$ and $$28$$ is that variance surfacing as a
@@ -1644,9 +1665,10 @@ direction contain a direction that steers correctly, and it can be reached witho
 leaving the linear class, either by the Fisher direction or by projecting out the
 leading eigenvector.
 
-The results have limits. The criterion that predicts this failure, a within-class
-spectrum with one dominant eigenmode and the mass-mean direction aligned to it, has one
-confirmed positive and one confirmed negative. The
+The results have limits. The criterion that diagnoses this failure, a within-class spectrum with one dominant
+eigenmode and the mass-mean direction aligned to it, has one confirmed positive and one
+confirmed negative. It identifies the collapse but not the sign of a correction, which
+is set by the overlap of the corrected direction with the score gradient. The
 steering measurements are on Pythia alone, since OLMo replicates the geometry and the
 decoding but was not steered. The wrong sign at layer $$28$$ is beyond first order in
 the displacement and its mechanism is not settled here. The corrected effect is modest. The
@@ -2158,48 +2180,37 @@ A fuller, annotated version of this bibliography — organized as a reader's map
 - **Marks & Tegmark, *The Geometry of Truth: Emergent Linear Structure in LLM Representations of True/False Datasets*** — [arXiv:2310.06824](https://arxiv.org/abs/2310.06824), COLM 2024.
 - **Bürger, Hamprecht & Nadler, *Truth is Universal: Robust Detection of Lies in LLMs*** — [arXiv:2407.12831](https://arxiv.org/abs/2407.12831), NeurIPS 2024.
 - **Burns, Ye, Klein & Steinhardt, *Discovering Latent Knowledge in Language Models Without Supervision* (CCS)** — [arXiv:2212.03827](https://arxiv.org/abs/2212.03827), ICLR 2023.
-- **Zou et al., *Representation Engineering: A Top-Down Approach to AI Transparency*** — [arXiv:2310.01405](https://arxiv.org/abs/2310.01405) (2023).
 
 **The critiques — identifiability / which direction did you actually find (the SNR angle)**
 
 - **Farquhar, Varma, Kenton, Gasteiger, Mikulik & Shah (DeepMind), *Challenges with Unsupervised LLM Knowledge Discovery*** — [arXiv:2312.10029](https://arxiv.org/abs/2312.10029) (2023).
 - **Roger, *What Discovering Latent Knowledge Did and Did Not Find*** — [AlignmentForum, 2023](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4).
 - **Mallen & Belrose, *Eliciting Latent Knowledge from Quirky Language Models*** — [arXiv:2312.01037](https://arxiv.org/abs/2312.01037) (2023).
-- **Levinstein & Herrmann, *Still No Lie Detector for Language Models: Probing Empirical and Conceptual Roadblocks*** — [arXiv:2307.00175](https://arxiv.org/abs/2307.00175), *Philosophical Studies* 182(7):1539–1565 (2025; online-first 2024).
-- **Laurito, Maiya, Dhimoïla, Yeung & Hänni, *Cluster-Norm for Unsupervised Probing of Knowledge*** — [arXiv:2407.18712](https://arxiv.org/abs/2407.18712), EMNLP 2024.
 - **Bao et al., *Probing the Geometry of Truth: Consistency and Generalization*** — [ACL Findings 2025](https://aclanthology.org/2025.findings-acl.38.pdf).
 - **Ying, Ravfogel, Kriegeskorte & Hase, *The Truthfulness Spectrum Hypothesis*** — [arXiv:2602.20273](https://arxiv.org/abs/2602.20273) (2026).
 - **Ying, Hase & Kriegeskorte, *Comparing Linear Probes with Mahalanobis Cosine Similarity*** — [arXiv:2606.19603](https://arxiv.org/abs/2606.19603) (2026).
-- **Nordby, Pais & Parrack, *Linear Probe Accuracy Scales with Model Size and Benefits from Multi-Layer Ensembling*** — [arXiv:2604.13386](https://arxiv.org/abs/2604.13386) (2026).
 - **Poulis, Crovella & Terzi, *Testing the Limits of Truth Directions in LLMs*** — [arXiv:2604.03754](https://arxiv.org/abs/2604.03754) (2026).
 
 **Controls and methodology**
 
 - **Hewitt & Liang, *Designing and Interpreting Probes with Control Tasks*** — [arXiv:1909.03368](https://arxiv.org/abs/1909.03368), EMNLP 2019.
 - **MacDiarmid et al. (Anthropic), *Simple Probes Can Catch Sleeper Agents*** — [Anthropic Alignment Note, 2024](https://www.anthropic.com/research/probes-catch-sleeper-agents).
-- **Kumar, *Pressure-Testing Deception Probes in LLMs: Scaling, Robustness, and the Geometry of Deceptive Representations*** — [arXiv:2605.27958](https://arxiv.org/abs/2605.27958) (2026).
 
 **Representation geometry — the rogue-dimension lineage**
 
 - **Sun, Chen, Kolter & Liu, *Massive Activations in Large Language Models*** — [arXiv:2402.17762](https://arxiv.org/abs/2402.17762), COLM 2024.
 - **Timkey & van Schijndel, *All Bark and No Bite: Rogue Dimensions in Transformer Language Models Obscure Representational Quality*** — [arXiv:2109.04404](https://arxiv.org/abs/2109.04404), EMNLP 2021 (pp. 4527–4546).
 
-**Calibration / self-knowledge**
-
-- **Kadavath et al. (Anthropic), *Language Models (Mostly) Know What They Know*** — [arXiv:2207.05221](https://arxiv.org/abs/2207.05221) (2022).
-
 **Models**
 
 - **Biderman et al., *Pythia: A Suite for Analyzing Large Language Models Across Training and Scaling*** — [arXiv:2304.01373](https://arxiv.org/abs/2304.01373), ICML 2023.
 
-**Refusal / steering directions (mechanistic, alignment-flavored)**
+**Steering directions**
 
-- **Arditi et al., *Refusal in Language Models Is Mediated by a Single Direction*** — [arXiv:2406.11717](https://arxiv.org/abs/2406.11717), NeurIPS 2024.
 - **Tan, Chanin, Lynch, Paige, Kanoulas, Garriga-Alonso & Kirk, *Analysing the Generalisation and Reliability of Steering Vectors*** — [arXiv:2407.12404](https://arxiv.org/abs/2407.12404), NeurIPS 2024.
 - **Braun, Eickhoff, Krueger, Bahrainian & Krasheninnikov, *Understanding (Un)Reliability of Steering Vectors in Language Models*** — [arXiv:2505.22637](https://arxiv.org/abs/2505.22637), ICLR 2025 Workshop on Foundation Models in the Wild.
 - **Torop, Masoomi & Dy, *Inverted Detection and Control in Steering Vectors*** — [arXiv:2608.02957](https://arxiv.org/abs/2608.02957) (2026).
 - **Liu, *Decodable but Not Corrected by Fixed Residual-Stream Linear Steering: Evidence from Medical LLM Failure Regimes*** — [arXiv:2605.05715](https://arxiv.org/abs/2605.05715) (2026).
-- **Cho, Wu, Da Costa & Koshiyama, *The Confidence Manifold: Geometric Structure of Correctness Representations in Language Models*** — [arXiv:2602.08159](https://arxiv.org/abs/2602.08159) (2026).
 
 ---
 
