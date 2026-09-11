@@ -63,7 +63,7 @@ marks the population quantity it estimates, with expectations taken over the
 data-generating distribution of activations at the probed layer. A table of every symbol
 used in the post is collected in the notation appendix. The distinction is crucial:
 almost every trap in this post is the gap between an estimate and its population target,
-$$\hat\theta$$ and $$\theta$$, or the eigenvalues of $$\hat\Sigma$$ and of $$\Sigma$$, which
+$$\hat\theta$$ and $$\theta$$, or the eigenvalues of $$\hat C$$ and of $$\Sigma$$, which
 agree only in the large-sample limit. Estimates are computed on a training split of
 $$N_{\text{train}} = N_0 + N_1$$ activations, $$N_0$$ of them with $$y = 0$$ and $$N_1$$
 with $$y = 1$$. Held-out data is used only to
@@ -573,8 +573,12 @@ and the held-out estimate $$0.24$$. Both follow from the derivation in *How smal
 small?*: the noise in $$\hat\theta$$ is aligned with the sample fluctuations that
 produced it, so in-sample $$d'^{2} \simeq 1 + 4d/N_{\text{train}}$$, while held-out
 $$d' \simeq \cos(\hat\theta, \theta) \simeq (1 + 4d/N_{\text{train}})^{-1/2}$$. The
-simulation matches both to within a few percent for $$d/N_{\text{train}}$$ from $$0.2$$
-to $$14$$.
+simulation matches the in-sample prediction to within $$2\%$$ and the overlap
+$$\cos(\hat\theta, \theta)$$ to within $$4\%$$ for $$d/N_{\text{train}}$$ from $$0.2$$ to $$14$$.
+The held-out $$d'$$ itself scatters more, $$-11\%$$ to $$+16\%$$ about its prediction,
+because it is estimated on a finite held-out half: its standard deviation across
+repetitions is about $$0.08$$, so a twenty-repetition mean is fixed only to about
+$$\pm 0.02$$, and every deviation sits within two of those.
 
 Two consequences follow. First, the held-out $$d'$$ is
 *attenuated*: the fitted $$\hat\theta$$ is misaligned with the true direction by
@@ -688,7 +692,7 @@ This axis is easy to find. On pythia-2.8b the mass-mean direction reaches held-o
 $$\mathrm{AUROC} = 0.890$$ ($$d'_{\mathrm{mm}} = 1.75$$) at layer $$12$$, against a null 95th percentile of
 $$0.593$$, a wider margin than `counterfact` achieves at any depth. What separates it
 from the truth sets is the depth at which it is recoverable. Plausibility is already
-readable in the embedding ($$0.700$$ at layer $$0$$), peaks at layer $$12$$, and then
+readable in the embedding ($$0.700$$ at layer $$0$$), peaks at layers $$11$$ and $$12$$ (the AUROC at $$11$$, the margin at $$12$$), and then
 decays through the second half of the network to $$0.657$$ by layer $$28$$. `cities`
 runs the other way: inside the null through the early layers, clear of it by
 mid-network, peaking at $$0.973$$ at layer $$29$$. In one model, the direction that
@@ -816,7 +820,7 @@ geometric grid from $$N = 100$$ to that dataset's total with sixteen label permu
 per point, and fitting
 $$\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2} \approx a\,(N/2d)^{b}$$ on each, gives
 
-| dataset | $$N_{\max}$$ | $$a$$ | $$b$$ | $$R^{2}$$ | $$\mathrm{PR}$$ | $$\hat\lambda_1/\operatorname{tr}\hat\Sigma$$ |
+| dataset | $$N_{\max}$$ | $$a$$ | $$b$$ | $$R^{2}$$ | $$\mathrm{PR}$$ | $$\hat\lambda_1/\operatorname{tr}\hat C$$ |
 |---|---|---|---|---|---|---|
 | `counterfact_true_false` | $$3000$$ | $$0.045$$ | $$-0.490 \pm 0.019$$ | $$0.993$$ | $$30.3$$ | $$0.11$$ |
 | `cities` | $$1496$$ | $$0.053$$ | $$-0.446 \pm 0.009$$ | $$0.998$$ | $$34.6$$ | $$0.11$$ |
@@ -1014,7 +1018,7 @@ $$L=20$$ the crossover.](/assets/figures/truth_steering_signflip.png)
 ## The rogue dimension
 
 **Definition.** I call $$\hat v_1$$ a **rogue dimension** when it dominates the
-*within-class* covariance, that is, $$\hat\lambda_1/\operatorname{tr}\hat\Sigma \approx 1$$ or equivalently $$\mathrm{PR} \approx 1$$ and $$\hat\lambda_1/\hat\lambda_2 \gg 1$$. This
+*within-class* covariance, that is, $$\hat\lambda_1/\operatorname{tr}\hat C \approx 1$$ or equivalently $$\mathrm{PR} \approx 1$$ and $$\hat\lambda_1/\hat\lambda_2 \gg 1$$. This
 condition is a statement about the noise geometry alone and is basis-free and independent
 of any probe. The estimator only becomes involved through the separate question of
 whether $$\hat\theta$$ has aligned with it.
@@ -1036,13 +1040,13 @@ so it inflates the mean without inflating the within-class covariance. It produc
 rogue dimension only when the remaining variance is small enough for it to dominate.
 
 The diagnosis is in the spectrum of the within-class covariance. I diagonalize
-$$\hat\Sigma = \sum_i \hat\lambda_i \hat v_i \hat v_i^{\top}$$ with sample eigenvalues
+$$\hat C = \sum_i \hat\lambda_i \hat v_i \hat v_i^{\top}$$ with sample eigenvalues
 $$\hat\lambda_1 \ge \hat\lambda_2 \ge \dots$$ and eigenvectors $$\hat v_i$$,
 and measure where the mass-mean direction sits relative to its leading eigenvector.
 On `counterfact` at pythia-2.8b, layer $$28$$:
 
 $$
-\frac{\hat\lambda_1}{\operatorname{tr}\hat\Sigma} = 0.980, \qquad
+\frac{\hat\lambda_1}{\operatorname{tr}\hat C} = 0.980, \qquad
 \frac{\hat\lambda_1}{\hat\lambda_2} = 535, \qquad
 \lvert\cos(\hat\theta, \hat v_1)\rvert = 0.994 .
 $$
@@ -1064,7 +1068,7 @@ noise effectively occupies.
 Read across depth, those observables say something sharper than the layer-$$28$$
 snapshot. What decides recoverability is *not* whether a dominant axis exists. At layer
 $$8$$, `cities` is collapsed too, with
-$$\hat\lambda_1/\operatorname{tr}\hat\Sigma = 0.723$$, $$\lvert\cos(\hat\theta,\hat
+$$\hat\lambda_1/\operatorname{tr}\hat C = 0.723$$, $$\lvert\cos(\hat\theta,\hat
 v_1)\rvert = 0.914$$ and $$d'_{\mathrm{mm}} = 0.11$$. That is `counterfact`'s condition,
 not a milder version of it. The two sets differ in what becomes of that condition at
 later layers. By layer $$28$$ it no longer holds for `cities`. The participation ratio
@@ -1099,9 +1103,9 @@ $$12$$. Deleting the axis and downweighting it do the same work.
 
 There is a sharper way to explain why the plain probe cannot leave the band on
 `counterfact`. When $$\delta$$ lies along $$\hat v_1$$ and $$\hat v_1$$ carries nearly all
-of $$\hat\Sigma$$, a random direction $$u$$ reads the class gap and the noise through the
+of $$\hat C$$, a random direction $$u$$ reads the class gap and the noise through the
 same coordinate, $$u^{\top}\delta \approx \lVert\delta\rVert u_1$$ and
-$$u^{\top}\hat\Sigma u \approx \hat\lambda_1 u_1^{2}$$, so
+$$u^{\top}\hat C u \approx \hat\lambda_1 u_1^{2}$$, so
 
 $$
 d'(u) \;\approx\; \frac{\lVert\delta\rVert\,\lvert u_1\rvert}{\sqrt{\hat\lambda_1}\,\lvert u_1\rvert}
@@ -1127,7 +1131,7 @@ $$\hat v_1$$ is also *well* estimated, which is what makes the collapse of $$\ha
 onto it a feature of $$\Sigma$$ rather than an accident of the sample. The reason is not
 the spectral gap by itself. With $$d = 2560$$ and $$N = 1198$$ the sample covariance is
 rank-deficient, so no deterministic perturbation bound applies without first controlling
-$$\lVert\hat\Sigma - \Sigma\rVert$$, and in this regime a sample eigenvector is in
+$$\lVert\hat C - \Sigma\rVert$$, and in this regime a sample eigenvector is in
 general an attenuated estimate of its population axis. What controls the attenuation is
 the spike strength relative to the aspect ratio. Writing $$\gamma = d/N = 2.14$$ and
 $$\ell$$ for the ratio of $$\hat\lambda_1$$ to the bulk scale, the relative bias of
@@ -1153,7 +1157,8 @@ weak.
 The obvious objection is that this is a fact about Pythia. However, the same observables on
 [OLMo-2-1B](https://huggingface.co/allenai/OLMo-2-0425-1B), a different architecture and
 training corpus at a third of the parameters, reproduce the pattern. On `counterfact` the
-mass-mean direction stays aligned with the leading axis at every depth and the plain probe
+mass-mean direction stays aligned with the leading axis at every depth except the final
+layer, and the plain probe
 never clears its null while whitening does, and on `cities` the alignment falls, the
 participation ratio climbs, and the plain probe clears the null as it does in Pythia. The
 numbers are in the appendix *Replication on OLMo-2-1B*.
@@ -1184,7 +1189,7 @@ relation is closer than coincidence. On `counterfact` the leading axis of the
 covariance is *generated* by the statements on which the massive activation drops.
 
 A coordinate that is exactly constant across statements contributes nothing to
-$$\hat\Sigma$$, however large it is. A coordinate that takes a large value $$a$$ on a
+$$\hat C$$, however large it is. A coordinate that takes a large value $$a$$ on a
 fraction $$1-p$$ of statements and a much smaller value $$b$$ on the remaining $$p$$
 contributes the variance of a two-point distribution,
 
@@ -1220,7 +1225,7 @@ comparison depends on the Ledoit–Wolf intensity are given in the appendix
 The massive coordinates themselves are not dataset-specific. The same coordinates
 qualify on `cities` and `counterfact` alike. What differs is whether any statement
 drops these coordinates. On `cities` none do, so the coordinates stay constant, contribute nothing to
-$$\hat\Sigma$$, and leave no rogue dimension behind. That is the earlier observation that
+$$\hat C$$, and leave no rogue dimension behind. That is the earlier observation that
 `cities` carries the same massive activation without the same pathology, now with a
 mechanism rather than a coincidence. The incidence is specific to the dataset but the
 mechanism is general. The per-layer incidence on both models, including pythia-1.4b, is
@@ -1317,7 +1322,7 @@ order, so $$A(\hat v_1) = -0.051$$ at this layer is not a linear effect. It is b
 At layer $$20$$ the overlap is resolved: $$\cos(g,\hat v_1) = -0.049$$, confidence
 interval $$[-0.061, -0.030]$$, and $$\cos(g,\hat\theta)$$ is the same through the $$0.994$$
 alignment. The linear prediction $$c\,(\hat\theta\cdot g) = -0.078$$ then lands
-within $$20\%$$ of the measured $$A(0.5)/0.5 = -0.064$$. The through-origin susceptibility
+within about $$20\%$$ of the measured $$A(0.5)/0.5 = -0.064$$. The through-origin susceptibility
 hides this, because the response reverses sign with displacement, from $$-0.032$$ at
 $$h = 0.5$$ ($$7/10$$ seeds negative, $$2.5$$ null standard deviations) through zero near
 $$h = 1$$ to $$+0.016$$ at $$h = 2$$ ($$9/10$$ seeds positive), so the slope fit over
@@ -1393,7 +1398,10 @@ $$
 This shows that whitening is simply a rotation within $$P$$. The measured
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert = 0.994$$ puts $$\varphi_{\mathrm{mm}} = 6.3^{\circ}$$.
 With $$\kappa = \hat\lambda_1/\hat\lambda_2 = 535$$ this gives
-$$\varphi_{\mathrm F} = 89.0^{\circ}$$. The whitened direction is orthogonal to $$\hat v_1$$
+$$\varphi_{\mathrm F} = 89.0^{\circ}$$. These are full-sample values of $$\hat C$$. The whitening
+actually applied uses the shrunk $$\hat\Sigma$$ of the training half, where
+$$\kappa = 463$$ and $$\varphi_{\mathrm{mm}} = 6.8^{\circ}$$, and it returns the same
+$$89.0^{\circ}$$ and the same predicted gain below. The whitened direction is orthogonal to $$\hat v_1$$
 to within a degree, which is why $$\hat\theta_{\mathrm F}$$ and $$\hat\theta_\perp$$ produce the same sign flip:
 in this regime they are the same vector, and the full-rank correction reduces to the
 rank-one one.
@@ -1404,7 +1412,7 @@ $$23{:}1$$ axis ratio). The mass-mean direction (black) lies $$6.3^{\circ}$$ off
 axis, inside the long axis of the noise. $$\hat\Sigma^{-1}$$ swings the Fisher direction
 (gold) to $$89.0^{\circ}$$ which is effectively orthogonal to it. Right: the Rayleigh quotient
 $$d'(\varphi)$$ normalized by its maximum, in the collapsed regime ($$\kappa = 535$$,
-$$r = 0.11$$) and the resolved regime ($$\kappa = 1.42$$, $$r = 6.21$$). Circles mark the
+$$r = 0.11$$) and the resolved regime ($$\kappa = 1.42$$, $$r = 6.20$$). Circles mark the
 mass-mean angle and squares the whitened angle. Where the spectrum has one dominant eigenmode the
 curve is a cliff and the mass-mean estimator sits at its foot; where the class gap has
 grown the curve is broad and both directions already sit near the
@@ -1825,10 +1833,10 @@ The massive coordinates are not dataset-specific. At pythia-2.8b the same
 four coordinates qualify at layers $$8$$–$$16$$, the same seven at layer $$20$$ and the
 same eight at layers $$24$$–$$28$$, on `cities` and `counterfact` alike. What differs is
 whether any statement drops them: on `cities`, none do, at any layer in either model.
-The coordinates therefore stay constant, contribute nothing to $$\hat\Sigma$$, and leave
+The coordinates therefore stay constant, contribute nothing to $$\hat C$$, and leave
 no rogue dimension behind. On pythia-1.4b no coordinate qualifies through layer $$15$$. One does at
-layers $$18$$ and $$21$$, where three `counterfact` statements drop it, a different three,
-and `cities` again has none. There $$\hat\lambda_1/\hat\lambda_2$$ moves only from
+layers $$18$$ and $$21$$, where three `counterfact` statements drop it, none of them among the eleven and two of
+the three shared between the layers, and `cities` again has none. There $$\hat\lambda_1/\hat\lambda_2$$ moves only from
 $$1.5$$ to $$1.4$$. So the incidence is specific and the mechanism is general.
 Wherever a near-constant massive activation is dropped by a small minority of inputs,
 the within-class covariance acquires a rogue dimension whose scale is set by
@@ -1841,9 +1849,9 @@ token lengths sit inside the bulk of the distribution.
 To check that the rogue dimension is not a fact about Pythia, I ran the observables of
 *The rogue dimension* on [OLMo-2-1B](https://huggingface.co/allenai/OLMo-2-0425-1B), which has a
 different architecture, a different training corpus and a third of the parameters. `counterfact`
-stays locked to the leading axis at every depth,
+stays locked to the leading axis at every depth except the final layer,
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ between $$0.64$$ and $$0.94$$ from layer $$2$$ to layer
-$$15$$, with $$d'_{\mathrm{mm}} \approx 0.1$$. Its plain probe never clears its own null (held-out
+$$15$$ (it falls to $$0.04$$ at layer $$16$$), with $$d'_{\mathrm{mm}} \approx 0.1$$. Its plain probe never clears its own null (held-out
 $$\mathrm{AUROC} = 0.529$$ at its best layer, against a null 95th percentile of $$0.547$$),
 while whitening lifts it to $$0.647$$. `cities` clears the null, as it does in Pythia: the alignment
 falls to $$\lvert\cos\rvert \approx 0.3$$, the participation ratio climbs $$1.4 \to 17.7$$, and
@@ -1979,10 +1987,6 @@ the pool and the seed selection are taken from the steering harness unchanged, s
 two measurements refer to the same object. Per-pair gradients are retained, and every
 overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ resamples.
 
-**Ceiling measurement.** $$g$$ is estimated on one half of the evaluation pairs and the steering
-along $$\hat g$$ is scored on the other half. Fitting and scoring on the same pairs would
-inflate the measurement precisely where the claim is strongest.
-
 **Scripts.**
 
 | claim | script | artifact |
@@ -2100,7 +2104,7 @@ population quantity it estimates.
 | $$\Sigma$$ | within-class covariance (class-weighted) |
 | $$\hat C$$ | sample within-class covariance, each class centered on its own mean |
 | $$\hat\Sigma$$ | Ledoit–Wolf shrinkage estimate of $$\Sigma$$, with intensity $$\rho$$ |
-| $$\hat\lambda_i$$, $$\hat v_i$$ | eigenvalues and eigenvectors of $$\hat\Sigma$$, ordered $$\hat\lambda_1 \ge \hat\lambda_2 \ge \cdots$$ |
+| $$\hat\lambda_i$$, $$\hat v_i$$ | eigenvalues and eigenvectors of $$\hat C$$, ordered $$\hat\lambda_1 \ge \hat\lambda_2 \ge \cdots$$; $$\hat\Sigma$$ shares the eigenvectors, with eigenvalues $$(1-\rho)\hat\lambda_i + \rho\operatorname{tr}\hat C/d$$ |
 | $$\mathrm{PR}$$ | participation ratio, $$(\sum_i\hat\lambda_i)^2/\sum_i\hat\lambda_i^2$$ |
 | $$k$$ | number of leading principal components projected out (superposition probe) |
 
@@ -2138,7 +2142,7 @@ population quantity it estimates.
 | $$\Delta(h)$$ | mean shift in $$\ell$$ under $$x \mapsto x + h\,c\,w$$ |
 | $$A$$, $$S$$ | antisymmetric and symmetric parts of $$\Delta$$ |
 | $$g$$ | mean gradient of the behavioral score, $$\langle\nabla_x \ell\rangle$$ |
-| $$\chi$$ | steering susceptibility, $$\mathrm{d}A/\mathrm{d}h$$ at $$h \to 0$$, equals $$c\,(w\cdot g)$$ |
+| $$\chi$$ | steering susceptibility, $$\mathrm{d}A/\mathrm{d}h$$ at $$h \to 0$$, equals $$c\,(w\cdot g)$$; measured as the through-origin slope of $$A$$ against $$h$$ |
 | seed / draw | resampling of the train/test split / of a random direction |
 
 ## References
