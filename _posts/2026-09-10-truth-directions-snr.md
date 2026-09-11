@@ -836,7 +836,7 @@ $$
 
 Each of the other three then matches `counterfact` restricted to its own reach.
 `cities` stops at $$1496$$ and gives $$-0.446$$ against $$-0.445$$, `larger_than`
-reaches $$1980$$ and gives $$-0.484$$ against $$-0.489$$, and `sp_en_trans` stops at
+reaches $$1980$$ and gives $$-0.484$$ against $$-0.465$$, and `sp_en_trans` stops at
 $$354$$ and gives $$-0.413$$ against $$-0.385$$, within its own error. With the fitting
 window matched the four agree, so the dataset-independence of the exponent is measured
 rather than only argued from the estimator, and the best estimate of the asymptotic
@@ -898,7 +898,7 @@ direction: `larger_than` is the most concentrated set, $$\mathrm{PR} = 8.9$$ wit
 $$28\%$$ of the within-class variance on one axis, and it carries the smallest amplitude
 of the three.
 
-![Left: the shuffled-label law. In-sample excess AUROC of the mass-mean direction under shuffled labels on `counterfact`, four Pythia widths, against $$N/2d$$, with the pooled fit $$0.045\,(N/2d)^{-0.49}$$ and Cover's capacity marked. The three pythia-70m points with negative excess are not drawn. The 70m points sit below the pooled line throughout, which is the across-model form of the question the right panel settles across datasets: whether the ambient width is the right denominator. Right: the effective-dimension collapse on pythia-2.8b, each dataset at its own best layer, against $$N/\mathrm{PR}$$. The line is $$\pi^{-1/2}\sqrt{\mathrm{PR}/N}$$ with no free parameter. `counterfact`, `cities` and `larger_than` fall on it across a thirtyfold range in $$N$$ and a fourfold range in $$\mathrm{PR}$$; `sp_en_trans` sits above it by about $$40\%$$. Error bars are the standard error over sixteen permutations.](/assets/figures/truth_shuffled_collapse.png)
+![Left: the shuffled-label law. In-sample excess AUROC of the mass-mean direction under shuffled labels on `counterfact`, four Pythia widths, against $$N/2d$$, with the pooled fit $$0.045\,(N/2d)^{-0.49}$$ and Cover's capacity marked. The three pythia-70m points with negative excess are not drawn. The 70m points sit below the pooled line throughout, which is the across-model form of the question the right panel settles across datasets: whether the ambient width is the right denominator. Right: the effective-dimension collapse on pythia-2.8b, each dataset at its own best layer, against $$N/\mathrm{PR}$$. The line is $$\pi^{-1/2}\sqrt{\mathrm{PR}/N}$$ with no free parameter. `counterfact`, `cities` and `larger_than` fall on it across a thirtyfold range in $$N$$ and a fourfold range in $$\mathrm{PR}$$; `sp_en_trans` sits above it by $$36$$–$$60\%$$. Error bars are the standard error over sixteen permutations.](/assets/figures/truth_shuffled_collapse.png)
 
 `sp_en_trans` does not join the collapse. It sits at $$C = 0.77$$ to $$0.90$$, well above
 $$1/\sqrt{\pi}$$, where the other three bracket it. The derivation factors into two
@@ -1119,7 +1119,7 @@ that of a random direction, and the spread above that median, $$p_{95}$$ from $$
 operationally, and it is why more data would not lift $$\hat\theta$$ clear of the band
 while the alignment holds: the null and the estimate move together.
 
-![Held-out AUROC against depth for both estimators on pythia-2.8b, with the per-layer random-direction null shaded from $$1/2$$ to its 95th percentile. A curve inside the band is not recoverable, and height above the band is the margin $$m$$ that layer selection maximizes. Left, `counterfact`: the mass-mean direction sits inside the band until layer $$32$$, while the whitened direction leaves it at layer $$26$$ and reaches $$0.716$$ at layer $$31$$. Right, `cities`: the mass-mean direction leaves the band for good at layer $$14$$ and the whitened one at layer $$7$$, both saturating near $$0.99$$. Stars are the rank-one corrected direction $$\hat\theta_\perp$$, which projects $$\hat v_1$$ out of the estimator and is measured on a six-layer grid rather than at every layer. Dashed lines mark the first layer from which each direction stays clear of its null. Note the different vertical scale of the achievement: the same correction that lifts `counterfact` from chance to $$0.72$$ is barely needed where the class gap is strong.](/assets/figures/truth_depth_arms.png)
+![Held-out AUROC against depth for both estimators on pythia-2.8b, with the per-layer random-direction null shaded from $$1/2$$ to its 95th percentile. A curve inside the band is not recoverable, and height above the band is the margin $$m$$ that layer selection maximizes. Left, `counterfact`: the mass-mean direction sits inside the band until layer $$32$$, while the whitened direction leaves it at layer $$26$$ and reaches $$0.716$$ at layer $$31$$. Right, `cities`: the mass-mean direction leaves the band for good at layer $$14$$ and the whitened one at layer $$7$$, saturating near $$0.98$$ and $$0.99$$. Stars are the rank-one corrected direction $$\hat\theta_\perp$$, which projects $$\hat v_1$$ out of the estimator and is measured on a six-layer grid rather than at every layer. Dashed lines mark the first layer from which each direction stays clear of its null. Note the different vertical scale of the achievement: the same correction that lifts `counterfact` from chance to $$0.72$$ is barely needed where the class gap is strong.](/assets/figures/truth_depth_arms.png)
 
 ![Within-class geometry on `cities` (top) and `counterfact` (bottom), pythia-2.8b layer 28. Left: activations in the plane of the top two within-class principal axes $$x\cdot\hat v_1$$, $$x\cdot\hat v_2$$, colored by truth label — on `counterfact` a single axis carries nearly all the variance. Middle: the mass-mean projection $$x\cdot\hat\theta$$, with its separation $$d'$$ and its alignment $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$, near 1 on `counterfact` where the estimator has collapsed onto the leading variance axis. Right: the within-class eigenvalue spectrum, $$\hat\lambda_1/\hat\lambda_2$$. The eleven points standing clear of the bulk on `counterfact` — the scattered group near $$x\cdot\hat v_1 \approx -200$$ in the bottom-left panel, away from the dense blob at $$\approx -1100$$, and the small bar near $$x\cdot\hat\theta \approx 200$$ in the bottom-middle one — are the statements that do not receive the massive activation. They are what the leading eigendirection is measuring, and what sets the axis range of both panels.](/assets/figures/truth_clusters.png)
 
@@ -1645,7 +1645,7 @@ the displacement and its mechanism is not settled here. The corrected effect is 
 whitened direction's response at one class gap is two null standard deviations, where
 the wrong-signed response of the mass-mean direction was five, so the correction
 restores a sign rather than supplying a large causal lever. On one of four datasets the
-shuffled-label amplitude departs from the parameter-free prediction by $$40\%$$ for
+shuffled-label amplitude departs from the parameter-free prediction by $$36$$–$$60\%$$ for
 reasons that were localized but not explained.
 
 This post has treated steering as a diagnostic. The steering results themselves are analyzed in a second, forthcoming post, Steering Vectors and the Limits of Linear Response. There the object of interest is the vector $$g$$ itself. Starting from the identity $$\chi(w) = c\,(w\cdot g)$$, I ask how much of $$g$$ lies along the high-variance directions of the within-class covariance, what bound it puts on any linear steering direction, how much of that bound the best direction actually reaches, and how much of $$g$$ published steering vectors capture.
@@ -1902,9 +1902,8 @@ null-distribution figure above draws its own $$400$$ in-sample directions on the
 set, as an illustration of the distribution's shape. The $$200$$-draw held-out null is
 the one every quoted number is scored against.) The steering null
 displaces along random unit directions exactly as the probe directions are displaced. Its draw
-count is $$400$$ at the cells that carry a quoted rank test — `counterfact` layers
-$$20$$, $$24$$, and $$28$$ and `cities` layer $$28$$ — and $$100$$ at every other
-cell. The decoding null is reported as the $$95$$th percentile of the folded AUROC.
+count is $$400$$ at `counterfact` layers $$20$$, $$24$$, and $$28$$ and `cities` layer
+$$28$$, and $$100$$ at every other cell, including `cities` layers $$12$$ and $$24$$. The decoding null is reported as the $$95$$th percentile of the folded AUROC.
 Steering clearances are *signed*: every steering $$p$$ in this post is a one-sided
 rank of the direction's mean $$A(1)$$ among the null draws in that direction, and
 "clears the null" means $$p < 0.05$$ — the same test the figure bands denote as the
@@ -1960,13 +1959,14 @@ $$c = \lVert\hat\delta\rVert$$ estimated on the training half, so $$h = 1$$ disp
 an activation by the distance between class means. The behavioral score is
 $$\ell = \log P(\text{true completion}) - \log P(\text{false completion})$$, summed over
 completion tokens given the prompt. Pairs are drawn as $$250$$ per seed from a fixed pool
-of $$400$$. Ten seeds per cell.
+of $$400$$. Ten seeds per cell, except the rogue-dimension sweep of $$\hat v_1$$ and
+$$\hat\theta_\perp$$, which has three.
 $$A$$ and $$S$$ are the odd and even parts of the response in $$h$$, and
 $$\chi$$ is the through-origin least-squares slope of $$A$$ against $$h$$ over the four
 magnitudes, so $$\chi$$ is weighted toward the large-$$h$$ end and is not a pure
 $$h\to0$$ derivative. Rank $$p$$ values are computed on $$A$$ at $$h = 1$$, each seed
 against the null distribution of $$A(1)$$ over random directions, and not on $$\chi$$.
-Ranking $$\chi$$ against the null of $$\chi$$ gives $$p = 0.018$$ for the plain direction at
+Ranking the seed-median $$\chi$$ against the null of $$\chi$$ gives $$p = 0.018$$ ($$0.060$$ for the seed mean) for the plain direction at
 `counterfact` layer $$28$$, because the slope averages in the turned-back response at
 $$h = 4$$.
 
@@ -2000,10 +2000,15 @@ inflate the measurement precisely where the claim is strongest.
 | steering sweeps and $$\chi$$ | `steer_confirm2.py`, `chi_whitening_analysis.py` | `steer_ckpt/` |
 | distractor transfer | `transfer_to_likely.py` | `transfer_likely.json` |
 | score gradient and overlaps | `score_gradient.py` | `score_gradient_*.json` |
-| OLMo cross-family | `geometry_olmo.py` | `geometry_olmo.json` |
+| OLMo cross-family geometry | `geometry_olmo.py` | `geometry_olmo.json` |
+| OLMo decoding, nulls, superposition | `snr_sweep.py` run on OLMo-2-1B | `olmo_goNogo.json` |
 | massive coordinates, droppers, cleaned held-out $$d'$$ | `outlier_check.py` | `outlier_check.json` |
 | shrinkage intensity and its decomposition | `extract_shrinkage.py`, `shrinkage_decomposition.py` | `shrinkage_intensity.json`, `shrinkage_decomposition.json` |
 | $$\rho$$ sweep and cross-validated $$\rho$$ | `shrinkage_sweep.py`, `shrinkage_cv.py` | `shrinkage_sweep.json`, `shrinkage_cv.json` |
+| $$400$$- and $$100$$-draw steering nulls | `extend_null.py` | `steer_ckpt/*__NULL.json` |
+| fixed-seed bootstrap intervals on the overlaps | `regen_gradient_ci.py` | `score_gradient_*.json` |
+| the twelve datasets | `fetch_geometry_of_truth.py` | |
+| figures | `fig_*.py`, `make_cluster_figures.py` | `truth_*.png` |
 
 **Reading the gradient decomposition.** The identity $$\chi(w) = c\,(w \cdot g)$$
 comes with two caveats. First, it is a small-$$h$$ statement,
@@ -2038,8 +2043,9 @@ $$11.6$$ is finite-sample inflation of the inverse rather than signal, and the h
 inversion is the one to trust. The qualitative claim holds either way: $$\kappa_{\mathrm{eff}}$$ sits far above
 $$\hat\lambda_1/\hat\lambda_2$$.
 
-**Known limitations.** Every steering cell carries ten seeds. The steering null
-carries $$400$$ draws where a rank test is quoted and $$100$$ elsewhere, so at a
+**Known limitations.** Every steering cell carries ten seeds except the three-seed
+rogue-dimension sweep. The steering null
+carries $$400$$ draws at the four cells listed under *Nulls* and $$100$$ elsewhere, so at a
 $$100$$-draw cell the rank $$p$$ resolves only to $$0.01$$ and a clearance near
 $$p = 0.05$$ rests on five draws. Marginal clearances there should be read with
 that resolution in mind. Inference
@@ -2178,12 +2184,17 @@ A fuller, annotated version of this bibliography — organized as a reader's map
 
 - **Kadavath et al. (Anthropic), *Language Models (Mostly) Know What They Know*** — [arXiv:2207.05221](https://arxiv.org/abs/2207.05221) (2022).
 
+**Models**
+
+- **Biderman et al., *Pythia: A Suite for Analyzing Large Language Models Across Training and Scaling*** — [arXiv:2304.01373](https://arxiv.org/abs/2304.01373), ICML 2023.
+
 **Refusal / steering directions (mechanistic, alignment-flavored)**
 
 - **Arditi et al., *Refusal in Language Models Is Mediated by a Single Direction*** — [arXiv:2406.11717](https://arxiv.org/abs/2406.11717), NeurIPS 2024.
 - **Tan, Chanin, Lynch, Paige, Kanoulas, Garriga-Alonso & Kirk, *Analysing the Generalisation and Reliability of Steering Vectors*** — [arXiv:2407.12404](https://arxiv.org/abs/2407.12404), NeurIPS 2024.
 - **Braun, Eickhoff, Krueger, Bahrainian & Krasheninnikov, *Understanding (Un)Reliability of Steering Vectors in Language Models*** — [arXiv:2505.22637](https://arxiv.org/abs/2505.22637), ICLR 2025 Workshop on Foundation Models in the Wild.
 - **Torop, Masoomi & Dy, *Inverted Detection and Control in Steering Vectors*** — [arXiv:2608.02957](https://arxiv.org/abs/2608.02957) (2026).
+- **Liu, *Decodable but Not Corrected by Fixed Residual-Stream Linear Steering: Evidence from Medical LLM Failure Regimes*** — [arXiv:2605.05715](https://arxiv.org/abs/2605.05715) (2026).
 - **Cho, Wu, Da Costa & Koshiyama, *The Confidence Manifold: Geometric Structure of Correctness Representations in Language Models*** — [arXiv:2602.08159](https://arxiv.org/abs/2602.08159) (2026).
 
 ---
