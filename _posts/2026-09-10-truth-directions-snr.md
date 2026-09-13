@@ -2,7 +2,7 @@
 layout: post
 title: "Truth Directions: Signal-to-Noise and Geometry of Recoverability"
 date: 2026-09-10
-description: "When is a linear truth direction in a language model's activations recoverable at all, and what does the estimator return when it is not?"
+description: "Treating the recovery of a linear truth direction as a signal-to-noise problem: when is such a direction recoverable at all from a language model's activations, and what does the estimator return when it is not?"
 ---
 
 ## Introduction
