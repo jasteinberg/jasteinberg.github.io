@@ -2218,4 +2218,4 @@ A fuller, annotated version of this bibliography — organized as a reader's map
 
 ---
 
-*<small>Claude (Anthropic) was used to check the numbers against the analysis artifacts, run the supplementary experiments, and edit for consistency. The text is mine.</small>*
+*<small>Prose drafted with the assistance of Claude (Anthropic), which also checked the numbers against the analysis artifacts and ran supplementary experiments. I ran the main experiments and vouch for every claim here.</small>*
