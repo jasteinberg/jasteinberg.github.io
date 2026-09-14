@@ -41,4 +41,4 @@ Code for current projects:
 
 I welcome correspondence from those working on or interested in these questions.
 
-<small>*Site drafted with the assistance of Claude (Anthropic).*</small>
+<small>*Site built with the assistance of Claude (Anthropic).*</small>
