@@ -586,4 +586,4 @@ are `notebooks/dyck/explore.ipynb` (Dyck-1),
 
 ---
 
-*<small>Drafted with the assistance of Claude (Anthropic).</small>*
+*<small>Prose drafted with the assistance of Claude (Anthropic). I ran the experiments and vouch for every claim here.</small>*

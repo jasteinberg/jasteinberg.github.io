@@ -440,4 +440,4 @@ Hardware, precision, and the evaluation pipeline are exactly as in [Part I](/blo
 
 ---
 
-*<small>Drafted with the assistance of Claude (Anthropic).</small>*
+*<small>Prose drafted with the assistance of Claude (Anthropic). I ran the experiments and vouch for every claim here.</small>*

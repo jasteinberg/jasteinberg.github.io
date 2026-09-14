@@ -517,4 +517,4 @@ self-evaluation and trained P(IK), with calibration on true/false improving with
 scale. This is a possible later post rather than part of this
 map.*
 
-*<small>Drafted with the assistance of Claude (Anthropic).</small>*
+*<small>Prose drafted with the assistance of Claude (Anthropic).</small>*
