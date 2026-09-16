@@ -47,7 +47,7 @@ Systems neuroscience has spent decades asking what a downstream reader can recov
 
 **(2) The estimator returns a nuisance direction when the signal is weak.** It returns the dominant activation axis $$\hat v_1$$ rather than a truth direction, and steering along what it returns then moves behavior with the wrong sign. Recoverability comes down to whether the class gap grows with depth until it dominates the spread along that axis. On `cities` it does, on `counterfact` it never does. That pattern, the alignment to $$\hat v_1$$ and the decoding alike, replicates on OLMo-2-1B across a different architecture and corpus. The steering measurement is on Pythia alone.
 
-**(3) The failure is in the estimator, not the model:** the offending direction is identified in advance from the within-class spectrum, not from the steering outcome. Removing it, without leaving the linear class, lifts the direction clear of its decoding null and corrects the sign of the steering behavior, at the same layer.
+**(3) The failure is in the estimator, not the model:** the offending direction is identified in advance from the within-class spectrum, not from the steering outcome. Removing it, without leaving the linear class, raises the held-out AUROC above the random decoding null and corrects the sign of the steering behavior, at the same layer.
 
 </div>
 
@@ -1088,16 +1088,16 @@ Recoverability is whether the class gap ever grows large enough to pull $$\hat\d
 off that axis and clear the null.
 
 Read against the decoding null, the two datasets separate cleanly, and the correction
-is what makes the direction recoverable at all on `counterfact`, while it was never
-needed on `cities`. On `cities` the
-mass-mean direction leaves the null band for good at layer $$14$$ and the whitened one at
-layer $$7$$, both climbing above $$0.95$$. On `counterfact` the mass-mean direction stays
-inside the band at every layer but the last, where it reaches $$0.566$$ against a null of
+makes the truth direction recoverable on `counterfact`. On `cities` the
+mass-mean direction leaves the null band at layer $$14$$ and stays above every
+subsequent layer, climbing above $$0.95$$ from layer $$25$$ and peaking at $$0.975$$ at
+layer $$28$$. The whitened direction clears the null earlier, at layer $$7$$.
+On `counterfact` the mass-mean direction stays
+inside the null band at every layer but the last, where it reaches $$0.566$$ against a null of
 $$0.556$$, while the whitened direction leaves the band at layer $$26$$ and climbs to
-$$0.716$$ against $$0.552$$ at layer $$31$$. That layer-$$32$$ value is the maximum of a
+$$0.716$$ against $$0.552$$ at layer $$31$$. The layer-$$32$$ value is the maximum of a
 $$5\%$$ test taken over $$33$$ layers, so it is a selected extreme rather than a
-recovery, and nothing below rests on it. The rank-one
-direction $$\hat\theta_\perp$$, measured on a six-layer grid in the rogue-dimension
+recovery. The rank-one direction $$\hat\theta_\perp$$, measured on a six-layer grid in the rogue-dimension
 sweep, tracks the whitened direction: on `counterfact` it sits at chance through layer $$24$$ and
 reaches $$0.574$$ at layer $$28$$, and on `cities` it is already at $$0.921$$ by layer
 $$12$$. Deleting the axis and downweighting it do the same work.
