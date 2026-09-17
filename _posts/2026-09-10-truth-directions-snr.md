@@ -17,18 +17,17 @@ implicated under intervention, and — crucially — sharpens with model scale.
 
 Previously, [Burns et al. (2022)](https://arxiv.org/abs/2212.03827) had proposed finding a
 truth direction *without* labels, by demanding logical consistency, a method they call
-Contrast-Consistent Search (CCS). Within months,
+Contrast-Consistent Search (CCS). However,
 [Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4)
-showed empirically how little the objective pins down. Untrained, randomly initialized
-probes already reach about $$75\%$$ on the "easy" datasets, once the CCS convention of
-flipping a below-chance probe is applied, and CCS does not find the optimal linear
-probe: more than twenty mutually orthogonal probes reach accuracies similar to the one
-it returns. The flip matters here, because a sign-resolved random baseline is precisely
+showed empirically that the CCS is insufficiently constrained. 
+
+Untrained, randomly initialized probes already reach about $$75\%$$ accuracy on the "easy" dataset  once the CCS convention of
+inverting the sign of a below-chance probe is applied. Additionally, more than twenty mutually orthogonal probes reach accuracies similar to the one returned by the CCS estimator implying that CSS has not found the optimal linear probe. The inversion matters here, because a sign-resolved random baseline is precisely
 what a null has to be. A direction and its negation separate the classes equally well,
 so any honest chance level already includes the better of the two.
-[Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) then gave the reason:
-arbitrary binary features are optimal under that consistency loss, so nothing in it
-selects for knowledge, and unsupervised probes in practice recover whatever feature is
+[Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) then showed that because
+arbitrary binary features are optimal under that consistency loss, nothing in it
+selects for knowledge, and in practice unsupervised probes recover whatever feature is
 *most prominent* in the representation. Whether the supervised estimator is exposed to
 the same failure is a question this post takes up.
 
