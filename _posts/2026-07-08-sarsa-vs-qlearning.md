@@ -223,4 +223,4 @@ diagnostic, the annealing/GLIE study of when SARSA's greedy policy actually
 shortens, and the minimum-exposure solution set SARSA samples from — is in the
 [tabular-control notebook](https://github.com/jasteinberg/rl-alignment-repo/tree/main/notebooks/tabular_control).
 
-*<small>Prose drafted with the assistance of Claude (Anthropic). I ran the experiments and vouch for every claim here.</small>*
+*<small>Prose edited with the assistance of Claude (Anthropic), which also checked the numbers against the analysis artifacts and ran supplementary experiments. I ran the main experiments and vouch for every claim here.</small>*

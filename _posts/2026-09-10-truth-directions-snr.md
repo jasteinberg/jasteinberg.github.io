@@ -2214,4 +2214,4 @@ A fuller, annotated version of this bibliography — organized as a reader's map
 
 ---
 
-*<small>Prose drafted with the assistance of Claude (Anthropic), which also checked the numbers against the analysis artifacts and ran supplementary experiments. I ran the main experiments and vouch for every claim here.</small>*
+*<small>Prose edited with the assistance of Claude (Anthropic), which also checked the numbers against the analysis artifacts and ran supplementary experiments. I ran the main experiments and vouch for every claim here.</small>*
