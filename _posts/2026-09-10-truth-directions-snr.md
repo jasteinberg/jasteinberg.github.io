@@ -19,26 +19,22 @@ Previously, [Burns et al. (2022)](https://arxiv.org/abs/2212.03827) had proposed
 truth direction *without* labels, by demanding logical consistency, a method they call
 Contrast-Consistent Search (CCS). However,
 [Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4)
-showed empirically that the CCS is insufficiently constrained. 
-
-Untrained, randomly initialized probes already reach about $$75\%$$ accuracy on the "easy" dataset  once the CCS convention of
-inverting the sign of a below-chance probe is applied. Additionally, more than twenty mutually orthogonal probes reach accuracies similar to the one returned by the CCS estimator implying that CSS has not found the optimal linear probe. The inversion matters here, because a sign-resolved random baseline is precisely
-what a null has to be. A direction and its negation separate the classes equally well,
-so any honest chance level already includes the better of the two.
+showed empirically that the CCS is insufficiently constrained.  
+Untrained, randomly initialized probes already reach about $$75\%$$ accuracy on the "easy" dataset  once the CCS convention of inverting the sign of a below-chance probe is applied. More than twenty mutually orthogonal probes reach accuracies similar to the one returned by the CCS estimator implying that CSS has not found the optimal linear probe. Additionally, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy will always be either greater than or equal to one half.
 [Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) then showed that because
 arbitrary binary features are optimal under that consistency loss, nothing in it
 selects for knowledge, and in practice unsupervised probes recover whatever feature is
-*most prominent* in the representation. Whether the supervised estimator is exposed to
+*most prominent* in the representation. This 
+Whether the supervised estimator is exposed to
 the same failure is a question this post takes up.
 
-The common thread across these observations is that this is a signal-versus-noise problem. A linear direction can look like it reads truth while actually tracking something more
-salient that happens to correlate with the label on the particular dataset. Consequently, on a
-benchmark where chance-level structure is this strong, "the probe separates the
+A linear direction can appear to decode truth while actually 
+salient that happens to correlate with the label on the particular dataset. Thus the common thread across these observations implies that the decoding of truth directions inherits a signal-versus-noise problem. Consequently, on a benchmark where chance-level structure is this strong, "the probe separates the
 classes" is a much weaker statement than it first appears.
 
 <div class="tldr gray" markdown="1">
 
-A mass-mean "truth direction" can genuinely separate true from false, but it can also be the estimator collapsing onto the most *salient* axis in the activations, the direction of largest within-class variance. On a dataset where the class gap is weak the finite-sample mean difference is dominated by that noise, so the estimator is drawn to the salient axis whether or not truth lies along it. On `counterfact`, truth does not lie along the salient axis, so the estimator returns a nuisance direction rather than a weak version of the right one. A truth direction and a salient axis look alike on a benchmark and require a signal-to-noise reading to tell them apart. This post takes up the question of recoverability: *when* does a model contain a linear truth direction a probe can actually recover, which rises above a random-direction null and carries signal beyond the single most salient axis?
+A mass-mean "truth direction" is an estimator for the decodable truth direction which separates true and false statements. However, in the low signal to noise regime, it can also end up returning the most salient direction in activation sapce, i.e. the direction of largest within-class variance. On a dataset where the class gap is small relative to the within class spread along the axis connecting the centroids, the finite-sample mean difference is dominated by noise along that axis, aligning the estimator along the salient axis regardless of whether it has large overlap with the recoverable truth direction. On `counterfact`, the decodable truth direction does not lie along the salient axis, so the estimator returns a nuisance direction. A truth direction and a salient axis look alike on a benchmark and require a signal-to-noise reading to tell them apart. This post takes up the question of recoverability: *when* does a model contain a linear truth direction a probe can actually recover, which rises above a random-direction null and carries signal beyond the single most salient axis?
 
 Systems neuroscience has spent decades asking what a downstream reader can recover from a population of noisy neural units. In that spirit I treat probing for a truth direction as a readout problem: I take the probe as a linear readout, quantify its separation with a detection-theoretic $$d'$$, and benchmark that $$d'$$ against an explicit random-direction null across the Pythia scale ladder. This reading yields three results:
 
