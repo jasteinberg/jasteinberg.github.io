@@ -8,50 +8,49 @@ description: "Treating the recovery of a linear truth direction as a signal-to-n
 ## Introduction
 
 The linear representation hypothesis states that a model encodes high-level
-concepts as directions in activation space. This reduces reading a concept to a dot
-product with a single vector, and steering along it to adding a multiple of that vector to the
-residual stream. [Marks & Tegmark (2023)](https://arxiv.org/abs/2310.06824) showed that in sufficiently large models, a linear direction corresponding to an abstract notion of truth emerges that applies across diverse sets of inputs. They estimated this direction with a difference-in-means ("mass-mean") direction fit on true/false statements and showed that it separates held-out statements, transfers across datasets, and is causally implicated under intervention.
+concepts as directions in activation space. This reduces reading a concept to projecting the residual stream along the concept direction, and steering to adding a multiple of the concept vector to the
+residual stream. [Marks & Tegmark (2023)](https://arxiv.org/abs/2310.06824) showed that in sufficiently large models, a linear direction corresponding to an abstract notion of truth emerges and applies across diverse sets of inputs. They estimated this direction with a difference-in-means ("mass-mean") direction fit on true/false statements and showed that it separates held-out statements, transfers across datasets, and is causally implicated under intervention.
 
 Previously, [Burns et al. (2022)](https://arxiv.org/abs/2212.03827) had proposed finding a
 linear truth direction *without* labels, by demanding logical consistency, a method they call
 Contrast-Consistent Search (CCS). However,
-[Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4) showed empirically that the CCS estimator insufficiently constrained.  Untrained, randomly initialized probes already reach about $$75\%$$ accuracy on the "easy" dataset  once the CCS convention of inverting the sign of a below-chance probe is applied. More than twenty mutually orthogonal "truth probes" reach accuracies similar to the one returned by the CCS estimator implying that CSS has not found the optimal linear probe. Additionally, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy of this baseline will always be either greater than or equal to one half. Furthermore,
-[Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) then showed that because
-arbitrary binary features are optimal under that consistency loss, nothing in it
-selects for knowledge, and in practice unsupervised probes recover whatever feature is
-*most prominent* in the representation implying that in the unsupervised case a linear direction can appear to decode truth while actually corresponding to a salient direction that happens to correlate with the label on the particular dataset. Thus the common thread across these observations implies that the decoding of truth inherits a signal-versus-noise problem, which I will show is also relevant for the supervised case. Consequently, on a benchmark where chance-level structure is this strong, the ability of a truth probe to separate the classes is a much weaker result than it first appears.
+[Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4) showed empirically that the CCS estimator is insufficiently constrained.  In this study, untrained, randomly initialized probes were shown to already reach about $$75\%$$ accuracy on the "easy" dataset once the CCS convention of inverting the sign of a below-chance probe was applied. Additionally, more than twenty mutually orthogonal "truth probes" reached accuracies similar to the one returned by the CCS estimator implying that CSS has not found the optimal linear probe. Moreover, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy of this baseline will always be either greater than or equal to one half. [Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) studied the CCS estimator further and showed that because
+arbitrary binary features are optimal under that consistency loss, nothing in it selects for knowledge, and in practice unsupervised probes recover whatever feature is *most prominent* in the representation. This implies that when using unsupervised methods to obtain a linear truth direction, the linear direction obtained via the estimator can appear to decode truth but actually correspond to a salient direction that happens to correlate with the label on that particular dataset. These observations imply that the decoding of truth inherits a signal-versus-noise problem. Consequently, on a benchmark where chance-level structure is very strong, the ability of a truth probe to separate the data in the true and false classes is a much weaker result than it first appears. The signal-versus-noise problem 
+is also relevant in cases where a truth direction is estimated using supervised methods, which I will show in this post.
 
 <div class="tldr gray" markdown="1">
 
-A mass-mean "truth direction" is an estimator for the decodable truth direction which separates true and false statements. However, in the low signal-to-noise regime, it can also end up returning the most salient direction in activation sapce, i.e. the direction of largest within-class variance. On a dataset where the class gap is small relative to the within class spread along the axis connecting the centroids, the finite-sample mean difference is dominated by noise along that axis, aligning the estimator along the salient axis regardless of whether it has large overlap with the recoverable truth direction. On `counterfact`, the decodable truth direction does not lie along the salient axis, so the estimator returns a nuisance direction. A truth direction and a salient axis look alike on a benchmark and require a signal-to-noise reading to tell them apart. This post takes up the question of recoverability: *when* does a model contain a linear truth direction a probe can actually recover, which rises above a random-direction null and carries signal beyond the single most salient axis?
+A mass-mean "truth direction" is an estimator for the decodable truth direction which separates true and false statements. However, in the low signal-to-noise regime, the estimator can end up returning a direction with a large component lying along the most salient direction in activation space, i.e. the direction of largest within-class variance. On a dataset where the class gap is small relative to the within class spread along the axis connecting the centroids, the finite-sample mean difference is dominated by noise along that axis, and the estimator contains a large component along the salient axis regardless of whether the salient axis has a large overlap with the recoverable truth direction. This implies that a truth direction and a salient axis can look alike on a benchmark and require a signal-to-noise analysis to distinguish them. In this post, I apply a signal-to-noise analysis to mass-mean truth estimators to address the question of recoverability: *when* does a model contain a linear truth direction that can be recovered by a probe that carries signal beyond the single most salient axis? 
 
-Systems neuroscience has spent decades asking what a downstream reader can recover from a population of noisy neural units. In that spirit I treat probing for a truth direction as a readout problem: I take the probe as a linear readout, quantify its separation with a detection-theoretic $$d'$$, and benchmark that $$d'$$ against an explicit random-direction null across the Pythia scale ladder. This reading yields three results:
+Systems neuroscience has spent decades asking what a downstream reader can recover from a population of noisy neural units. In this spirit I treat probing for a truth direction as a readout problem: I take the probe as a linear readout, quantify its separation with a detection-theoretic $$d'$$, and benchmark that $$d'$$ against an explicit random-direction null across the Pythia scale ladder on twelve benchmark datasets. This yields three results:
+i
+**(1) Apparent separation is trivial.** Two effects inflate a probe's score before considering any truth content. If the size of the dataset puts the model below Cover's capacity ($$N \ll 2d$$ throughout) for a binary classifier, then it is possible to find a direction which can separate any random relabeling of the data (given some constraints). This causes a random direction to inherits a share of the real class gap between the true and false centroids and implies that the performance of the fitted probe relative to a random null direction is the relevant quantity, not the raw score of the probe.
 
-**(1) Apparent separation is trivial.** Two effects inflate a probe's score before any truth content enters. Fitting below Cover's capacity ($$N \ll 2d$$ throughout) buys separation from shuffled labels alone, and a random direction inherits a share of the real class gap, so the chance level rises with the very separation being measured. The null, not the raw score, is the bar.
+**(2) When the class signal is weak, the estimator returns a nuisance direction.** In this case the mass-means estimator returns the dominant activation axis $$\hat v_1$$ rather than a truth direction, and steering along it moves behavior with the wrong sign. Recoverability of the causal truth direction is determined by whether the class gap grows with depth until it dominates the spread along that axis. On the `cities` dataset, the class gap begins to dominate the spread at layer 12. However, on `counterfact`, the class gap never dominates the spread at any layer of the network. The decodability results replicate on OLMo-2-1B across a different architecture and corpus (the steering measurement is on Pythia alone).
 
-**(2) The estimator returns a nuisance direction when the signal is weak.** It returns the dominant activation axis $$\hat v_1$$ rather than a truth direction, and steering along what it returns then moves behavior with the wrong sign. Recoverability comes down to whether the class gap grows with depth until it dominates the spread along that axis. On `cities` it does, on `counterfact` it never does. That pattern, the alignment to $$\hat v_1$$ and the decoding alike, replicates on OLMo-2-1B across a different architecture and corpus. The steering measurement is on Pythia alone.
-
-**(3) The failure is in the estimator, not the model:** the offending direction is identified in advance from the within-class spectrum, not from the steering outcome. Removing it, without leaving the linear class, raises the held-out AUROC above the random decoding null and corrects the sign of the steering behavior, at the same layer.
+**(3) The failure is in the estimator, not the model:** the offending direction is identified in advance from the within-class spectrum, not from the steering outcome. Removing it, without leaving the linear class, raises the held-out AUROC above the random decoding null AUROC and corrects the sign of the steering behavior. These two effects occur at the same layer.
 
 </div>
 
 ## Notation
 
-I start by fixing a model and a layer $$L$$. Each statement is passed through the model once and
-summarized by the residual-stream activation at its final token,
-$$x \in \mathbb{R}^{d}$$, where $$d$$ is the model's hidden width. Each statement carries
-a truth label $$y \in \{0, 1\}$$ and a dataset consists of $$N$$ such pairs $$(x_i, y_i)$$.
+For each experiment, I start by fixing a model and dataset. I get the residual stream activations for the inputs by passing the statement through the model once and at each layer, summarize the statement by the residual-stream activation at its final token,
+$$x \in \mathbb{R}^{d}$$, where $$d$$ is the model's hidden width. 
 
-Throughout, a **hat** marks a quantity estimated from a finite sample, and its absence
-marks the population quantity it estimates, with expectations taken over the
+Each dataset consists of $$N$$ pairs of labeled statements $$(x_i, y_i)$$ where the truth labels $$y \in \{0, 1\}$$.
+
+Throughout the post, a **hat** denotes a quantity estimated from a finite sample, and its absence
+denotes the population quantity it estimates, with expectations taken over the
 data-generating distribution of activations at the probed layer. A table of every symbol
-used in the post is collected in the notation appendix. The distinction is crucial:
-almost every trap in this post is the gap between an estimate and its population target,
+used in the post is collected in the notation appendix. The distinction between sample and population estimates is crucial:
+almost every issue studied in this post can be traced back to the gap between an estimate and its population target,
 $$\hat\theta$$ and $$\theta$$, or the eigenvalues of $$\hat C$$ and of $$\Sigma$$, which
-agree only in the large-sample limit. Estimates are computed on a training split of
+agree only in the large-sample limit. I fit quantities on a training split of
 $$N_{\text{train}} = N_0 + N_1$$ activations, $$N_0$$ of them with $$y = 0$$ and $$N_1$$
-with $$y = 1$$. Held-out data is used only to
-evaluate a fitted direction, never to determine it. I define the population class means
+with $$y = 1$$. Held-out data is never used to fit a direction, I only use it to
+evaluate the held-out performance (AUROC) of the probe. 
+
+I define the population class means
 and their estimators as
 
 $$
@@ -74,7 +73,7 @@ $$
 \qquad \pi_0 = \Pr[y = 0], \quad \pi_1 = \Pr[y = 1].
 $$
 
-Its estimator centers each class on *its own* mean, so that the between-class shift
+The estimator for $$\Sigma$$ centers each class on *its own* mean, so that the between-class shift
 does not leak into the noise estimate:
 
 $$
@@ -93,8 +92,7 @@ $$
 $$
 
 with $$\hat C_0$$ and $$\hat C_1$$ the sample covariance of each class (dividing by
-$$N_0$$ and $$N_1$$). Balanced classes
-are the special case $$\pi_0 = \pi_1 = \tfrac{1}{2}$$, where $$\Sigma$$ reduces to the
+$$N_0$$ and $$N_1$$). For balanced classes $$\pi_0 = \pi_1 = \tfrac{1}{2}$$, and $$\Sigma$$ reduces to the
 plain average $$\tfrac{1}{2}\big(\operatorname{Cov}[x\mid y{=}0] +
 \operatorname{Cov}[x\mid y{=}1]\big)$$.
 
@@ -102,8 +100,8 @@ For real activations, these population quantities have no closed form: they are 
 $$N_{\text{train}}\to\infty$$ limits under the data-generating distribution and are never
 obtained directly. Their influence is detected operationally. A training-fit direction
 is scored on held-out data against the random-direction null, and a shortfall, or a
-wrong-signed causal effect, is the signature of the estimate having locked onto a
-finite-sample artifact rather than the population target. The one exception is the
+wrong-signed causal effect, is the signature of the estimate having overfit to a
+finite-samplet. The one exception is the
 whitening schematic below, whose activations are drawn from a *known* Gaussian, so there
 $$\Sigma$$ and the optimal direction $$\Sigma^{-1}\delta$$ are known by construction rather
 than estimated.
@@ -177,14 +175,13 @@ u^{\top}\operatorname{Cov}[x\mid y{=}0]\,u\big)$$, since $$\Sigma$$ is the class
 average of the two. Writing it this way makes the object a Rayleigh quotient in $$u$$
 from the start, which is the form every later result takes.
 
-This is the separation measured in units of its own noise, the detection-theoretic
+Thus, $$d'$$ is the separation measured in units of its own noise, the detection-theoretic
 sensitivity of an ideal observer discriminating two Gaussians. Defining the square
 first makes the **sign-blindness** explicit rather than asserted: $$d'$$ depends on the
 mean difference only through $$(u^{\top}\delta)^2$$, so it cannot distinguish a direction
 from its negation.
 
-$$d'$$ is a property of a *direction*, so every reported value has to name the estimator
-that produced the direction. I subscript throughout:
+I subscript throughout:
 
 $$
 d'_{\mathrm{mm}} = d'(\hat\theta), \qquad
@@ -201,8 +198,7 @@ $$
 d'_{\mathrm M} \;=\; \max_{u} d'(u) \;=\; \sqrt{\delta^{\top}\Sigma^{-1}\delta} .
 $$
 
-So the whitened direction is not a heuristic correction to the mass-mean one. It is the
-solution of the optimization that $$d'$$ poses, and the mass-mean direction coincides
+so the whitened direction is the solution of the above optimization of $$d'$$, and the mass-mean direction coincides
 with it only when $$\Sigma$$ is a multiple of the identity. Its sample estimate is
 
 $$
@@ -212,7 +208,7 @@ $$
 with $$\hat\Sigma$$ the shrunk estimate. It upper-bounds the three sample directions
 when all are scored in sample, but it estimates the population maximum rather than
 attaining it, and it is a fitted in-sample quantity at $$N \ll 2d$$. The distinction
-matters numerically, and in a way that is easy to get wrong. At `counterfact` layer
+matters numerically. At `counterfact` layer
 $$28$$, $$\hat d'_{\mathrm M}$$ $$= 1.03$$ on the full set, while the fitted whitened direction achieves
 $$d'_{\mathrm F} = 0.38$$ held-out. It is tempting to read the first as what the
 geometry is capable of and the gap as what the estimator loses, but that reading is
@@ -261,55 +257,43 @@ an optimizer. Therefore, whatever separation it finds
 is a property of the data, not of an optimizer's freedom to search.
 
 **Cover's theorem: the counting baseline.** Before asking how *well* a direction
-separates the classes, the first question is how surprising it is that a separating
-direction exists at all. Cover's function-counting theorem (1965) makes the
-accounting exact: for $$N$$ points in general position in $$\mathbb{R}^{d}$$, the number
+separates the classes, first one must ask how surprising it is that a separating
+direction exists at all. Cover's function-counting theorem (1965) is an exact results that states that for $$N$$ points in general position in $$\mathbb{R}^{d}$$, the number
 of the $$2^{N}$$ possible binary labelings that a hyperplane through the origin can
 separate is
 
 $$C(N,d) = 2\sum_{k=0}^{d-1}\binom{N-1}{k}.$$
 
-General position means every subset of at most $$d$$ points is linearly independent.
-Activations satisfy this generically, and the count is exact under it. The *fraction*
-of labelings that are linearly separable is
+where general position is defined by every subset of at most $$d$$ points being linearly independent which activations satisfy generically. The *fraction* of labelings that are linearly separable is then
 $$f(N,d) = C(N,d)/2^{N}$$ (a probe with a bias term is an affine hyperplane, the
-homogeneous case one dimension up, and at $$d\sim10^{3}$$ the distinction is
-immaterial). That fraction stays near $$1$$ for $$N \lesssim d$$ and falls through
-$$\tfrac{1}{2}$$ at the separating capacity $$N = 2d$$. Probing sits at or below that
-capacity, since $$d_{\text{model}}$$ runs from a few hundred to a few thousand across the
-ladder, while a probing set is hundreds to low thousands. This means that a large fraction of
-labelings are linearly separable: the true/false one, but equally a random relabeling
-of it. In this regime the linear separability of the truth dichotomy is close to
-information-free. It reflects the ambient dimension more than anything the model has
+homogeneous case in one higher dimension). The fraction stays near $$1$$ for $$N \lesssim d$$ and falls through
+$$\tfrac{1}{2}$$ at the separating capacity $$N = 2d$$. Since $$d_{\text{model}}$$ runs from a few hundred to a few thousand across the
+ladder, and each probing set is hundreds to low thousands, probing sits at or below that capacity. This means that a large fraction of
+labelings are linearly separable so the linear separability of the truth dichotomy provides little information. It reflects the ambient dimension more than anything the model has
 learned. The question is therefore never *whether* a separating direction exists, but
-*how far above the null* the particular mass-mean direction lands.
+*how far above the random null* the particular mass-mean direction lands.
 
-The distinction between these three baselines, Cover, the null, and the mass-mean estimator, is crucial. Cover counts labelings, not directions: it says how many of the $$2^{N}$$ dichotomies admit *some* separating hyperplane, which upper-bounds what any label-informed fit could achieve however it searches. The null below asks what a *fixed*, *label-agnostic* direction achieves. The mass-mean estimator sits between them, label-informed but fit only through two class means, and so under no obligation to recover a separating hyperplane even when Cover guarantees one exists. The experiment measures where between those two baselines the estimator lands.
+The distinction between these three baselines, Cover, the random null, and the mass-mean estimator, is crucial. Cover counts labelings, not directions: it says how many of the $$2^{N}$$ dichotomies admit *some* separating hyperplane, which upper-bounds what any label-informed fit could achieve. The random null control asks what a *fixed*, *label-agnostic* direction achieves. The mass-mean estimator sits between them, label-informed but fit only through two class means, and so it is not restricted to recovering a separating hyperplane even when one is guaranteed to exist. The experiment measures where between those the two baselines the mass-mean estimator lands.
 
-Cover also sets the scale. $$N/2d$$ is the natural unit for the empirical question, and $$N \lesssim 2d$$ is the regime in which the dimensional slack is available to any fit. The shuffled-label control asks how much of that slack the mass-mean rule converts into apparent signal when the labels carry none.
+Cover's theorem suggests that $$N/2d$$ is the natural unit for the empirical analysis, with $$N \lesssim 2d$$ being the regime in which the dimensional slack is available to any fit. The shuffled-label control asks how much of the dimensional slack the mass-mean rule converts into apparent signal when the labels are random and thus carry no signal at all.
 
 **The random-direction null.** Roger's and Farquhar's results show that a *nonzero*
 $$d'$$ is not, by itself, evidence of anything. A random unit vector $$u$$ is not
-orthogonal to the class gap. Its projection inherits a share of the real mean shift, of
+orthogonal to the class gap because its projection inherits a share of the real mean shift, of
 order $$\lVert\delta\rVert/\sqrt{d}$$, so it produces some separation with no fitting at
-all, and that separation grows with the true separation rather than sitting at a fixed
-background. The meaningful quantity is therefore not $$d'$$ but $$d'$$ relative to its null. Draw
-many random unit directions $$u \sim \mathrm{Unif}(S^{d-1})$$, form the distribution of
+all. That separation grows with the true separation rather than sitting at a fixed
+background level. The meaningful quantity is therefore not $$d'$$ obtained from the estimator but $$d'$$ relative to that obtained by the random null control. This is obtained by drawing many random unit directions $$u \sim \mathrm{Unif}(S^{d-1})$$, forming the distribution of
 their $$d'$$ (equivalently AUROC), and take its 95th percentile,
 
 $$
 p_{95} \;=\; Q_{0.95}\big[\,\mathrm{AUROC}(u)\,\big] .
 $$
 
-A truth direction is *recoverable* only insofar as its own score clears that quantile,
-$$\mathrm{AUROC}(\hat\theta) > p_{95}$$. That is the observation in Roger's post
-turned into an instrument, a step
-[Mallen & Belrose (2023)](https://arxiv.org/abs/2312.01037) took first, resolving each
-random probe's sign on its source distribution and scoring transfer against quantiles
-of $$10^7$$ random-probe AUROCs. The per-layer null, the $$d'$$ scale, and the margin
-criterion are what is added here. The report that random probes reach ~75% on the "easy"
-datasets becomes a chance level measured for each model, layer, and dataset, and
-every claim below is stated relative to it.
+A truth direction is *recoverable* only insofar as its own score clears that quantile, i.e.
+$$\mathrm{AUROC}(\hat\theta) > p_{95}$$. This is the observation in Roger's post
+turned into a control, first done by [Mallen & Belrose (2023)](https://arxiv.org/abs/2312.01037), resolving each
+random probe's sign on its source distribution and scoring transfer against quantiles of $$10^7$$ random-probe AUROCs. The per-layer null, the $$d'$$ scale, and the margin criterion are added by this post. The report that random probes reach ~75% on the "easy"
+datasets now becomes a chance level measured for each model, layer, and dataset. Every claim below is stated relative to this measure.
 
 For a direction $$u$$ evaluated on held-out data against the null of its own layer and
 dataset, the margin $$m(u)$$ is given by
@@ -342,8 +326,7 @@ construction in terms of Mahalanobis whitening, and their $$\Sigma$$ is the with
 covariance defined exactly as above. What is at issue is *where* the correction is
 applied. They are explicit that $$\Sigma^{-1}$$ is there to tilt the decision boundary,
 while $$\theta_{\mathrm{mm}}$$ remains the candidate feature direction, one which may be
-non-orthogonal to that boundary. Their intervention experiments steer along $$\theta_{\mathrm{mm}}$$. In their framework, the whitened vector is a readout and the raw
-mean-difference is the feature. The steering results below report a regime in which
+non-orthogonal to that boundary. Their intervention experiments steer along $$\theta_{\mathrm{mm}}$$. In their framework, the whitened vector is a readout and the raw mean-difference is the feature. The steering results below report a regime in which
 that assignment is inverted.
 
 Whitening should raise $$d'$$ when the signal is partly buried
@@ -363,7 +346,7 @@ that a raw inner product misleads. A follow-up by [Ying, Hase & Kriegeskorte
 readout quality in closed form. For balanced classes with Gaussian projections, a probe's
 held-out AUROC is $$\Phi(s/\sqrt{2})$$ in its signal-to-noise ratio $$s$$, and its
 Mahalanobis cosine to the Fisher direction is a softsign in the same $$s$$. Their $$s$$
-is the $$d'(u)$$ of this post computed with the pooled within-class covariance, and their
+is the $$d'(u)$$ defined in this post computed with the pooled within-class covariance, and their
 Fisher distance is $$d'_{\mathrm M}$$. One of the conditions under which they show the law
 fails, a difference-of-means probe far from the Fisher direction, is the regime studied
 below.
@@ -1103,7 +1086,7 @@ gives, and the null collapses onto the mass-mean value. The sweep shows it
 to the third decimal. On `counterfact` the held-out $$d'_{\mathrm{mm}}$$ is $$0.082$$,
 $$0.081$$, $$0.081$$, $$0.080$$ at layers $$8$$, $$20$$, $$24$$, $$28$$, and the median of
 the random-direction null at the same layers is $$0.083$$, $$0.081$$, $$0.079$$, $$0.078$$.
-The plain probe is not merely inside its null. Its $$d'$$ is indistinguishable from
+The plain probe is not merely located inside the null distribution Its $$d'$$ is indistinguishable from
 that of a random direction, and the spread above that median, $$p_{95}$$ from $$0.094$$ to $$0.139$$, is what the two percent of variance off the axis contributes. That is what locked to the axis means
 operationally, and it is why more data would not lift $$\hat\theta$$ clear of the band
 while the alignment holds: the null and the estimate move together.
@@ -2071,7 +2054,7 @@ single split at seed $$0$$ underlies the decoding numbers. The steering and grad
 results carry seed variation, the decoding ones do not.
 
 **The whitened numbers are a lower bound.** Every $$d'_{\mathrm F}$$ in this post uses
-Ledoit–Wolf's shrinkage intensity, which minimizes
+Ledoit–Wolf's shrinkage intensity to estimate $$\hat\Sigma$$, which minimizes
 $$\mathbb{E}\lVert\hat\Sigma - \Sigma\rVert_F^2$$. That is not the objective the post
 reports: what matters here is $$d'$$ of the direction $$\hat\Sigma^{-1}\hat\delta$$, which
 depends on the *inverse* and on one particular direction in it. The two diverge, and not
@@ -2082,13 +2065,13 @@ on the held-out half gives $$0.530$$ against $$0.031$$ at layer $$16$$ and $$0.4
 against $$0.384$$ at layer $$28$$, with `cities` improving more modestly
 ($$3.68 \to 4.39$$ at layer $$28$$). I have kept Ledoit–Wolf throughout rather than
 switching estimators mid-study, so the whitened direction here understates what whitening can
-do. This does not weaken any of the comparisons the post draws, since they all ask whether
-whitening beats the plain estimator and clears the null. However, it does mean the cross-validated
+do. This does not weaken any of the comparisons the post makes, since they all ask whether
+whitening beats the plain estimator and clears the null AUROC. However, it does mean the cross-validated
 selection is not itself reliable at every depth: at layers $$8$$ and $$12$$ it lands on
 the opposite end of the grid and returns values inside the null, because five-fold on a
 training half of about $$600$$ rows scores $$d'$$ on roughly $$120$$ points, which cannot
-resolve the ridge. Fixing that properly — via repeated cross-validation, or an objective
-smoother than $$d'$$ — is left open.
+resolve the ridge. Fixing that properly, via repeated cross-validation, or an objective
+smoother than $$d'$$, is left open.
 
 ## Appendix: notation
 
@@ -2158,7 +2141,7 @@ population quantity it estimates.
 
 ## References
 
-A fuller, annotated version of this bibliography — organized as a reader's map of how these results tension against each other — is at [the geometry of truth probes]({{ '/reviews/truth-probes-map/' | relative_url }}). The grouped list below gives locators only.
+A fuller, annotated version of this bibliography — is at [the geometry of truth probes]({{ '/reviews/truth-probes-map/' | relative_url }}).
 **The geometry — separability, capacity, and readout**
 
 - **Cover, *Geometrical and Statistical Properties of Systems of Linear Inequalities with Applications in Pattern Recognition*** — IEEE Trans. Electronic Computers **EC-14**(3):326–334 (1965) [PDF](http://hebb.mit.edu/courses/9.641/2002/readings/Cover65.pdf).
