@@ -3,6 +3,58 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
+<!-- Figure captions.
+     kramdown renders  ![caption](path)  as a bare <img> inside its own <p>,
+     so the caption text only ever reached the alt attribute and was never
+     visible. This promotes any paragraph holding a single image to a
+     <figure> and moves that text into a <figcaption>. Caption source is the
+     title attribute if the image has one,  ![alt](path "caption"),  else the
+     alt text. Backtick spans become <code>; everything else is left as text
+     so the $$...$$ in a caption is typeset by the MathJax pass below.
+     Runs from MathJax's pageReady (before typesetting) and again on
+     DOMContentLoaded, so captions still appear if MathJax fails to load.
+     Idempotent: a wrapped image is no longer a child of a <p>. -->
+<script>
+  function jsWrapPostFigures() {
+    var scope = document.querySelector('.post-content');
+    if (!scope) return;
+    var imgs = Array.prototype.slice.call(scope.querySelectorAll('p > img'));
+    imgs.forEach(function (img) {
+      var p = img.parentNode;
+      if (p.textContent.trim() !== '') return;          // paragraph has prose
+      if (p.querySelectorAll('img').length !== 1) return;  // side-by-side pair
+      if (img.classList.contains('profile-photo')) return;
+      if (img.classList.contains('no-caption')) return;
+      var text = img.getAttribute('title') || img.getAttribute('alt') || '';
+      text = text.trim();
+
+      var fig = document.createElement('figure');
+      fig.className = 'post-figure';
+      p.parentNode.replaceChild(fig, p);
+      fig.appendChild(img);
+      img.removeAttribute('title');
+      if (!text) return;
+
+      var html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        // The post source writes all math as $$...$$ and relies on kramdown
+        // to rewrite an inline span to single dollars. Alt text never passes
+        // through kramdown, so apply that rule here; without it every piece
+        // of caption math is display math and breaks onto its own line.
+        .replace(/\$\$([\s\S]+?)\$\$/g, function (m, inner) {
+          return '<span class="kdmath">$' + inner + '$</span>';
+        })
+        .replace(/`([^`]+)`/g, '<code>$1</code>');
+      var cap = document.createElement('figcaption');
+      cap.innerHTML = html;
+      fig.appendChild(cap);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', jsWrapPostFigures);
+</script>
+
 <!-- MathJax v3: renders $...$ and $$...$$ in the browser.
      kramdown's own math engine is disabled (see _config.yml), so all
      math reaches the browser as raw delimiters. -->
@@ -20,6 +72,14 @@
     },
     options: {
       skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: {
+      // Promote figures before the first typeset so caption math is
+      // rendered in the same pass as the body.
+      pageReady: function () {
+        try { jsWrapPostFigures(); } catch (e) {}
+        return MathJax.startup.defaultPageReady();
+      }
     }
   };
 </script>

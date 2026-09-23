@@ -359,6 +359,30 @@ mjx-container[display="true"] {
   max-width: 34rem;
   margin: 0 auto;
 }
+/* Post figures, built from markdown by the wrapper in custom-head.html.
+   Captions here run to several sentences, so they are left-aligned rather
+   than centered like the short research-page captions. */
+.post-figure {
+  margin: 1.5rem 0 2rem;
+  text-align: center;
+}
+.post-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 0.6rem;
+}
+.post-figure figcaption {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  text-align: left;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+.post-figure figcaption code {
+  font-size: 0.95em;
+}
 .fig-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
