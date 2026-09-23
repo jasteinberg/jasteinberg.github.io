@@ -279,7 +279,7 @@ a small test set censors to zero, since one cannot measure
 $A \ll 1/m$. The "appears from nothing" reading of such curves is a
 resolution artifact, exactly as they argued.
 
-![accuracy vs N]({{ site.baseurl }}/assets/figures/accuracy_vs_N.png)
+![accuracy vs N]({{ site.baseurl }}/assets/figures/accuracy_vs_N.png){: .fig-label}
 
 ### The transition's sharpness is resolution-stable
 
@@ -311,7 +311,7 @@ gives a two-regime answer:
   Appendix A. Foot-region sharpness should not be taken at face
   value.
 
-![sharpness vs m]({{ site.baseurl }}/assets/figures/sharpness_vs_m.png){: .fig-single}
+![sharpness vs m]({{ site.baseurl }}/assets/figures/sharpness_vs_m.png){: .fig-single .fig-label}
 
 The picture from the two results above is symmetric. Both artifact mechanisms are
 measurably present where they apply:
@@ -372,7 +372,7 @@ $12$B use $n = 1024$.
 | $6.4\times10^{9}$ (6.9B) | 0.1406 | 0.1537 | 0.381 | $0.091$ | $0.094$ |
 | $1.1\times10^{10}$ (12B) | 0.2471 | 0.2611 | 0.504 | $0.189$ | $0.191$ |
 
-![susceptibility vs N]({{ site.baseurl }}/assets/figures/susceptibility_vs_N.png)
+![susceptibility vs N]({{ site.baseurl }}/assets/figures/susceptibility_vs_N.png){: .fig-label}
 
 Four observations:
 
@@ -511,7 +511,7 @@ which Pythia's runs $0.073 \to 0.454$. Three-digit addition emerges about a
 decade of $N$ later for BLOOM, which is unsurprising for a multilingual ROOTS
 model measured against the English-dense, arithmetic-rich Pile.
 
-![cross-family overlay]({{ site.baseurl }}/assets/figures/susceptibility_xfamily.png)
+![cross-family overlay]({{ site.baseurl }}/assets/figures/susceptibility_xfamily.png){: .fig-label}
 
 The reading is that the deflationary *mechanism* — the foot, the censoring, the
 positive composition bias — is not a property of Pythia. It reappears in a
@@ -554,7 +554,7 @@ independence can see) show nothing. Per size:
 | 6.9B | $-0.111$ | 0.554 | 0.425 | 0.52 | 62% |
 | 12B  | $-0.102$ | 0.703 | 0.603 | 0.67 | 76% |
 
-![token correlation vs N]({{ site.baseurl }}/assets/figures/token_correlation_vs_N.png)
+![token correlation vs N]({{ site.baseurl }}/assets/figures/token_correlation_vs_N.png){: .fig-label}
 
 **The token errors are weakly anti-correlated — but the sign is the tokenizer's, not the model's**
 $\phi$ is negative at all eight sizes. At 12B, knowing the first token is
@@ -579,7 +579,7 @@ size for size. Mechanistically, the model adds place by place with carry
 propagation, its errors riding the carry chain; the apparent single-token
 localization is the tokenizer's signature, not the model's algorithm.
 
-![digit cascade vs N]({{ site.baseurl }}/assets/figures/digit_cascade_vs_N.png){: .fig-single}
+![digit cascade vs N]({{ site.baseurl }}/assets/figures/digit_cascade_vs_N.png){: .fig-single .fig-label}
 
 **The correlation does not reorganize at the transition** This is the
 emergence-relevant result. $\phi(N)$ runs $-0.02,\,-0.05,\,-0.07,\,-0.05,\,
@@ -607,7 +607,7 @@ $+0.019$ against pooling terms summing to $-0.005$. So the anti-correlation is
 real where accuracy can resolve it, and the foot gap should not be read as
 correlation at all.
 
-![phi(N) decomposition and susceptibility]({{ site.baseurl }}/assets/figures/phi_N_decomposition.png)
+![phi(N) decomposition and susceptibility]({{ site.baseurl }}/assets/figures/phi_N_decomposition.png){: .fig-label}
 
 **What this says about the mirage** Independence is analogous to a mean-field step —
 multiply the marginals, discard the connected correlation — and recovering that

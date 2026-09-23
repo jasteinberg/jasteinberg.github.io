@@ -61,7 +61,7 @@ GPU is needed to reproduce the analysis.
 
 ## The phase diagram
 
-![grok time and memorization delay]({{ site.baseurl }}/assets/figures/phase_grok_delay.png)
+![grok time and memorization delay]({{ site.baseurl }}/assets/figures/phase_grok_delay.png){: .fig-label}
 
 In the heat maps above, the right panel shows the memorization delay.
 
@@ -94,7 +94,7 @@ is not cheaply available. When networks are near capacity, memorization is slow 
 
 I plot one representative seed from each corner of the plane to show the four types of trajectories.
 
-![regime curves]({{ site.baseurl }}/assets/figures/phase_regime_curves.png)
+![regime curves]({{ site.baseurl }}/assets/figures/phase_regime_curves.png){: .fig-label}
 
 - **No grokking** ($d = 128, f = 0.2$): train accuracy saturates and
   test accuracy sits at chance. There is capacity but too little data —
@@ -157,7 +157,7 @@ the fraction at which the median seed first groks within budget — and
 ask which axis, $f$, $N$, or $N/p$, collapses the seven onset curves
 onto one.
 
-![data collapse over p]({{ site.baseurl }}/assets/figures/pscale_collapse.png)
+![data collapse over p]({{ site.baseurl }}/assets/figures/pscale_collapse.png){: .fig-label}
 
 The collapse rules out both a fixed fraction and absolute pairs. The critical fraction is not
 constant: it runs from $f_c = 0.5$ at $p = 31$ down to $f_c = 0.25$ at
@@ -189,7 +189,7 @@ grokking modular addition grows like $p^{3/2}$: neither "a constant
 fraction of all pairs" nor "each symbol a constant number of times," but
 between them.
 
-![fitted exponent]({{ site.baseurl }}/assets/figures/pscale_exponent.png)
+![fitted exponent]({{ site.baseurl }}/assets/figures/pscale_exponent.png){: .fig-label}
 
 I plot $f_c(p)$ on log–log axes and fit the points to a line to obtain an approximate value for the scaling exponent. The left panel places
 $f_c(p)$ between the flat fraction-invariant slope and the steeper
@@ -200,7 +200,7 @@ I test the $p^{3/2}$ scaling by plotting
 the onset against the rescaled axis $N/p^{3/2}$ and see that the seven
 per-prime curves collapse onto one.
 
-![onset collapse under N over p to the three-halves]({{ site.baseurl }}/assets/figures/pscale_p32_collapse.png)
+![onset collapse under N over p to the three-halves]({{ site.baseurl }}/assets/figures/pscale_p32_collapse.png){: .fig-label}
 
 The left panel uses the clean $3/2$, the right the fitted $1.42$. Both
 stack the seven onset curves into a single step crossing

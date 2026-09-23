@@ -28,6 +28,16 @@
       var text = img.getAttribute('title') || img.getAttribute('alt') || '';
       text = text.trim();
 
+      // A post that predates this may carry its caption as a wholly
+      // italic paragraph written under the figure. That paragraph is the
+      // caption: leave it alone and do not add a second one from alt.
+      var nxt = p.nextElementSibling;
+      if (nxt && nxt.tagName === 'P' && nxt.children.length === 1 &&
+          nxt.children[0].tagName === 'EM' &&
+          nxt.textContent.trim() === nxt.children[0].textContent.trim()) {
+        text = '';
+      }
+
       var fig = document.createElement('figure');
       fig.className = 'post-figure';
       p.parentNode.replaceChild(fig, p);
@@ -48,6 +58,8 @@
         })
         .replace(/`([^`]+)`/g, '<code>$1</code>');
       var cap = document.createElement('figcaption');
+      // A short label rather than a caption: centered under the figure.
+      if (img.classList.contains('fig-label')) cap.className = 'fig-label';
       cap.innerHTML = html;
       fig.appendChild(cap);
     });

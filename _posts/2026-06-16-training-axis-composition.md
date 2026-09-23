@@ -122,7 +122,7 @@ response peak alone is not a transition; every sigmoid has one, and what
 a genuine transition would additionally require is set out in the
 discussion.
 
-![susceptibility]({{ site.baseurl }}/assets/figures/susceptibility_dedup.png)
+![susceptibility]({{ site.baseurl }}/assets/figures/susceptibility_dedup.png){: .fig-label}
 
 Because $d = 2$ has $\ell = 1$, the composition model's prediction
 $A_{\mathrm{pred}} = \prod_j p_j$ reduces to $p$ itself, and indeed
@@ -180,7 +180,7 @@ the two accuracies equalize over training:
 | $2.1\times10^{11}$ | $-0.014$ | $-0.003$ | $-0.011$ | $-0.013\pm.007$ |
 | $3.0\times10^{11}$ | $-0.018$ | $+0.003$ | $-0.020$ | $-0.024\pm.008$ |
 
-![composition residual decomposed]({{ site.baseurl }}/assets/figures/phi_decomposition_d3.png){: .fig-single}
+![composition residual decomposed]({{ site.baseurl }}/assets/figures/phi_decomposition_d3.png){: .fig-single .fig-label}
 
 ### Conditioning the null on length, and the sharpness claim
 
@@ -206,7 +206,7 @@ statement: even length-conditioned, composition overpredicts the joint,
 because $\phi_2$ is genuinely negative ($-0.017 \pm 0.0044$, $3.9\sigma$ at
 the peak). Whether *that* is a correlation is the last question.
 
-![susceptibility, pooled vs length-conditioned null]({{ site.baseurl }}/assets/figures/susceptibility_lengthcond_d3.png){: .fig-single}
+![susceptibility, pooled vs length-conditioned null]({{ site.baseurl }}/assets/figures/susceptibility_lengthcond_d3.png){: .fig-single .fig-label}
 
 ### The carry cascade is real — at the digit level
 
@@ -280,7 +280,7 @@ the residual error riding the carry chain — units into tens most strongly, the
 carry-laden middle places failing together — rather than distributed holistically
 over the answer or localized to single tokens.
 
-![digit-level carry cascade]({{ site.baseurl }}/assets/figures/digit_cascade_d3.png)
+![digit-level carry cascade]({{ site.baseurl }}/assets/figures/digit_cascade_d3.png){: .fig-label}
 
 ## Discussion
 
@@ -379,7 +379,7 @@ interval where $A$ climbs from $0.001$ to $0.205$. That shows the loss axis is a
 benign reparameterization here — *not* that smoothness rules out a transition,
 which, per the dictionary, it never could.
 
-![accuracy and loss vs tokens]({{ site.baseurl }}/assets/figures/loss_mapping_d3.png)
+![accuracy and loss vs tokens]({{ site.baseurl }}/assets/figures/loss_mapping_d3.png){: .fig-label}
 
 Worse for the rebuttal, the collapse onto a loss curve is *predicted* by
 composition: if per-token competence $p$ is a function of how well-trained the
@@ -393,7 +393,7 @@ $A(L)$ curve, but only `pythia-2.8b-deduped` reaches low enough loss to climb it
 `pythia-1b` and `pythia-1.4b` never clear $A \approx 0.01$ and so only pin the
 high-loss foot.
 
-![accuracy vs Pile loss, three training trajectories]({{ site.baseurl }}/assets/figures/loss_collapse_d3.png){: .fig-single}
+![accuracy vs Pile loss, three training trajectories]({{ site.baseurl }}/assets/figures/loss_collapse_d3.png){: .fig-single .fig-label}
 
 *Accuracy versus Pile loss along training ($d = 3$), one curve per size, training
 running left as loss falls. Consistent with a single $A(L)$ curve, but only the
@@ -405,7 +405,7 @@ lower-loss models carrying the turn-on — though the fit is only as clean as th
 suite, with `pythia-6.9b` sitting below trend, the documented anomaly in that
 model.
 
-![accuracy vs final Pile loss across eight sizes]({{ site.baseurl }}/assets/figures/loss_collapse_paramaxis.png){: .fig-single}
+![accuracy vs final Pile loss across eight sizes]({{ site.baseurl }}/assets/figures/loss_collapse_paramaxis.png){: .fig-single .fig-label}
 
 *Teacher-forced accuracy versus final-checkpoint Pile loss across the eight sizes
 (70M–12B). Against pre-training loss rather than parameter count the sizes

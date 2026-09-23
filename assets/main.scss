@@ -383,6 +383,11 @@ mjx-container[display="true"] {
 .post-figure figcaption code {
   font-size: 0.95em;
 }
+/* A short label rather than a caption, set with {: .fig-label} on the image. */
+.post-figure figcaption.fig-label {
+  text-align: center;
+  max-width: 34rem;
+}
 .fig-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
