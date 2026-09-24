@@ -1040,8 +1040,8 @@ mechanism rather than a coincidence. The incidence is specific to the dataset bu
 mechanism is general. The per-layer incidence on both models, including pythia-1.4b, is
 in the appendix *Identification and removal of the eleven outlier statements*.
 
-The dropped activation mechanism also predicts where the rogue dimension should vanish. The number of massive coordinates grows with depth, from three at layer $$3$$ to eight
-by layer $$22$$, holds there through layer $$29$$, falls to five at layer $$30$$, and
+The dropped activation mechanism also predicts where the rogue dimension should vanish. The number of massive coordinates grows with depth, from three at layer $$3$$ to nine
+at layer $$21$$, is eight from layer $$22$$ through layer $$29$$, falls to five at layer $$30$$, and
 from layer $$31$$ on there are none. The count is the same on
 both datasets at every layer. The eleven `counterfact` statements stop being exceptional, and the two-point variance that
 generated $$\hat\lambda_1$$ disappears. As a result, the rogue dimension disappears at layer $$31$$ as
@@ -1058,7 +1058,7 @@ $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ between $$0.07$$ and $$0.41$$, nowhere
 the pinned condition at 2.8b. Layers $$17$$ to $$23$$
 carry a single massive coordinate that two to four statements drop, so the mechanism
 fires and produces nothing. One coordinate at $$136$$ to $$177$$ times the median cannot
-dominate a spectrum the way four to nine coordinates running from $$543$$ to $$1718$$
+dominate a spectrum the way three to nine coordinates running from $$543$$ to $$1728$$
 times the median do over twenty-eight layers. Droppers are necessary for a rogue dimension and not
 sufficient, now shown at two model sizes.
 
@@ -1117,7 +1117,7 @@ $$w$$ is a truth direction.
 
 Every susceptibility quoted above is therefore a
 projection of one vector. This is why the $$\hat v_1$$ and $$\hat\theta$$ measurements agreeing
-to within $$10^{-4}$$ at layer $$20$$ is a restatement of their $$0.994$$ alignment rather
+to within $$10^{-4}$$ at layer $$20$$ is a restatement of their $$0.999$$ alignment rather
 than independent confirmation.
 
 Decomposing in the plane of the next section,
@@ -1157,9 +1157,9 @@ correction. A channel consistent with zero cannot produce the wrong sign at firs
 order, so $$A(\hat v_1) = -0.051$$ at this layer is not a linear effect. It is beyond first order in the displacement.
 
 At layer $$20$$ the overlap is resolved: $$\cos(g,\hat v_1) = -0.049$$, confidence
-interval $$[-0.061, -0.030]$$, and $$\cos(g,\hat\theta)$$ is the same through the $$0.994$$
+interval $$[-0.061, -0.030]$$, and $$\cos(g,\hat\theta)$$ is the same through the $$0.999$$
 alignment. The linear prediction $$c\,(\hat\theta\cdot g) = -0.078$$ then lands
-within about $$20\%$$ of the measured $$A(0.5)/0.5 = -0.064$$. The through-origin susceptibility
+within about $$20\%$$ of the seed median $$A(0.5)/0.5 = -0.064$$ (the seed mean is $$-0.041$$). The through-origin susceptibility
 hides this, because the response reverses sign with displacement, from $$-0.032$$ at
 $$h = 0.5$$ ($$7/10$$ seeds negative, $$2.5$$ null standard deviations) through zero near
 $$h = 1$$ to $$+0.016$$ at $$h = 2$$ ($$9/10$$ seeds positive), so the slope fit over
