@@ -851,7 +851,7 @@ direction (red) drives $$A$$ significantly negative, so steering toward the true
 suppresses the true completion, while the whitened direction (blue), differing only
 by the covariance correction, drives it positive. Gray band: 5th–95th percentiles
 of the random-direction null, so a point outside it in its own direction is a
-one-sided clearance at 5%. Right: steering susceptibility $$\chi$$, the through-origin slope of $$A$$ against $$h$$,
+one-sided clearance at 5%. Right: steering susceptibility $$\chi$$,
 across depth, median over ten seeds with inter-quartile bars, the median rather than
 the mean because the plain direction's seeds are bimodal, eight clustered near $$-0.024$$ and
 two positive, so a mean lands on a value no seed exhibits. Plain is wrong-signed at
@@ -929,11 +929,10 @@ $$24$$ and $$28$$, $$\mathrm{PR}$$ within $$0.05$$ of $$1$$ and alignment above 
 and escape it by layer $$31$$ where their class gap has grown, as the appendix *Results
 on the full twelve-dataset benchmark* records.
 
-Recoverability is therefore not whether the class gap grows, it is whether is becomes large relative to the within-class spread. The two datasets reach that by opposite routes. On `cities` the gap outgrows the noise on `counterfact` spread collapses.
+Recoverability is therefore not whether the class gap grows, it is whether it becomes large relative to the within-class spread. The two datasets reach that by opposite routes. On `cities` the gap outgrows the noise. On `counterfact` the spread collapses.
 
 
-The rank-one direction $$\hat\theta_\perp$$, measured on a six-layer grid in the rogue-dimension
-sweep, tracks the whitened direction: on `counterfact` it sits at chance through layer $$24$$ and
+The rank-one direction $$\hat\theta_\perp$$ tracks the whitened direction: on `counterfact` it sits at chance through layer $$24$$ and
 reaches $$0.574$$ at layer $$28$$, and on `cities` it is already at $$0.921$$ by layer
 $$12$$. Deleting the axis and downweighting it do the same work.
 
@@ -991,7 +990,7 @@ direction *improves* recovery, that direction is the rogue dimension seen throug
 superposition probe rather than the spectrum. Datasets without a rogue dimension lose
 signal when the same components are stripped.
 
-![The salience knob: $$d'$$ of the mass-mean direction after projecting out the top-$$k$$ principal components, at each dataset's best layer on pythia-2.8b. On `cities`, `neg_cities` and `larger_than` the separation decays as the leading directions are removed — the truth signal is partly contained in the salient subspace. On `counterfact` it rises instead, from $$0.20$$ to $$0.44$$, so the leading directions are not carrying the truth signal but obscuring it.](/assets/figures/truth_superposition.png){: .fig-single}
+![The salience knob: $$d'$$ of the mass-mean direction after projecting out the top-$$k$$ principal components, at each dataset's best layer on pythia-2.8b. On `cities`, `neg_cities` and `larger_than` the separation decays as the leading directions are removed — the truth signal is partly contained in the salient subspace. On `counterfact` it rises instead, so the leading directions are not carrying the truth signal but obscuring it.](/assets/figures/truth_superposition.png){: .fig-single}
 
 ### The origin of the rogue dimension
 
