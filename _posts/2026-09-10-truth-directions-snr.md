@@ -469,8 +469,8 @@ the estimated mean difference absorbs $$O(\sqrt{d/N})$$ of noise, and scoring it
 in-sample biases $$d'$$ upward through exactly the fluctuations that defined the direction. In practice the correction is
 large. On a synthetic control with isotropic noise, a planted separation of $$d' = 1$$,
 and the post's own $$d = 2560$$ and $$N = 1198$$, the in-sample estimate returns $$4.2$$
-and the held-out estimate $$0.24$$. Both follow from the derivation in *How small is too
-small?*: the noise in $$\hat\theta$$ is aligned with the sample fluctuations that
+and the held-out estimate $$0.24$$. Both follow from the derivation in *Dimensional slack and
+sample size*: the noise in $$\hat\theta$$ is aligned with the sample fluctuations that
 produced it, so in-sample $$d'^{2} \simeq 1 + 4d/N_{\text{train}}$$, while held-out
 $$d' \simeq \cos(\hat\theta, \theta) \simeq (1 + 4d/N_{\text{train}})^{-1/2}$$. The
 simulation matches the in-sample prediction to within $$2\%$$ and the overlap
@@ -829,7 +829,7 @@ true-class centroid, along the very vector the estimator returns for truth, make
 measurably **less** likely to produce the true completion.
 
 Because the AUROC of $$\hat\theta$$ is inside the decoding null, it is expected to do nothing under
-intervention, and a small negative point estimate on its own would indistinguishable from noise. What makes this a result rather than a null is that the
+intervention, and a small negative point estimate on its own would be indistinguishable from noise. What makes this a result rather than a null is that the
 effect clears a $$400$$-draw random-direction null in the wrong direction, reproducibly
 across seeds and at two layers despite 
 Read naively, this is a failure of the causal linear picture. Displacing along the direction fit to read truth does not raise the probability of the true completion and, in fact, lowers it. I use the rest of this post to argue that the naive reading is wrong: the wrong sign is a property of the estimator, not of the activation geometry.
