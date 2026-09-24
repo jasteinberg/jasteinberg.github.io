@@ -26,11 +26,11 @@ Systems neuroscience has spent decades asking what a downstream reader can recov
 
 **(1) Apparent separation is trivial.** Two effects inflate a probe's score before considering any truth content. If the size of the dataset puts the model below Cover's capacity ($$N \ll 2d$$ throughout) for a binary classifier, then it is possible to find a direction which can separate any random relabeling of the data (given some constraints). This causes a random direction to inherits a share of the real class gap between the true and false centroids and implies that the performance of the fitted probe relative to a random null direction is the relevant quantity, not the raw score of the probe.
 
-**(2) When the class signal is weak, the estimator returns a nuisance direction.** In this case the mass-means estimator returns the dominant activation axis $$\hat v_1$$ rather than a truth direction. Recoverability of the causal truth direction is determined by whether the class gap grows with depth until it dominates the spread along that axis. On the `cities` dataset, the class gap begins to dominate the spread at layer 12. However, on `counterfact`, the class gap does not dominate the spread until the last two layers of the network where is is to weak to provide a usable readout. The decodability results replicate on OLMo-2-1B across a different architecture and corpus.
+**(2) When the class signal is weak, the estimator returns a nuisance direction.** In this case the mass-mean estimator returns the dominant activation axis $$\hat v_1$$ rather than a truth direction. Recoverability of the causal truth direction is determined by whether the class gap grows with depth until it dominates the spread along that axis. On the `cities` dataset, the class gap begins to dominate the spread at layer 12. However, on `counterfact`, the class gap does not dominate the spread until the last two layers of the network where it is too weak to provide a usable readout. The decodability results replicate on OLMo-2-1B across a different architecture and corpus.
 
-**(3) When the estimator returns a nuisance direction, steering along it fails to correct the behavior.** Because the estimator has failed to return the causal truth direction, steering along the estimator does not generally increase the score for true completion and can in some cases provide a lower score when compared to steering along random directions for displacements of the same magnitude. All steering measurement are done on Pythia.
+**(3) When the estimator returns a nuisance direction, steering along it fails to correct the behavior.** Because the estimator has failed to return the causal truth direction, steering along the estimator does not generally increase the score for true completion and can in some cases provide a lower score when compared to steering along random directions for displacements of the same magnitude. All steering measurements are done on Pythia.
 
-**(4) The failure is in the mass-means estimator and not in the absence of a causal truth direction:** the nuisance direction corresponding to the salient but non-causal axis is identified in advance from the within-class spectrum and the alignment of the fitted direction with the salient direction. Correcting the estimator via whitening raises the held-out AUROC above the random decoding null and returns the correct steering behavior in `counterfact`.
+**(4) The failure is in the mass-mean estimator and not in the absence of a causal truth direction:** the nuisance direction corresponding to the salient but non-causal axis is identified in advance from the within-class spectrum and the alignment of the fitted direction with the salient direction. Correcting the estimator via whitening raises the held-out AUROC above the random decoding null and returns the correct steering behavior in `counterfact`.
 
 </div>
 
@@ -103,7 +103,7 @@ than estimated.
 **Probe.** A probe is defined as a unit vector $$u \in \mathbb{R}^{d}$$, $$\lVert u \rVert = 1$$, that reads the scalar $$z = u^{\top} x$$.
 
 **Steering.** Steering is the inference-time counterpart of reading. To steer along a concept, one adds a scalar multiple of the corresponding vector to the residual stream at a chosen layer of the model during the forward pass, i.e. $$x \mapsto x + h\,c\,w$$, and measures
-how the model's output moves. Steering along a truth direction is expected to carry the representation of a statement to a point in the residual stream to where the model favors the true completion. This is tested relative to a steering null described in *Drawing a random direction*.
+how the model's output moves. Steering along a truth direction is expected to carry the representation of a statement to a point in the residual stream where the model favors the true completion. This is tested relative to a steering null described in *Drawing a random direction*.
 
 Generic steering directions are written $$w$$ and generic readout directions $$u$$. The
 specific directions I consider carry their own names.
@@ -172,7 +172,7 @@ $$
 d'_{\mathrm M} \;=\; \max_{u} d'(u) \;=\; \sqrt{\delta^{\top}\Sigma^{-1}\delta} .
 $$
 
-so the whitened direction is the solution of the above optimization of $$d'$$, and the mass-mean direction only coincides with it  when $$\Sigma$$ is a multiple of the identity. A heldout $$d'$$ used to characterize the separability of a fitted direction replaces $$\delta$$ and $$\Sigma$$ by their sample values on the remaining data not used to fit the direction.
+so the whitened direction is the solution of the above optimization of $$d'$$, and the mass-mean direction only coincides with it when $$\Sigma$$ is a multiple of the identity. A held-out $$d'$$ used to characterize the separability of a fitted direction replaces $$\delta$$ and $$\Sigma$$ by their sample values on the remaining data not used to fit the direction.
 
 **AUROC (area under the receiver-operating-characteristic curve).** The AUROC is the probability
 that a randomly chosen true statement projects above a
@@ -359,8 +359,8 @@ null is therefore *large exactly when the true separation is large*. It is not a
 fixed background, and it must be recomputed for every layer and dataset.
 
 ![The decoding null on `cities`, pythia-2.8b layer $$28$$: the histogram of $$d'$$ achieved by $$400$$ random unit directions, with its 95th
-percentile marked as the bar a probe must clear with the mass-mean direction's $$d'$$
-marked as a vertical line. Both $$d'$$ and the null are compute on the full dataset here, so $$\hat\theta$$ reads the
+percentile marked as the bar a probe must clear and the mass-mean direction's $$d'$$
+marked as a vertical line. Both $$d'$$ and the null are computed on the full dataset here, so $$\hat\theta$$ reads the
 in-sample $$3.14$$ rather than the held-out $$3.02$$ the sweep reports for the same
 layer. Recoverability is the margin above
 the percentile, not the raw $$d'$$.](/assets/figures/truth_null_distribution.png){: .fig-single}
@@ -831,14 +831,15 @@ measurably **less** likely to produce the true completion.
 Because the AUROC of $$\hat\theta$$ is inside the decoding null, it is expected to do nothing under
 intervention, and a small negative point estimate on its own would be indistinguishable from noise. What makes this a result rather than a null is that the
 effect clears a $$400$$-draw random-direction null in the wrong direction, reproducibly
-across seeds and at two layers despite 
+across seeds and at two layers.
+
 Read naively, this is a failure of the causal linear picture. Displacing along the direction fit to read truth does not raise the probability of the true completion and, in fact, lowers it. I use the rest of this post to argue that the naive reading is wrong: the wrong sign is a property of the estimator, not of the activation geometry.
 What that means precisely is that the same activations, at the
 same layer, contain a direction along which displacement moves the model toward the true
 completion which the mass-mean estimator does not return. Instead, it returns $$\hat v_1$$,
 the axis of largest within-class variance, with which $$\hat\theta$$ shares a cosine of
 $$0.994$$ at this depth. Replacing the mass-mean estimate by the Fisher rule, inside
-the same linear class, recovers the correct sign. What makes the plain produce a
+the same linear class, recovers the correct sign. What makes the plain estimator produce a
 negative direction at layer $$28$$ is not settled here. Change the estimator, either by downweighting the salient axis or by
 deleting it outright, and the correct sign comes back out of the same data. The claim is
 about which part of the geometry the estimator points at, not about how much truth the
@@ -911,16 +912,16 @@ noise effectively occupies.
 Read across depth, this shows that what determines recoverability is *not* whether a
 dominant axis exists. At layer $$8$$, `cities` is also aligned with a nuisance direction, with
 $$\hat\lambda_1/\operatorname{tr}\hat C = 0.723$$, $$\lvert\cos(\hat\theta,\hat
-v_1)\rvert = 0.914$$ and $$d'_{\mathrm{mm}} = 0.11$$. However this alignment dissipates by the middle of the network, the separation along the estimator grows with the class gap while the spread stays of order one. On `counterfact` the alignment with the noise axis continues through layer $$30$$ and $$d'_{\mathrm{mm}}$$ only rises in the last two layers. However, unlike for `cities` the class gap does not grow in these layers, it shrinks from $$6.41$$ to $$1.99$$ between layers $$30$$ and $$31$$. Due to the fall in the spread from $$70.3$$ to $$9.5$$, $$d'_{\mathrm{mm}}$$ increases overall. 
+v_1)\rvert = 0.914$$ and $$d'_{\mathrm{mm}} = 0.11$$. However, this alignment dissipates by the middle of the network, and the separation along the estimator grows with the class gap while the spread stays of order one. On `counterfact` the alignment with the noise axis continues through layer $$30$$ and $$d'_{\mathrm{mm}}$$ only rises in the last two layers. However, unlike for `cities`, the class gap does not grow in these layers. It shrinks from $$6.41$$ to $$1.99$$ between layers $$30$$ and $$31$$. Due to the fall in the spread from $$70.3$$ to $$9.5$$, $$d'_{\mathrm{mm}}$$ increases overall. 
 Contrasting the spreads and class gaps between the two datasets for two representative layers makes the mechanism fully clear. At layer
 $$8$$ the `counterfact` class gap is $$47$$ times the `cities` gap but its separation $$d'_{\mathrm{mm}}$$ is still lower than `cities`, because its spread is $$59$$ times larger. By layer $$28$$
-the `counterfact` down to $$2.4$$ times the cities gap, but the spread is still $$83$$ times
-larger, resulting in the separation being lower by a factor of thirty.
+the `counterfact` gap is down to $$2.4$$ times the `cities` gap, but the spread is still $$83$$ times
+larger, resulting in the separation being lower by a factor of thirty-five.
 
 These observables are computed on the full set
 rather than the held-out half, since they describe the geometry rather than a probe's
 performance, and the held-out $$d'_{\mathrm{mm}}$$ at `counterfact` layer $$28$$ is
-$$0.080$$ against the $$0.089$$ quoted here. The two company at the end of the network, where the held-out values are $$0.081$$,
+$$0.080$$ against the $$0.089$$ quoted here. The two part company at the end of the network, where the held-out values are $$0.081$$,
 $$0.120$$ and $$0.196$$ at layers $$30$$, $$31$$ and $$32$$ against $$0.091$$, $$0.210$$
 and $$0.500$$ on the full set. The rogue dimension is the default
 condition, not a pathology. It is also not a property of `counterfact` alone:
@@ -974,7 +975,7 @@ weak.
 
 The obvious objection is that this is a fact about Pythia. However, the same observables on
 [OLMo-2-1B](https://huggingface.co/allenai/OLMo-2-0425-1B), a different architecture and
-training corpus at a third of the parameters, reproduce the pattern. Both `cities` and `counterfact` have the same qualitative behavior as on Pythia and
+training corpus at a third of the parameters, reproduce the pattern. Both `cities` and `counterfact` have the same qualitative behavior as on Pythia, and the
 numbers are reported in the appendix *Replication on OLMo-2-1B*.
 
 The superposition probe set up in *Separability, capacity and readout* reads the same object from the other
@@ -1379,7 +1380,7 @@ every layer's point estimate is positive.
 A mass-mean truth direction can either be a truth direction or the estimator's projection onto the most salient axis of the activations, with a signal-to-noise
 analysis required to tell the two apart on any given benchmark. In this work I have focused on four consequences of this observation. I started by demonstrating that for the standard datasets in this literature, in-sample
 separation is inflated by dimensional slack that scales as $$N^{-1/2}$$ with a prefactor
-set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset and or model layer, the mass-mean
+set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset or model layer, the mass-mean
 estimator aligns with the leading within-class eigenvector. On `counterfact` that direction fails to decode truth and steers behavior with a significant wrong sign, five null standard deviations deep at one class gap. However, I show that the same activations used to obtain the mass-mean direction contain a direction that steers correctly, and it can be reached without leaving the linear class, either by the Fisher direction or by projecting out the
 leading eigenvector.
 
@@ -1390,10 +1391,10 @@ is $$-0.062$$, five null standard deviations, and the whitened direction's is $$
 two. While the correction flips the sign of the effect, the corrected effect is less than half the magnitude of the incorrect result, so the correction
 restores a sign rather than supplying a large causal lever.
 
-Likewise, the decoding gain is significant but also small in magnitude. At the layer $$28$$ along with correcting the steering behavior whitening raises the held-out AUROC from $$0.502$$ to $$0.624$$ against a null of $$0.560$$. More generally, the whitened direction stays above its null from layer $$26$$ to the end of the network, peaking at $$0.716$$ against $$0.552$$ at layer $$31$$
+Likewise, the decoding gain is significant but also small in magnitude. At layer $$28$$, along with correcting the steering behavior, whitening raises the held-out AUROC from $$0.502$$ to $$0.624$$ against a null of $$0.560$$. More generally, the whitened direction stays above its null from layer $$26$$ to the end of the network, peaking at $$0.716$$ against $$0.552$$ at layer $$31$$.
 Set beside `cities`, where the same direction reads $$0.99$$, this is a weak readout. The overall
 claim is a corrected sign and a confirmed mechanism, not a recovered truth direction of
-practical use. The incorrect steering behavior from the original mass-mean estimator could also imply that a richer  perhaps nonlinear, intervention is required. However, in my analysis I found that there are two corrections to the linear estimator, for which this is not needed, projecting out the nuisance direction, and whitening which both enable decoding and correct the steering behavior.
+practical use. The incorrect steering behavior from the original mass-mean estimator could also imply that a richer, perhaps nonlinear, intervention is required. However, in my analysis I found that there are two corrections to the linear estimator for which this is not needed, projecting out the nuisance direction and whitening, which both enable decoding and correct the steering behavior.
 
 
 Finally, the criterion that diagnoses this failure, a within-class spectrum with one dominant
@@ -1429,7 +1430,7 @@ target signal, whose removal improves recovery. The shallow `counterfact` layers
 describe, but not the same one. Whitening leaves the effect inside the null they define, and
 projecting out $$\hat v_1$$ does not restore the sign: at layer $$8$$ it steers
 significantly wrong-signed. That is not an absence of linear signal. It is the sign of
-$$\hat e_2\cdot g$$, which at that depth is negative, as shown in *Susceptibility and the score gradient. The per-sample form of the anomaly is documented by
+$$\hat e_2\cdot g$$, which at that depth is negative, as shown in *Susceptibility and the score gradient*. The per-sample form of the anomaly is documented by
 [Tan et al. (2024)](https://arxiv.org/abs/2407.12404), who find that for several
 concepts, close to half the inputs steer in the direction opposite to the one intended.
 The `counterfact` effect at layers $$24$$ and $$28$$ is that variance surfacing as a
@@ -1567,13 +1568,13 @@ sweep covers all twelve. At pythia-2.8b, each at its own selected layer:
 | `likely` | 12 | 0.890 | 1.75 | 0.929 | 0.593 |
 
 The two translation sets sit at $$N = 354$$ rather than $$1198$$ and clear their random null by
-as wide a margin as the single-frame sets.  Every templated set with a single frame clears its null comfortably. The two free-form sets are the bottom of
+as wide a margin as the single-frame sets. Every templated set with a single frame clears its null comfortably. The two free-form sets are the bottom of
 the table: `common_claim_true_false` at $$d'_{\mathrm{mm}} = 0.64$$ and `counterfact_true_false` at
 $$0.20$$. `companies_true_false` is interesting because it has a plain $$d'_{\mathrm{mm}}$$ of $$0.17$$, at
 the floor with `counterfact`, but a whitened AUROC of $$0.855$$, the largest gap between
 the two estimators anywhere in the table. Together with its rising superposition curve, this
 makes it a second instance of the rogue-dimension pattern in decoding. Since the dataset includes only statements and labels, with no contrastive completions from
-which to build a behavioral score, so it does not include a causal measurement. The spectrum confirms
+which to build a behavioral score, it does not include a causal measurement. The spectrum confirms
 it. At layers $$24$$ and $$28$$, `companies_true_false` has $$\mathrm{PR} = 1.01$$ and
 $$1.02$$, $$\hat\lambda_1/\hat\lambda_2$$ near $$2000$$ and $$1250$$, and
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert = 0.98$$ and $$0.93$$, with $$d'_{\mathrm{mm}}$$ of
@@ -1604,7 +1605,7 @@ every layer measured. Layer-invariance makes it a property of the
 input rather than of any particular representation.
 
 Refitting on a training half with the eleven excluded and scoring on
-the full held-out half leaves the mass-mean direction essentially unchanged and but moves the whitened direction substantially at early and middle depth:
+the full held-out half leaves the mass-mean direction essentially unchanged but moves the whitened direction substantially at early and middle depth:
 
 | layer | $$d'_{\mathrm F}$$, all | $$d'_{\mathrm F}$$, eleven removed | null $$p_{95}$$ |
 |---|---|---|---|
@@ -1935,7 +1936,8 @@ smoother than $$d'$$, is left open.
 
 ## References
 
-A fuller, annotated version of this bibliography — is at [the geometry of truth probes]({{ '/reviews/truth-probes-map/' | relative_url }}).
+A fuller, annotated version of this bibliography is at [the geometry of truth probes]({{ '/reviews/truth-probes-map/' | relative_url }}).
+
 **Separability, capacity and readout**
 
 - **Cover, *Geometrical and Statistical Properties of Systems of Linear Inequalities with Applications in Pattern Recognition*** — IEEE Trans. Electronic Computers **EC-14**(3):326–334 (1965) [PDF](http://hebb.mit.edu/courses/9.641/2002/readings/Cover65.pdf).
