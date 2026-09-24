@@ -903,7 +903,7 @@ axis. This axis is the salient direction of the superposition test above. When t
 gap is negligible, the leading direction of the total activation covariance and the
 within-class $$\hat v_1$$ coincide, so the two diagnostics see the same axis. They
 separate only once the gap grows. The participation ratio
-$$\mathrm{PR} = (\sum_i\hat\lambda_i)^2/\sum_i\hat\lambda_i^2$$ puts the collapse on a
+$$\mathrm{PR} = (\sum_i\hat\lambda_i)^2/\sum_i\hat\lambda_i^2$$ characterizes the spectrum on a
 dimension-free scale: $$\mathrm{PR} \to 1$$ when one eigenvalue dominates the spectrum
 and $$\mathrm{PR} \to d$$ when the spectrum is flat, so it counts the directions the
 noise effectively occupies.
@@ -1021,7 +1021,7 @@ membership function.
 
 The eleven statements are identifiable coordinate-first, by a rule that never touches the
 covariance, the class means, or the labels, and it returns the same eleven at
-every layer. Refitting with them excluded collapses the geometry at layer $$28$$, taking
+every layer. Refitting with them excluded suppresses the dominant eigenmode at layer $$28$$, taking
 $$\hat\lambda_1/\hat\lambda_2$$ from $$535$$ to $$1.1$$ and
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ from $$0.994$$ to $$0.063$$, and it leaves
 held-out $$d'_{\mathrm F}$$ unchanged at $$0.385$$. At that layer whitening leaves
@@ -1641,7 +1641,7 @@ The massive coordinates are not dataset-specific. At pythia-2.8b the same
 four coordinates qualify at layers $$8$$–$$16$$, the same seven at layer $$20$$ and the
 same eight at layers $$24$$–$$28$$, on `cities` and `counterfact` alike. On `cities` all of the statements include the massive coordinates at all layers in either model. The coordinates therefore stay constant and contribute nothing to $$\hat C$$, so there is no rogue dimension. 
 
-Pythia-1.4b also contains massive coordinates which are dropped by some statements in `counterfact` but never in `cities`. At layer $$18$$ upon removal of the three `counterfact` statements without massive activations, $$\hat\lambda_1/\hat\lambda_2$$ drops from $$1.5$$ to $$1.4$$ so there is no dominate eigenmode collapse. 
+Pythia-1.4b also contains massive coordinates which are dropped by some statements in `counterfact` but never in `cities`. Upon removing the three `counterfact` statements with dropped massive activations at layer $$18$$, $$\hat\lambda_1/\hat\lambda_2$$ drops from $$1.5$$ to $$1.4$$ so there is no dominant eigenmode to suppress. 
 
 
 I do not know what distinguishes the eleven statements on pythia-2.8b from the others. They span both labels, all end in a period, and their token lengths sit inside the bulk of the distribution.
