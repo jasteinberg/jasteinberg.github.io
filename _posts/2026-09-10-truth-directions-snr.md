@@ -962,8 +962,8 @@ while the alignment holds: the null and the estimate move together.
 
 ![Within-class geometry on `cities` (top) and `counterfact` (bottom), pythia-2.8b layer 28. Left: activations in the plane of the top two within-class principal axes $$x\cdot\hat v_1$$, $$x\cdot\hat v_2$$, colored by truth label. On `counterfact` a single axis carries nearly all the variance. Middle: the mass-mean projection $$x\cdot\hat\theta$$, with its separation $$d'$$ and its alignment $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$, near 1 on `counterfact` where the estimator has aligned with the leading variance axis. Right: the within-class eigenvalue spectrum, $$\hat\lambda_1/\hat\lambda_2$$. The eleven points standing clear of the bulk on `counterfact` — i.e. the scattered group near $$x\cdot\hat v_1 \approx -200$$ in the bottom-left panel and the small bar near $$x\cdot\hat\theta \approx 200$$ in the bottom-middle one — are the statements that do not receive the massive activation. They are crucial in determining the magnitude of the leading eigendirection setting the axis range of both panels.](/assets/figures/truth_clusters.png)
 
-$$\hat v_1$$ is also *well* estimated, which is what makes the collapse of $$\hat\theta$$
-onto it a feature of $$\Sigma$$ rather than an accident of the sample. That $$\hat v_1$$ is a population axis and not a finite-sample
+$$\hat v_1$$ is also *well* estimated, which is what makes the alignment of $$\hat\theta$$
+with it a feature of $$\Sigma$$ rather than an accident of the sample. That $$\hat v_1$$ is a population axis and not a finite-sample
 artifact rests on two direct checks. Identifying the eleven statements
 coordinate-first, by the size of that one coordinate and without forming the
 covariance, returns the same eleven at every layer, and a two-point variance formula
@@ -1261,7 +1261,7 @@ with the within-class noise ellipse ($$\hat\lambda_1/\hat\lambda_2 = 535$$, so a
 $$23{:}1$$ axis ratio). The mass-mean direction (black) lies $$6.3^{\circ}$$ off the rogue
 axis, inside the long axis of the noise. $$\hat\Sigma^{-1}$$ swings the Fisher direction
 (gold) to $$89.0^{\circ}$$ which is effectively orthogonal to it. Right: the Rayleigh quotient
-$$d'(\varphi)$$ normalized by its maximum, in the collapsed regime ($$\kappa = 535$$,
+$$d'(\varphi)$$ normalized by its maximum, in the aligned regime ($$\kappa = 535$$,
 $$r = 0.11$$) and the resolved regime ($$\kappa = 1.42$$, $$r = 6.20$$). Circles mark the
 mass-mean angle and squares the whitened angle. Where the spectrum has one dominant eigenmode the
 curve is a cliff and the mass-mean estimator sits at its foot; where the class gap has
@@ -1288,7 +1288,7 @@ failure mode. The spectrum must have one dominant eigenmode, $$\mathrm{PR} \appr
 with $$\lambda_1/\lambda_2 \gg 1$$, or there is no plane to reduce to. Additionally,
 $$\varphi_{\mathrm{mm}}$$ must be small, or the estimator is not at the foot of the cliff
 and there is nothing to correct. Both are read off the activations and the fitted direction, and together they diagnose
-that the estimator has collapsed onto $$\hat v_1$$. They do not by themselves say which
+that the estimator has aligned with $$\hat v_1$$. They do not by themselves say which
 way either direction will steer. That is set by the overlaps with the score gradient,
 $$\hat v_1\cdot g$$ for the mass-mean direction and $$\hat e_2\cdot g$$ for the
 correction, which are also measured without displacing an activation. At `counterfact`
@@ -1380,14 +1380,8 @@ A mass-mean truth direction can either be a truth direction or the estimator's p
 analysis required to tell the two apart on any given benchmark. In this work I have focused on four consequences of this observation. I started by demonstrating that for the standard datasets in this literature, in-sample
 separation is inflated by dimensional slack that scales as $$N^{-1/2}$$ with a prefactor
 set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset and or model layer, the mass-mean
-estimator collapses onto the leading within-class eigenvector. On `counterfact` that direction fails to decode truth and steers behavior with a significant wrong sign, five null standard deviations deep at one class gap. However, I show that the same activations used to obtain the mass-mean direction contain a direction that steers correctly, and it can be reached without leaving the linear class, either by the Fisher direction or by projecting out the
+estimator aligns with the leading within-class eigenvector. On `counterfact` that direction fails to decode truth and steers behavior with a significant wrong sign, five null standard deviations deep at one class gap. However, I show that the same activations used to obtain the mass-mean direction contain a direction that steers correctly, and it can be reached without leaving the linear class, either by the Fisher direction or by projecting out the
 leading eigenvector.
-
-In summary these results above establish that, when the within-class spectrum meets a specific
-criterion, the mass-mean estimator returns a nuisance direction rather than a causal truth
-direction, and that a correction inside the linear class restores the sign of the
-steering behavior when steering along the corrected direction. 
-
 
 
 Four things should be noted before comparing to other reports.
@@ -1404,8 +1398,8 @@ practical use. The incorrect steering behavior from the original mass-mean estim
 
 Finally, the criterion that diagnoses this failure, a within-class spectrum with one dominant
 eigenmode and the mass-mean direction aligned to it, has one confirmed positive result and one
-confirmed negative result. It identifies the collapse but not the sign of a correction, which
-is set by the overlap of the corrected direction with the score gradient. Additionally The
+confirmed negative result. It identifies the alignment but not the sign of a correction, which
+is set by the overlap of the corrected direction with the score gradient. Additionally, the
 steering measurements are on Pythia alone, since OLMo replicates the geometry and the decoding but was not steered. 
 
 
