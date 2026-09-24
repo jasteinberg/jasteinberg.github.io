@@ -179,13 +179,13 @@ $\varepsilon = 0$, and the figure code — is in the
 
 ![Greedy rollouts after training: SARSA along the top row, Q-learning along the cliff edge]({{ site.baseurl }}/assets/figures/cliff_greedy_paths.png){: .fig-single}
 
-*Greedy policies after 500 episodes (seed 0). Q-learning takes the cliff-edge optimum ($-12$); SARSA backs all the way to the top row and accepts the longer route ($-16$) to stay clear of the $-100$ region. The policies differ exactly where the greedy and $\varepsilon$-soft optima disagree.*
+*Greedy policies after 500 episodes (seed 0). Q-learning takes the cliff-edge optimum ($-12$). SARSA backs all the way to the top row and accepts the longer route ($-16$) to stay clear of the $-100$ region. The policies differ exactly where the greedy and $\varepsilon$-soft optima disagree.*
 
 ![Online-return learning curves: SARSA settles higher than Q-learning]({{ site.baseurl }}/assets/figures/sarsa_learning_curves.png){: .fig-single}
 
-*Online return during training, mean over 100 CRN-paired seeds with 95% bands. SARSA settles higher (around $-28$) because it rarely falls; Q-learning sits lower (around $-50$) as it walks the edge and occasionally steps off. The dotted and dashed lines mark the two greedy-evaluation returns ($-12$ and $-16$) — far above the behavior return, which carries the cost of exploration.*
+*Online return during training, mean over 100 CRN-paired seeds with 95% bands. SARSA settles higher (around $-28$) because it rarely falls. Q-learning sits lower (around $-50$) as it walks the edge and occasionally steps off. The dotted and dashed lines mark the two greedy-evaluation returns ($-12$ and $-16$) — far above the behavior return, which carries the cost of exploration.*
 
-Two returns are in play and they should be compared separately. The **behavior return** is the reward actually collected while the agent acts $\varepsilon$-greedily *during training* — exploration costs and
+Two returns are in play that should be compared separately. The **behavior return** is the reward actually collected while the agent acts $\varepsilon$-greedily *during training* — exploration costs and
 cliff-falls included; this is the online return plotted above (≈ $-28$ for SARSA,
 ≈ $-50$ for Q-learning). The **greedy-evaluation return** is the final learned
 policy run greedily at $\varepsilon = 0$, with no exploration ($-16$ for SARSA,
