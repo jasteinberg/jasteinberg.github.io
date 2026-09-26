@@ -24,7 +24,7 @@ layout: page
     <a href="{{ site.baseurl }}/assets/cv/js_cv.pdf">CV</a>
   </p>
 
-  <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot.jpg"
+  <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot_crop.jpg"
        alt="Julia Steinberg">
 </div>
 
