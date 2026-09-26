@@ -600,9 +600,7 @@ The control is the *control task* of
 [Hewitt & Liang (2019)](https://aclanthology.org/D19-1275/), and the gap between
 real-task and control-task performance is what they call *selectivity*. Their diagnosis
 and their prescription concern probe **capacity**: a probe expressive enough to memorize
-the control task is too expressive to trust, so a smaller one should be used. That
-prescription has no purchase here. The mass-mean probe fits two class means and nothing
-else, and on `counterfact` at $$N = 100$$ it still separates shuffled labels with AUROC
+the control task is too expressive to trust, so a smaller one should be used. However, the mass-mean probe only fits the two class means, and on `counterfact` at $$N = 100$$ it still separates shuffled labels with AUROC
 $$0.80$$ on pythia-2.8b ($$0.795 \pm 0.042$$ over sixteen permutations), which is what
 the true labels reach in sample at the same $$N$$. There is no capacity to shrink. The
 freedom is in the ambient dimension.
@@ -662,8 +660,7 @@ direction's honest score, which is why held-out $$d'$$ errs low where in-sample 
 errs high.
 
 The control also behaves correctly at the other end of the ladder. On pythia-70m the
-true and shuffled curves lie on top of each other at every $$N$$, which is what a model
-with nothing recoverable in it should give.
+true and shuffled curves lie on top of each other at every $$N$$, which expected from a model with no recoverable direction.
 
 The prefactor is where the dataset enters. What it quantifies is the number of
 directions the noise effectively occupies. A spectrum concentrated on a few axes leaves
@@ -783,7 +780,7 @@ concentrated.
 
 ## A causal test of the mass-mean direction
 
-The decoding analysis says when a truth direction is *readable*. Steering asks the
+The decoding analysis provides the conditions for when a truth direction is *readable*. Steering asks the
 separate question of whether it is *causal*, that is, whether displacing the residual stream
 along $$\hat\theta$$ moves the model's behavior toward the true completion. The two
 need not agree. On `counterfact_true_false` at the deep layers of pythia-2.8b the
@@ -791,8 +788,8 @@ mass-mean direction is neither readable nor correctly causal. For the readout, t
 $$0.560$$, and it stays inside the null at every layer except for the last. As an intervention
 it produces a significant effect with the wrong sign.
 
-As defined above, steering is reported as the antisymmetric response $$A$$ in
-class-gap units. A genuine truth direction produces $$A > 0$$, and the random-direction
+As defined above, steering is reported as the antisymmetric response $$A$$ in units of the
+class-gap. A genuine truth direction produces $$A > 0$$, and the random-direction
 steering null fixes the bar $$A$$ must clear. Across ten seeds at layer $$28$$, at a
 displacement of one class gap, the mass-mean direction returns
 
