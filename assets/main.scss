@@ -514,8 +514,17 @@ body.layout-page .post-content h2:not(.post-title) { text-align: center; }
   position: relative;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+.hero-tagline {
+  margin: 0.5rem 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.05rem;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
 }
 .hero-name {
   margin: 0;
