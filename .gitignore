@@ -14,3 +14,8 @@ artifacts_serve.log
 # machine-specific local tooling (not deployed)
 scripts/local/
 !_reviews/truth-probes-map.md
+
+# CV: only the public PDF is published here. The source lives in the private
+# ~/writing/cv/ (build.sh there copies js_cv.pdf in).
+assets/cv/*
+!assets/cv/js_cv.pdf
