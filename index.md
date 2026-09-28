@@ -3,6 +3,10 @@ layout: page
 ---
 
 <div class="profile">
+  <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot_crop.jpg"
+       alt="Julia Steinberg">
+
+  <div class="profile-body">
   <p class="profile-intro">
   I am a theoretical physicist by training. I completed my PhD at Harvard in 2020, then held an independent postdoctoral fellowship at Princeton's Center for the Physics of Biological Function. My research has spanned quantum condensed matter, computational neuroscience, and the statistical mechanics of learning.
   </p>
@@ -14,26 +18,18 @@ layout: page
   </p>
 
   <p class="profile-links">
-    <a href="mailto:jasteinberg24@gmail.com">Email</a> /
-    <a href="https://linkedin.com/in/julia-steinberg-11b61865">LinkedIn</a> /
-    <a href="https://github.com/jasteinberg">GitHub</a> /
-    <a href="https://scholar.google.com/citations?user=E8GJrQEAAAAJ&hl=en&oi=ao">Google Scholar</a> /
-    <a href="{{ site.baseurl }}/assets/cv/js_cv.pdf">CV</a>
+    <a href="mailto:jasteinberg24@gmail.com"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Email</a>
+    <a href="https://linkedin.com/in/julia-steinberg-11b61865"><i class="fa-brands fa-linkedin" aria-hidden="true"></i> LinkedIn</a>
+    <a href="https://github.com/jasteinberg"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
+    <a href="https://scholar.google.com/citations?user=E8GJrQEAAAAJ&hl=en&oi=ao"><i class="fa-brands fa-google-scholar" aria-hidden="true"></i> Google Scholar</a>
+    <a href="{{ site.baseurl }}/assets/cv/js_cv.pdf"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> CV</a>
   </p>
-
-  <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot_crop.jpg"
-       alt="Julia Steinberg">
+  </div>
 </div>
 
 ## Research interests
 
-My work uses tools from statistical physics and machine learning to study how neural networks represent and bind information and how they generalize. In academia this produced a model of associative memory for structured knowledge ([talk](https://www.youtube.com/watch?v=rh_-Vh9CGbg)) and of generalization in neural networks with sparse expansions. My current interests extend these questions to AI alignment and interpretability: the honesty and calibration of foundation models, how reward optimization succeeds and fails, and how misaligned behavior can emerge from interactions between agents rather than from any single agent in isolation.
-Code for current projects:
-
-- [interp-repo](https://github.com/jasteinberg/interp-repo) — from-scratch interpretability
-  methods and small-scale circuit studies
-- [rl-alignment-repo](https://github.com/jasteinberg/rl-alignment-repo) — RL/alignment building blocks and truth-direction probing
-- [scaling-experiments-repo](https://github.com/jasteinberg/scaling-experiments-repo) — finite-size-scaling tests of "emergent abilities" in LLMs
+My work uses tools from statistical physics and machine learning to study how neural networks represent and bind information and how they generalize. In academia this produced a model of associative memory for structured knowledge ([talk](https://www.youtube.com/watch?v=rh_-Vh9CGbg)) and of generalization in neural networks with sparse expansions. My current interests extend these questions to AI alignment and interpretability: the honesty and calibration of foundation models, how reward optimization succeeds and fails, and how misaligned behavior can emerge from interactions between agents rather than from any single agent in isolation. Code for these projects is on the [Code]({{ site.baseurl }}/code/) page.
 
 I welcome correspondence from those working on or interested in these questions.
 
