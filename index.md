@@ -3,7 +3,7 @@ layout: page
 ---
 
 <div class="profile">
-  <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot_crop.jpg"
+  <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot_portrait.jpg"
        alt="Julia Steinberg">
 
   <div class="profile-body">
