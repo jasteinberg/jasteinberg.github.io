@@ -3,8 +3,18 @@ layout: page
 ---
 
 <div class="profile">
+  <div class="profile-side">
   <img class="profile-photo" src="{{ site.baseurl }}/assets/headshot_portrait.jpg"
        alt="Julia Steinberg">
+
+  <p class="profile-links">
+    <a href="mailto:jasteinberg24@gmail.com"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Email</a>
+    <a href="https://linkedin.com/in/julia-steinberg-11b61865"><i class="fa-brands fa-linkedin" aria-hidden="true"></i> LinkedIn</a>
+    <a href="https://github.com/jasteinberg"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
+    <a href="https://scholar.google.com/citations?user=E8GJrQEAAAAJ&hl=en&oi=ao"><i class="fa-brands fa-google-scholar" aria-hidden="true"></i> Google Scholar</a>
+    <a href="{{ site.baseurl }}/assets/cv/js_cv.pdf"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> CV</a>
+  </p>
+  </div>
 
   <div class="profile-body">
   <p class="profile-intro">
@@ -15,14 +25,6 @@ layout: page
   Most recently, I worked as a quantitative researcher in high-frequency
   trading, designing and running large-scale experiments for forecast
   model development and deploying models into production. I am currently focused on AI research, with particular interests in alignment, reinforcement learning, and interpretability of LLMs and agentic AI systems. My most recent projects are documented in my <a href="/blog/">blog</a>. My latest work is an analysis of the recoverability of linear truth directions in LLMs and anomalous behavioral effects of steering along the directions returned by different estimators.
-  </p>
-
-  <p class="profile-links">
-    <a href="mailto:jasteinberg24@gmail.com"><i class="fa-regular fa-envelope" aria-hidden="true"></i> Email</a>
-    <a href="https://linkedin.com/in/julia-steinberg-11b61865"><i class="fa-brands fa-linkedin" aria-hidden="true"></i> LinkedIn</a>
-    <a href="https://github.com/jasteinberg"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
-    <a href="https://scholar.google.com/citations?user=E8GJrQEAAAAJ&hl=en&oi=ao"><i class="fa-brands fa-google-scholar" aria-hidden="true"></i> Google Scholar</a>
-    <a href="{{ site.baseurl }}/assets/cv/js_cv.pdf"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> CV</a>
   </p>
   </div>
 </div>
