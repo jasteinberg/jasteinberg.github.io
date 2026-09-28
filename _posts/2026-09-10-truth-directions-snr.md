@@ -576,10 +576,8 @@ plausibility in disguise.
 ![Depth profiles of the plausibility axis and the truth axis, plotted as the margin $$m = \mathrm{AUROC} - p_{95}$$ against fractional depth $$L/L_{\max}$$. The margin rather than the raw score, because the null widens with depth and AUROC is therefore not comparable across layers. Left, pythia-2.8b: `likely` peaks at layer $$12$$ ($$m = 0.297$$) and `cities` at layer $$29$$ ($$m = 0.252$$), at opposite ends of the depth axis, and the two curves cross near $$L/L_{\max} = 0.7$$. Right, pythia-410m (dotted) and pythia-1.4b (solid): the ordering reverses — `cities` peaks at layers $$11$$ and $$7$$ of $$24$$, before `likely` at layers $$15$$ and $$13$$ — and the late-depth truth structure appears only as a secondary rise over the final layers, still climbing at layer $$24$$, which is the last block at both widths, so whether it would peak is not resolved by this sweep. Stars mark the selected layer, hollow circles the embedding, which is excluded from selection.](/assets/figures/truth_plausibility_depth.png)
 
 One limit on that reading, and one further test, should be stated. The limit is that
-the profiles are cleanest at 2.8b. The test is the one Marks &
-Tegmark designed the set for, the cross-dataset one: take a
-direction fitted on truth statements and evaluate it on `likely`. A direction that had
-been reading plausibility all along should separate it. However, none of them do. Across all nine main-tier sets, a direction fitted at that set's own
+the profiles are cleanest at 2.8b. Marks & Tegmark designed the `likely` dataset for a cross-dataset test: fit a direction on a truth dataset and evaluate it on `likely`, where plausibility is decorrelated from truth. A direction that had
+been reading plausibility all along should separate `likely`. However, none of the fitted directions achieve this. Across all nine main-tier sets, a direction fitted at that set's own
 selected layer and evaluated on held-out `likely` gives AUROC between $$0.44$$ and
 $$0.60$$, and not one clears the random-direction null on `likely` at the corresponding
 layer ($$p_{95} \approx 0.58$$–$$0.60$$). The largest is `larger_than` at $$0.598$$ against a
@@ -1382,7 +1380,7 @@ estimator aligns with the leading within-class eigenvector. On `counterfact` tha
 leading eigenvector.
 
 
-Four things should be noted before comparing to other reports.
+Three things should be noted before comparing to other reports.
 The corrected effect I find is modest. At one class gap the plain direction's median response
 is $$-0.062$$, five null standard deviations, and the whitened direction's is $$+0.025$$,
 two. While the correction flips the sign of the effect, the corrected effect is less than half the magnitude of the incorrect result, so the correction
