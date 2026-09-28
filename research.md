@@ -152,8 +152,8 @@ This work is described in more detail in a [talk](https://www.youtube.com/watch?
 
 ## AI alignment & interpretability
 
-My current interests carry the same questions into transformers: what internal structure a network builds, when it appears during training, and how to read it back off the weights, with a particular interest in binding, honesty, and calibration. 
+My current interests carry the same questions into AI models: what internal structure a model builds, when it appears during training, and how to read it back from the model's internal representations, with a particular interest in binding, honesty, and calibration.
 
-The binding problem from my associative-memory work reappears in transformers, where current interpretability methods recover a vocabulary of features but not yet the grammar that binds them.
+Questions from my associative-memory work reappear here in how language models store and retrieve associations from different types of memory, such as their weights and their context window. When a model must hold many associations in context at once, those associations can interfere with one another, and retrieval can return a plausible but wrong association. I am exploring how this interference grows with memory load, as one possible mechanism behind hallucination.
 
 Recently, my work has focused on interpretability and alignment, and in particular honesty: whether a model's internal representations carry a direction that tracks the truth of a statement independently of what the model asserts, and how that geometry relates to calibration and hallucination. My most recent [blog post](https://jasteinberg.github.io/blog/2026/truth-directions-snr/) develops an analysis of the geometry of truth directions from a signal-to-noise perspective.

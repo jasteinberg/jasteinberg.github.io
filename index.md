@@ -10,10 +10,7 @@ layout: page
   <p class="profile-intro">
   Most recently, I worked as a quantitative researcher in high-frequency
   trading, designing and running large-scale experiments for forecast
-  model development and deploying models into production. I am currently
-  focused on AI research, with particular interests in alignment,
-  reinforcement learning, and mechanistic interpretability in LLMs and
-  other foundation models. My most recent projects are documented in my <a href="/blog/">blog</a>. My latest work is an analysis of the recoverability of linear truth directions in LLMs and anomalous behavioral effects of steering along the directions returned by different estimators.
+  model development and deploying models into production. I am currently focused on AI research, with particular interests in alignment, reinforcement learning, and interpretability of LLMs and agentic AI systems. My most recent projects are documented in my <a href="/blog/">blog</a>. My latest work is an analysis of the recoverability of linear truth directions in LLMs and anomalous behavioral effects of steering along the directions returned by different estimators.
   </p>
 
   <p class="profile-links">
@@ -30,8 +27,7 @@ layout: page
 
 ## Research interests
 
-My work uses tools from statistical physics and machine learning to study how neural networks represent and bind information and how they generalize. In academia this produced a model of associative memory for structured knowledge ([talk](https://www.youtube.com/watch?v=rh_-Vh9CGbg)) and of generalization in neural networks with sparse expansions. My current interests extend these questions to AI alignment and interpretability: how reward optimization succeeds and fails, and the honesty and calibration of foundation models.
-
+My work uses tools from statistical physics and machine learning to study how neural networks represent and bind information and how they generalize. In academia this produced a model of associative memory for structured knowledge ([talk](https://www.youtube.com/watch?v=rh_-Vh9CGbg)) and of generalization in neural networks with sparse expansions. My current interests extend these questions to AI alignment and interpretability: the honesty and calibration of foundation models, how reward optimization succeeds and fails, and how misaligned behavior can emerge from interactions between agents rather than from any single agent in isolation.
 Code for current projects:
 
 - [interp-repo](https://github.com/jasteinberg/interp-repo) — from-scratch interpretability
