@@ -489,3 +489,8 @@ mjx-container[display="true"] {
    so blog-post headings are unaffected. Tune the two values below. */
 body.layout-page .post-title { font-size: 2.4rem; }
 body.layout-page .post-content h2 { font-size: 1.25rem; }
+
+/* Centered page titles and section heads on pages only; blog-post
+   headings and the blog/reviews list entries stay left-aligned. */
+body.layout-page .post-header .post-title,
+body.layout-page .post-content h2:not(.post-title) { text-align: center; }
