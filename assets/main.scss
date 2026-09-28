@@ -494,3 +494,37 @@ body.layout-page .post-content h2 { font-size: 1.25rem; }
    headings and the blog/reviews list entries stay left-aligned. */
 body.layout-page .post-header .post-title,
 body.layout-page .post-content h2:not(.post-title) { text-align: center; }
+
+/* ── Home-page banner: animated gradient with drifting dots ─────────── */
+.hero {
+  position: relative;
+  height: 15rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: linear-gradient(135deg, #3f6fd1, #7a6ad6);  /* pre-JS fallback */
+}
+.hero-text {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-name {
+  margin: 0;
+  color: #fff;
+  font-size: 2.6rem;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.18);
+}
+@media (max-width: 600px) {
+  .hero { height: 11rem; }
+  .hero-name { font-size: 2rem; }
+}
