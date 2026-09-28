@@ -79,19 +79,6 @@ h2 {
   border-bottom: 1px solid var(--border-soft);
 }
 
-/* a small accent tick at the start of each major section */
-h2::before {
-  content: "";
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  margin-right: 0.6rem;
-  vertical-align: 0.12em;
-  background: var(--accent);
-  border-radius: 1px;
-  opacity: 0.85;
-}
-
 h3 { font-size: 1.18rem; margin: 1.9rem 0 0.55rem; }
 
 /* h4 as a mono uppercase sub-label, matching the reference doc */
