@@ -7,7 +7,11 @@
 
     {%- include header.html -%}
 
-    {%- if page.url == "/" -%}{%- include hero.html -%}{%- endif -%}
+    {%- if page.url == "/" -%}
+      {%- include hero.html -%}
+    {%- elsif page.layout == "page" and page.title and page.hero != false -%}
+      {%- include hero.html variant="thin" title=page.title -%}
+    {%- endif -%}
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">

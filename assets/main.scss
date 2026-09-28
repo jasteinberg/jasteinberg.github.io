@@ -539,3 +539,11 @@ body.layout-page .post-content h2:not(.post-title) { text-align: center; }
   .hero { height: 11rem; }
   .hero-name { font-size: 2rem; }
 }
+
+/* Thin variant on section pages (Research, Publications, Blog, Reviews) */
+.hero--thin { height: 7.5rem; }
+.hero--thin .hero-name { font-size: 2rem; }
+@media (max-width: 600px) {
+  .hero--thin { height: 6rem; }
+  .hero--thin .hero-name { font-size: 1.6rem; }
+}

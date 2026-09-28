@@ -1,8 +1,13 @@
-<section class="hero" aria-label="Julia Steinberg">
+<section class="hero{% if include.variant == 'thin' %} hero--thin{% endif %}"
+         aria-label="{{ include.title | default: site.title | escape }}">
   <canvas class="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-text">
+    {%- if include.variant == 'thin' -%}
+    <h1 class="hero-name">{{ include.title | escape }}</h1>
+    {%- else -%}
     <h1 class="hero-name">Julia Steinberg</h1>
     <p class="hero-tagline">{{ site.description }}</p>
+    {%- endif -%}
   </div>
 </section>
 
