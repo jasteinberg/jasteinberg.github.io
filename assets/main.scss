@@ -498,6 +498,38 @@ mjx-container[display="true"] {
   }
 }
 
+/* Mid-width screens (1100–1279px, e.g. a laptop window at 125% zoom): the
+   centered layout above has no room left in the margin for the sidebar, so
+   it gets its own left column and the article fills the rest. */
+@media (min-width: 1100px) and (max-width: 1279px) {
+  body.layout-post .page-content .wrapper,
+  body.layout-review .page-content .wrapper { max-width: 72rem; }
+
+  body.layout-post .post,
+  body.layout-review .post {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    column-gap: 2rem;
+  }
+  body.layout-post .post-main,
+  body.layout-review .post-main { grid-column: 2; max-width: 48rem; }
+
+  body.layout-post .post-toc,
+  body.layout-review .post-toc {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+    box-sizing: border-box;
+    padding-right: 0.75rem;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+  }
+}
+
 .post-toc-label {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.8rem;
