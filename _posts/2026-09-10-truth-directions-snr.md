@@ -14,7 +14,7 @@ residual stream. [Marks & Tegmark (2023)](https://arxiv.org/abs/2310.06824) show
 Previously, [Burns et al. (2022)](https://arxiv.org/abs/2212.03827) had proposed finding a
 linear truth direction *without* labels, by demanding logical consistency, a method they call
 Contrast-Consistent Search (CCS). However,
-[Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4) showed empirically that the CCS estimator is insufficiently constrained. In this study, untrained, randomly initialized probes were shown to already reach about $$75\%$$ accuracy on the "easy" dataset once the CCS convention of inverting the sign of a below-chance probe was applied. Additionally, more than twenty mutually orthogonal "truth probes" reached accuracies similar to the one returned by the CCS estimator implying that CSS has not found the optimal linear probe. Moreover, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy of this baseline will always be either greater than or equal to one half. [Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) studied the CCS estimator further and showed that because
+[Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4) showed empirically that the CCS estimator is insufficiently constrained. In this study, untrained, randomly initialized probes were shown to already reach about $$75\%$$ accuracy on the "easy" dataset once the CCS convention of inverting the sign of a below-chance probe was applied. Additionally, more than twenty mutually orthogonal "truth probes" reached accuracies similar to the one returned by the CCS estimator implying that CCS has not found the optimal linear probe. Moreover, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy of this baseline will always be either greater than or equal to one half. [Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) studied the CCS estimator further and showed that because
 arbitrary binary features are optimal under that consistency loss, nothing in it selects for knowledge, and in practice unsupervised probes recover whatever feature is *most prominent* in the representation. This implies that when using unsupervised methods to obtain a linear truth direction, the linear direction obtained via the estimator can appear to decode truth but actually correspond to a salient direction that happens to correlate with the label on that particular dataset. These observations imply that the decoding of truth inherits a signal-versus-noise problem. Consequently, on a benchmark where chance-level structure is very strong, the ability of a truth probe to separate the data in the true and false classes is a much weaker result than it first appears. The signal-versus-noise problem 
 is also relevant in cases where a truth direction is estimated using supervised methods, which I will show in this post.
 
@@ -206,7 +206,7 @@ is a property of the data, not of an optimizer's freedom to search.
 
 **Cover's theorem: the counting baseline.** Before asking how *well* a direction
 separates the classes, first one must ask how surprising it is that a separating
-direction exists at all. Cover's function-counting theorem (1965) is an exact results that states that for $$N$$ points in general position in $$\mathbb{R}^{d}$$, the number
+direction exists at all. Cover's function-counting theorem (1965) is an exact result that states that for $$N$$ points in general position in $$\mathbb{R}^{d}$$, the number
 of the $$2^{N}$$ possible binary labelings that a hyperplane through the origin can
 separate is
 
@@ -265,8 +265,7 @@ itself. Marks & Tegmark set $$\theta_{\mathrm{mm}} = \mu_1 - \mu_0$$ and then, f
 evaluation, read with $$\sigma(\theta_{\mathrm{mm}}^{\top}\Sigma^{-1}x)$$, noting that
 this coincides with linear discriminant analysis. Their Appendix E gives the same
 construction in terms of Mahalanobis whitening, and their $$\Sigma$$ is the within-class
-covariance defined exactly as above. What is at issue is *where* the correction is
-applied. They are explicit that $$\Sigma^{-1}$$ is there to tilt the decision boundary,
+covariance defined exactly as above. The issue is *where* the correction is applied. They are explicit that $$\Sigma^{-1}$$ is there to tilt the decision boundary,
 while $$\theta_{\mathrm{mm}}$$ remains the candidate feature direction, one which may be
 non-orthogonal to that boundary. Their intervention experiments steer along $$\theta_{\mathrm{mm}}$$. In their framework, the whitened vector is a readout and the raw mean-difference is the feature. The steering results below report a regime in which
 that assignment is inverted.
@@ -582,9 +581,7 @@ selected layer and evaluated on held-out `likely` gives AUROC between $$0.44$$ a
 $$0.60$$, and not one clears the random-direction null on `likely` at the corresponding
 layer ($$p_{95} \approx 0.58$$–$$0.60$$). The largest is `larger_than` at $$0.598$$ against a
 null of $$0.600$$. `cities` gives $$0.559$$ and `counterfact` $$0.480$$. The reverse direction
-agrees: the `likely`-fitted direction scores $$0.43$$–$$0.54$$ on the nine truth sets. So
-the plausibility axis and the truth directions are separately readable and mutually
-uninformative. This is what the distractor was constructed to detect, and it comes
+agrees: the `likely`-fitted direction scores $$0.43$$–$$0.54$$ on the nine truth sets. The plausibility axis and the truth directions are therefore separately readable and mutually uninformative. This is what the distractor was constructed to detect, and it comes
 out clean.
 
 ## Dimensional slack and sample size
@@ -829,12 +826,10 @@ effect clears a $$400$$-draw random-direction null in the wrong direction, repro
 across seeds and at two layers.
 
 Read naively, this is a failure of the causal linear picture. Displacing along the direction fit to read truth does not raise the probability of the true completion and, in fact, lowers it. I use the rest of this post to argue that the naive reading is wrong: the wrong sign is a property of the estimator, not of the activation geometry.
-What that means precisely is that the same activations, at the
-same layer, contain a direction along which displacement moves the model toward the true
+This means that the same activations, at the same layer, contain a direction along which displacement moves the model toward the true
 completion which the mass-mean estimator does not return. Instead, it returns $$\hat v_1$$,
 the axis of largest within-class variance, with which $$\hat\theta$$ shares a cosine of
-$$0.994$$ at this depth. Replacing the mass-mean estimate by the Fisher rule, inside
-the same linear class, recovers the correct sign. What makes the plain estimator produce a
+$$0.994$$ at this depth. Replacing the mass-mean estimate by the Fisher rule, downweighting the salient axis, or deleting the salient axis outright, inside the same linear class, recovers the correct sign. What makes the plain estimator produce a
 negative direction at layer $$28$$ is not settled here. Change the estimator, either by downweighting the salient axis or by
 deleting it outright, and the correct sign comes back out of the same data. The claim is
 about which part of the geometry the estimator points at, not about how much truth the
@@ -1046,8 +1041,7 @@ across that boundary, which implies that most of the apparent class gap on
 `counterfact` was from the eleven statements with missing massive activations in the earlier layers of the network. `cities` carries the same coordinates over the same span, but they are never dropped by any statement in the dataset. Hence `cities` never acquires a rogue dimension at any depth.
 
 pythia-1.4b tests whether this is only a statement about the top of the network. Half of
-it is. The massive activation dies at 1.4b's final layer too, so vanishing at the top is
-a general property of the residual stream rather than anything about truth. The other
+it is. The massive activation dies at 1.4b's final layer too, so vanishing at the top of the network is a general property of the residual stream rather than anything about truth. The other
 half is not. At 1.4b there is no rogue dimension at any layer: from layer $$3$$ on the
 participation ratio runs between $$14$$ and $$35$$ and the alignment
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ between $$0.07$$ and $$0.41$$, nowhere near
@@ -1283,8 +1277,7 @@ Two conditions make the reduction valid, and together they are the criterion for
 failure mode. The spectrum must have one dominant eigenmode, $$\mathrm{PR} \approx 1$$
 with $$\lambda_1/\lambda_2 \gg 1$$, or there is no plane to reduce to. Additionally,
 $$\varphi_{\mathrm{mm}}$$ must be small, or the estimator is not at the foot of the cliff
-and there is nothing to correct. Both are read off the activations and the fitted direction, and together they diagnose
-that the estimator has aligned with $$\hat v_1$$. They do not by themselves say which
+and there is nothing to correct. Both are read off the activations and the fitted direction, and together they diagnose whether the estimator has aligned with $$\hat v_1$$. They do not by themselves say which
 way either direction will steer. That is set by the overlaps with the score gradient,
 $$\hat v_1\cdot g$$ for the mass-mean direction and $$\hat e_2\cdot g$$ for the
 correction, which are also measured without displacing an activation. At `counterfact`
@@ -1345,7 +1338,7 @@ toward it. The rogue-dimension diagnosis explains why. There $$\hat\theta$$ has 
 onto $$\hat v_1$$ and is not tracking a feature at all, so the $$\Sigma^{-1}$$ meant to
 sharpen a readout is instead doing the work of recovering the direction.
 
-The inversion is a property of a regime, not a refutation of Marks & Tegmark, which is demonstrated by `cities` as a the control. There the two directions behave as mass-mean
+The inversion is a property of a regime, not a refutation of Marks & Tegmark, which is demonstrated by `cities` as the control. There the two directions behave as mass-mean
 probing intends. At pythia-2.8b layer $$28$$, the same model and depth at which
 `counterfact` inverts, the plain direction steers correctly in $$10/10$$ seeds
 ($$\chi = +0.030$$) while the whitened direction is weak and inconsistent
@@ -1359,7 +1352,7 @@ wrong-signed at both. At every other layer of either dataset it sits inside the 
 At layer $$28$$ the two datasets share the model, the depth and the estimator, and
 their significant effects point in opposite directions. When no single eigenmode
 dominates the within-class covariance, the mean difference *is* the causal feature and
-the inverse covariance only adds estimation noise, which is what Marks & Tegmark report, on datasets of exactly this kind. The inversion is confined to the regime where $$\hat\delta$$ has aligned with $$v_{1}$$, and the rogue dimension decides which regime a dataset is in.
+the inverse covariance only adds estimation noise, which is what Marks & Tegmark report, on datasets of exactly this kind. The inversion is confined to the regime where $$\hat\delta$$ has aligned with $$\hat v_1$$, and the rogue dimension decides which regime a dataset is in.
 
 Two points in the `cities` panel deserve naming, since they are visible and read at
 first glance like counterexamples. At layers $$16$$ and $$20$$ the plain direction becomes
