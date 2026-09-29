@@ -211,6 +211,10 @@ mjx-container[display="true"] {
   border-bottom: 1px solid var(--border);
   background: var(--bg);
   min-height: auto;
+  /* Keep the header (and the phone-width dropdown menu that opens from it)
+     above the animated banner, which is positioned and comes later. */
+  position: relative;
+  z-index: 10;
 }
 .site-header .wrapper { padding-top: 1.3rem; padding-bottom: 1.3rem; }
 
