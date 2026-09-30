@@ -779,4 +779,4 @@ notebook alongside.
 
 ---
 
-*<small>Prose edited with the assistance of Claude (Anthropic), which also checked the numbers against the analysis artifacts and ran supplementary experiments. I ran the main experiments and vouch for every claim here.</small>*
+*<small>Claude (Anthropic) produced an initial draft from my description of the ideas, which I rewrote in full. It also supplied the numbers quoted in the text from the analysis artifacts and checked them. I ran the experiments and vouch for every claim here.</small>*
