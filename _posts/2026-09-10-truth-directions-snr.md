@@ -1357,7 +1357,7 @@ every layer's point estimate is positive.
 A mass-mean truth direction can align with a causal truth direction, but it can also contain a large component along the most salient axis of the activations, with a signal-to-noise
 analysis required to tell the two apart on any given benchmark. In this work I have focused on four consequences of this observation. I started by demonstrating that for the standard datasets in this literature, in-sample
 separation is inflated by dimensional slack that scales as $$N^{-1/2}$$ with a prefactor
-set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset or model layer, the mass-mean
+set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors on held-out data in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset or model layer, the mass-mean
 estimator aligns with the leading within-class eigenvector. On `counterfact` that direction fails to decode truth and steers behavior with a significant wrong sign, five null standard deviations deep at one class gap. However, I show that the same activations used to obtain the mass-mean direction contain a direction that steers correctly, and it can be reached without leaving the linear class, either by the Fisher direction or by projecting out the
 leading eigenvector.
 
