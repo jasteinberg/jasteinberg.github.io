@@ -14,23 +14,23 @@ residual stream. [Marks & Tegmark (2023)](https://arxiv.org/abs/2310.06824) show
 Previously, [Burns et al. (2022)](https://arxiv.org/abs/2212.03827) had proposed finding a
 linear truth direction *without* labels, by demanding logical consistency, a method they call
 Contrast-Consistent Search (CCS). However,
-[Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4) showed empirically that the CCS estimator is insufficiently constrained. In this study, untrained, randomly initialized probes were shown to already reach about $$75\%$$ accuracy on the "easy" dataset once the CCS convention of inverting the sign of a below-chance probe was applied. Additionally, more than twenty mutually orthogonal "truth probes" reached accuracies similar to the one returned by the CCS estimator implying that CCS has not found the optimal linear probe. Moreover, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy of this baseline will always be either greater than or equal to one half. [Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) studied the CCS estimator further and showed that because
-arbitrary binary features are optimal under that consistency loss, nothing in it selects for knowledge, and in practice unsupervised probes recover whatever feature is *most prominent* in the representation. This implies that when using unsupervised methods to obtain a linear truth direction, the linear direction obtained via the estimator can appear to decode truth but actually correspond to a salient direction that happens to correlate with the label on that particular dataset. These observations imply that the decoding of truth inherits a signal-versus-noise problem. Consequently, on a benchmark where chance-level structure is very strong, the ability of a truth probe to separate the data in the true and false classes is a much weaker result than it first appears. The signal-versus-noise problem 
-is also relevant in cases where a truth direction is estimated using supervised methods, which I will show in this post.
+[Roger (2023)](https://www.alignmentforum.org/posts/bWxNPMy5MhPnQTzKz/what-discovering-latent-knowledge-did-and-did-not-find-4) showed empirically that the CCS estimator is insufficiently constrained and showed that untrained, randomly initialized probes could already reach about $$75\%$$ accuracy on the "easy" dataset once the CCS convention of inverting the sign of a below-chance probe was applied. Additionally, in his study more than twenty mutually orthogonal "truth probes" reached accuracies similar to the one returned by the CCS estimator, implying that CCS has not found the optimal linear probe. Moreover, due to the inversion convention in choosing the sign, comparing to a random baseline is misleading because the accuracy of this baseline will always be either greater than or equal to one half. [Farquhar et al. (2023)](https://arxiv.org/abs/2312.10029) studied the CCS estimator further and showed that because
+arbitrary binary features are optimal under the consistency loss, nothing in it selects for knowledge, and in practice unsupervised probes recover whatever feature is *most prominent* in the activation space representation. This implies that when using unsupervised methods to obtain a linear truth direction, the linear direction obtained via the estimator can appear to decode truth while actually corresponding to a salient direction that happens to correlate with the label on that particular dataset. These observations suggest that the decoding of truth inherits a signal-versus-noise problem. Consequently, on a benchmark where chance-level structure is very strong, the ability of a truth probe to separate the data into true and false classes is a much weaker result than it first appears.
+This post applies the same signal-to-noise analysis, raised by critiques of the CCS estimator, to linear probes fit from labeled statements.
 
 <div class="tldr gray" markdown="1">
 
-A mass-mean "truth direction" is an estimator for the decodable truth direction which separates true and false statements. However, in the low signal-to-noise regime, the estimator can end up returning a direction with a large component lying along the most salient direction in activation space, i.e. the direction of largest within-class variance. On a dataset where the class gap is small relative to the within class spread along the axis connecting the centroids, the finite-sample mean difference is dominated by noise along that axis, and the estimator contains a large component along the salient axis regardless of whether the salient axis has a large overlap with the recoverable truth direction. This implies that a truth direction and a salient axis can look alike on a benchmark and require a signal-to-noise analysis to distinguish them. In this post, I apply a signal-to-noise analysis to mass-mean truth estimators to address the question of recoverability: *when* does a model contain a linear truth direction that can be recovered by a probe that carries signal beyond the single most salient axis? 
+A mass-mean "truth direction" is an estimator for a causal truth direction which separates true and false statements. However, in the low signal-to-noise regime, the estimator can end up returning a direction with a large component lying along the most salient direction in activation space, i.e. the direction of largest within-class variance. On a dataset where the class gap is small relative to the within-class spread along the axis connecting the centroids, the finite-sample mean difference is dominated by noise along that axis, and the estimator contains a large component along the salient axis regardless of whether the salient axis has a large overlap with the recoverable truth direction. This implies that a truth direction and a salient axis can look alike on a benchmark and require a signal-to-noise analysis to distinguish them. In this post, I apply a signal-to-noise analysis to mass-mean truth estimators to address the question of recoverability: *when* does a model contain a linear truth direction that can be recovered by a probe that carries signal beyond the single most salient axis? 
 
-Systems neuroscience has spent decades asking what a downstream reader can recover from a population of noisy neural units. In this spirit I treat probing for a truth direction as a readout problem: I take the probe as a linear readout, quantify its separation with a detection-theoretic $$d'$$, and benchmark that $$d'$$ against an explicit random-direction null across the Pythia scale ladder on twelve benchmark datasets. This yields four results:
+Systems neuroscience has spent decades asking what a downstream reader can recover from a population of noisy neural units. In this spirit, I treat probing for a truth direction as a readout problem: I take the probe as a linear readout, quantify its separation with a detection-theoretic $$d'$$, and benchmark that $$d'$$ against an explicit random-direction null across the Pythia scale ladder on twelve benchmark datasets. This yields four results:
 
-**(1) Apparent separation is trivial.** Two effects inflate a probe's score before considering any truth content. If the size of the dataset puts the model below Cover's capacity ($$N \ll 2d$$ throughout) for a binary classifier, then it is possible to find a direction which can separate any random relabeling of the data (given some constraints). This causes a random direction to inherit a share of the real class gap between the true and false centroids and implies that the performance of the fitted probe relative to a random null direction is the relevant quantity, not the raw score of the probe.
+**(1) Apparent separation is trivial.** If the size of the dataset puts the model below Cover's capacity ($$N \ll 2d$$ throughout) for a binary classifier, then it is possible to find a direction which can separate any random relabeling of the data for points in general position, which is generically true for activations. This causes in-sample separation to be inflated and it must be fixed by scoring on held-out data not used to fit the direction. Additionally, a random direction inherits a share of the real class gap between the true and false centroids by virtue of projection, i.e. $$u^{\top}\delta \sim \mathcal{N}(0, \lVert\delta\rVert^2/d)$$. This implies that the performance of the fitted probe relative to a random null direction is the relevant quantity, not the raw score of the probe.
 
 **(2) When the class signal is weak, the estimator returns a nuisance direction.** In this case the mass-mean estimator returns the dominant activation axis $$\hat v_1$$ rather than a truth direction. Recoverability for the mass-mean probe is determined by whether the class gap grows with depth relative to the spread such that the held-out AUROC clears the random-direction null. On the `cities` dataset, the spread begins to shrink and the gap begins to grow at layer 11, and by layer 14 the held-out AUROC clears the null for the remaining layers of the network. However, on `counterfact`, the class gap never dominates the spread, which only collapses in the last two layers of the network where the separation is still too weak to provide a usable readout. The decodability results replicate on OLMo-2-1B across a different architecture and corpus.
 
 **(3) When the estimator returns a nuisance direction, steering along it fails to correct the behavior.** Because the estimator has failed to return the causal truth direction, steering along the estimator does not generally increase the score for true completion and can in some cases provide a lower score when compared to steering along random directions for displacements of the same magnitude. All steering measurements are done on Pythia.
 
-**(4) The failure is in the mass-mean estimator and not in the absence of a causal truth direction:** the nuisance direction corresponding to the salient but non-causal axis is identified in advance from the within-class spectrum and the alignment of the fitted direction with the salient direction. Correcting the estimator via whitening raises the held-out AUROC above the random decoding null and returns the correct steering behavior in `counterfact`.
+**(4) The failure is in the mass-mean estimator and not in the absence of a causal truth direction:** the nuisance direction corresponding to the salient axis is identified in advance from the within-class spectrum and the alignment of the fitted direction with the salient direction. Correcting the estimator via whitening raises the held-out AUROC above the random decoding null and returns the correct steering behavior in `counterfact`.
 
 </div>
 
@@ -225,7 +225,7 @@ Cover's theorem suggests that $$N/2d$$ is the natural unit for the empirical ana
 
 **The random-direction null.** Roger's and Farquhar's results show that a *nonzero*
 $$d'$$ is not, by itself, evidence of anything. The meaningful quantity is therefore not $$d'$$ obtained from the estimator but $$d'$$ relative to that obtained by the random null control. This is obtained by drawing many random unit directions $$u \sim \mathrm{Unif}(S^{d-1})$$, forming the distribution of
-their $$d'$$ (equivalently AUROC), and take its 95th percentile,
+their $$d'$$ (equivalently AUROC), and taking its 95th percentile,
 
 $$
 p_{95} \;=\; Q_{0.95}\big[\,\mathrm{AUROC}(u)\,\big] .
@@ -317,10 +317,7 @@ the mass-mean direction after projecting out the top-$$k$$ principal components 
 activations, taken on the total covariance and so including any between-class shift,
 and analyze $$d'$$ as a function of $$k$$. If truth is merely contained in the
 salient subspace, the signal collapses as soon as the leading components are
-removed. However, if it occupies its own low-variance subspace, $$d'$$ survives. This
-superposition probe, $$d'$$ against the number of top directions removed, is the
-salience-versus-truth confound turned into a measurement. The measurement itself is
-reported in *The rogue dimension* below, once the null is in place.
+removed. However, if it occupies its own low-variance subspace, $$d'$$ survives.
 
 ## Drawing a random direction
 
@@ -374,7 +371,7 @@ used in no other sense.
 
 ## The scale of an intervention
 
-**The behavioral score.** What steering moves is the model's preference between two
+**The behavioral score.** Steering moves the model's preference between two
 completions of the same prompt. Each statement is split at its final entity into a
 prompt and a pair of one-entity completions. On `cities` the prompt is "The city of
 Krasnodar is in" with true completion " Russia" against a paired false country. On
@@ -775,13 +772,12 @@ concentrated.
 
 ## A causal test of the mass-mean direction
 
-The decoding analysis provides the conditions for when a truth direction is *readable*. Steering asks the
-separate question of whether it is *causal*, that is, whether displacing the residual stream
+The decoding analysis says when a truth direction is *readable*. Steering asks whether it is *causal*, that is, whether displacing the residual stream
 along $$\hat\theta$$ moves the model's behavior toward the true completion. The two
 need not agree. On `counterfact_true_false` at the deep layers of pythia-2.8b the
 mass-mean direction is neither readable nor correctly causal. For the readout, the held-out AUROC at layer $$28$$ is $$0.502$$ against a null of
 $$0.560$$, and it stays inside the null at every layer except for the last. As an intervention
-it produces a significant effect with the wrong sign.
+it produces a significant effect, but with the incorrect sign.
 
 As defined above, steering is reported as the antisymmetric response $$A$$ in units of the
 class-gap. A genuine truth direction produces $$A > 0$$, and the random-direction
@@ -811,8 +807,9 @@ directly comparable. In this post, I additionally split the steering response in
 parts, to separate the degradation from the signed effect and compare against a random-direction
 null to determine which susceptibilities are distinguishable from chance.
 
-The seed median sits
-five null standard deviations below zero, and the two positive seeds sit inside the
+where $$p$$ is the fraction of the $$400$$-draw random-direction null of $$A(1)$$ at
+least as extreme in the same direction, evaluated seed by seed.
+The seed median sits five null standard deviations below zero, and the two positive seeds sit inside the
 null. Layer $$24$$ gives the same sign less cleanly: $$7/10$$
 seeds negative with a median $$A(1) = -0.037$$ against a null standard deviation of
 $$0.015$$, and one seed strongly positive. The effect is not null. It is
@@ -890,10 +887,7 @@ variance. It is $$535$$ times larger than the next, and the mass-mean direction 
 almost perfectly aligned with it. Therefore, the estimator has not returned a truth direction, it has returned $$\hat v_1$$, the dominant axis of the within-class noise. On this
 dataset there is essentially no class-gap signal for $$\hat\delta$$ to align with, so the
 finite-sample $$\hat\delta$$ is dominated by its projection onto the highest-variance
-axis. This axis is the salient direction of the superposition test above. When the class
-gap is negligible, the leading direction of the total activation covariance and the
-within-class $$\hat v_1$$ coincide, so the two diagnostics see the same axis. They
-separate only once the gap grows. The participation ratio
+axis. The participation ratio
 $$\mathrm{PR} = (\sum_i\hat\lambda_i)^2/\sum_i\hat\lambda_i^2$$ characterizes the spectrum on a
 dimension-free scale: $$\mathrm{PR} \to 1$$ when one eigenvalue dominates the spectrum
 and $$\mathrm{PR} \to d$$ when the spectrum is flat, so it counts the directions the
@@ -968,18 +962,14 @@ The obvious objection is that this is a fact about Pythia. However, the same obs
 training corpus at a third of the parameters, reproduce the pattern. Both `cities` and `counterfact` have the same qualitative behavior as on Pythia, and the
 numbers are reported in the appendix *Replication on OLMo-2-1B*.
 
-The superposition probe set up in *Separability, capacity and readout* reads the same object from the other
-side, and on Pythia it separates the datasets the same way. On `cities` the separation
+The superposition probe set up in *Separability, capacity and readout* separates the datasets on Pythia. On `cities` the separation
 decays steadily once the leading components go, $$d'_{\mathrm{mm}} = 2.93 \to 0.25$$, and
 `larger_than` decays likewise. On `neg_cities` it is untouched until the top two are
 removed ($$3.03$$ at $$k = 2$$) and only then collapses, so its truth direction sits below
 the most salient axes rather than in them. `counterfact_true_false` does neither. Its
 $$d'_{\mathrm{mm}}$$ *rises*, $$0.20 \to 0.44$$, so stripping the leading directions makes
 the truth signal **better**. `companies_true_false` exhibits the same effect more strongly, $$d'_{\mathrm{mm}} = 0.17 \to 1.09$$
-at $$k = 8$$ before falling back to $$0.55$$ at $$k = 64$$. When removing the leading
-direction *improves* recovery, that direction is the rogue dimension seen through the
-superposition probe rather than the spectrum. Datasets without a rogue dimension lose
-signal when the same components are stripped.
+at $$k = 8$$ before falling back to $$0.55$$ at $$k = 64$$.
 
 ![The salience knob: $$d'$$ of the mass-mean direction after projecting out the top-$$k$$ principal components, at each dataset's best layer on pythia-2.8b. On `cities`, `neg_cities` and `larger_than` the separation decays as the leading directions are removed — the truth signal is partly contained in the salient subspace. On `counterfact` it rises instead, so the leading directions are not carrying the truth signal but obscuring it.](/assets/figures/truth_superposition.png){: .fig-single}
 
@@ -1084,13 +1074,13 @@ layers, and at mid-depth on `cities`. Whatever produces it is systematic rather 
 arbitrary, and the label-blindness of $$\hat v_1$$ says only that truth is not what
 produces it.
 
-If that account is right, removing the contribution of $$\hat v_1$$ should recover a
+If this account is right, removing the contribution of $$\hat v_1$$ should recover a
 correctly signed causal effect, by correcting the estimator's alignment with the rogue
 dimension rather than by enriching the function class.
 
 ### Susceptibility and the score gradient
 
-Before testing that prediction, it is worth asking what the steering number reports. The
+Before testing this prediction, it is worth asking what the steering number reports. The
 susceptibility is a linear functional of the direction pushed. Writing
 $$g = \big\langle \nabla_x \ell(x)\big\rangle$$ for the mean gradient of the behavioral
 score over the evaluation set, the odd part of the response gives
@@ -1302,7 +1292,7 @@ the quotient, and the measured $$1.22\times$$ is a small gain from the rest of t
 spectrum, outside the plane. The formula stops applying where the regime ends, and the
 regime control below draws the same boundary.
 
-Both corrections flip the sign. Steering along the whitened direction at layer $$28$$
+For `counterfact` both the whitened and projected corrections flip the sign of steering. Steering along the whitened direction at layer $$28$$
 gives
 
 $$
@@ -1315,17 +1305,16 @@ with $$8/10$$ seeds individually clearing the null at $$5\%$$. Layer $$24$$ give
 same picture: $$10/10$$ positive, $$7/10$$ clearing, $$p = 0.020$$. Here $$\chi$$
 coincides with $$A(1)$$ at $$+0.025$$, because the whitened response is linear in $$h$$
 over the whole sweep, $$0.013$$, $$0.025$$, $$0.050$$, $$0.099$$ at $$h = 0.5, 1, 2, 4$$,
-where the plain direction's response fell off at $$h = 4$$. The corrected effect is
-smaller than the wrong-signed one it replaces, two null standard deviations against
-five, but it is monotone where that one was not. The rank-one correction
+where the plain direction's response fell off at $$h = 4$$. The corrected steering behavior is
+smaller than the wrong-signed steering behavior it replaces, two null standard deviations against
+five, but it is monotone where the uncorrected steering was not. The rank-one correction
 $$\hat\theta_\perp$$, measured independently in the rogue-dimension sweep, agrees. At
 layer $$28$$ its three seeds give $$A(1) = +0.045$$, $$+0.036$$ and $$+0.048$$, each at
 $$p \le 0.0025$$ against the same $$400$$-draw null, so on its own it carries $$A$$ from
 significantly negative to significantly positive, and it raises held-out decoding AUROC
-at layer $$28$$ from $$0.51$$, the mass-mean value inside the null, to $$0.57$$. Layer
-$$20$$ is the crossover. Whitened steering there is correctly signed in $$9/10$$ seeds
-but does not clear the null, $$p = 0.12$$, which corresponds to a transition region rather
-than a clean effect.
+at layer $$28$$ from $$0.51$$, the mass-mean value inside the null, to $$0.57$$. The crossover occurs at layer
+$$20$$. Whitened steering there is correctly signed in $$9/10$$ seeds
+but does not clear the null, $$p = 0.12$$, which corresponds to a transition region.
 
 ## Steering without a rogue dimension
 
@@ -1338,7 +1327,7 @@ toward it. The rogue-dimension diagnosis explains why. There $$\hat\theta$$ has 
 onto $$\hat v_1$$ and is not tracking a feature at all, so the $$\Sigma^{-1}$$ meant to
 sharpen a readout is instead doing the work of recovering the direction.
 
-The inversion is a property of a regime, not a refutation of Marks & Tegmark, which is demonstrated by `cities` as the control. There the two directions behave as mass-mean
+The inversion is a property of a regime and not a refutation of Marks & Tegmark. This is demonstrated by `cities` as the control. There the two directions behave as mass-mean
 probing intends. At pythia-2.8b layer $$28$$, the same model and depth at which
 `counterfact` inverts, the plain direction steers correctly in $$10/10$$ seeds
 ($$\chi = +0.030$$) while the whitened direction is weak and inconsistent
@@ -1352,7 +1341,7 @@ wrong-signed at both. At every other layer of either dataset it sits inside the 
 At layer $$28$$ the two datasets share the model, the depth and the estimator, and
 their significant effects point in opposite directions. When no single eigenmode
 dominates the within-class covariance, the mean difference *is* the causal feature and
-the inverse covariance only adds estimation noise, which is what Marks & Tegmark report, on datasets of exactly this kind. The inversion is confined to the regime where $$\hat\delta$$ has aligned with $$\hat v_1$$, and the rogue dimension decides which regime a dataset is in.
+the inverse covariance only adds estimation noise, which is what Marks & Tegmark report, on datasets of exactly this kind. The inversion is confined to the regime where $$\hat\delta$$ has aligned with $$\hat v_1$$, corresponding to the presence of a rogue dimension in the dataset.
 
 Two points in the `cities` panel deserve naming, since they are visible and read at
 first glance like counterexamples. At layers $$16$$ and $$20$$ the plain direction becomes
@@ -1365,7 +1354,7 @@ every layer's point estimate is positive.
 ![Steering susceptibility $$\chi$$ on pythia-2.8b, plain (red) against whitened (blue), median over seeds with inter-quartile bars. Left, `cities`: the plain difference-in-means direction carries the causal effect and whitening degrades it which is the intended behavior of mass-mean probing. The mild negative excursions of the plain direction at layers $$16$$ and $$20$$ do not clear the steering null and are an order of magnitude below its layer-$$28$$ effect. Right, `counterfact_true_false`: at depth the assignment inverts, the plain direction steers significantly wrong-signed while the whitened direction steers correctly. This is the same model, estimators, and protocol and only the within-class geometry differs.](/assets/figures/truth_regime_control.png)
 
 ## Discussion
-A mass-mean truth direction can either be a truth direction or the estimator's projection onto the most salient axis of the activations, with a signal-to-noise
+A mass-mean truth direction can align with a causal truth direction, but it can also contain a large component along the most salient axis of the activations, with a signal-to-noise
 analysis required to tell the two apart on any given benchmark. In this work I have focused on four consequences of this observation. I started by demonstrating that for the standard datasets in this literature, in-sample
 separation is inflated by dimensional slack that scales as $$N^{-1/2}$$ with a prefactor
 set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset or model layer, the mass-mean
@@ -1412,9 +1401,7 @@ coherent linear direction.
 `counterfact` at layers $$24$$ and $$28$$, with $$d'_{\mathrm{mm}} = 0.08$$, sits at the
 unsteerable end of their scale but steers with a negative mean that clears its null. This implies
 that the behavior is linearly represented, since the whitened direction steers it correctly at
-the same layer. What has failed is the estimator. The superposition result above is the
-decoding-side form of the same failure, a high-variance direction interfering with the
-target signal, whose removal improves recovery. The shallow `counterfact` layers, $$L \le 16$$, are closer to the regime Braun et al.
+the same layer. What has failed is the estimator. The shallow `counterfact` layers, $$L \le 16$$, are closer to the regime Braun et al.
 describe, but not the same one. Whitening leaves the effect inside the null they define, and
 projecting out $$\hat v_1$$ does not restore the sign: at layer $$8$$ it steers
 significantly wrong-signed. That is not an absence of linear signal. It is the sign of
