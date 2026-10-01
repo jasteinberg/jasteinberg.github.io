@@ -1763,32 +1763,31 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 
 **Scripts.**
 
-| claim | script | artifact |
+| claim | command | artifact |
 |---|---|---|
-| scale ladder, layer sweeps, transfer, superposition, Cover | `snr_sweep.py` | `snr_sweep.json` |
-| per-dataset shuffled-label fits and their spectra | `cover_by_dataset.py` | `cover_by_dataset.json` |
-| the shuffled-label law and collapse figure | `fig_shuffled_collapse.py` | `truth_shuffled_collapse.png` |
-| $$d'_{\text{in}}$$ against $$2\sqrt{\mathrm{PR}/N}$$, and AUROC against $$\Phi(d'/\sqrt2)$$ | `cover_gaussian_check.py` | `cover_gaussian_check.json` |
-| pool-size control on the collapse constant | `cover_pool_control.py` | `cover_pool_control.json` |
-| spectra, PR, alignment | `geometry_observables.py` | `geometry_observables.json` |
-| the same observables at every layer | `geometry_all_layers.py` | `geometry_all_layers.json` |
-| massive coordinates and droppers at every layer | `massive_all_layers.py` | `massive_all_layers.json` |
-| the same observables on `companies`, `common_claim`, `conj` | `geometry_extra_datasets.py` | `geometry_extra_datasets.json` |
-| synthetic in-sample versus held-out $$d'$$ at planted $$d' = 1$$ | `check_insample_attenuation.py` | `check_insample_attenuation.json` |
-| rogue-dimension steering and decoding of $$\hat v_1$$, $$\hat\theta_\perp$$ | `check_rogue_dimension.py` | `rogue_dimension.json` |
-| steering sweeps and $$\chi$$ | `steer_confirm2.py`, `chi_whitening_analysis.py` | `steer_ckpt/` |
-| distractor transfer | `transfer_to_likely.py` | `transfer_likely.json` |
-| unsteered judgment readout on `cities`, `common_claim`, `counterfact` | `check_model_verdicts.py` | `check_model_verdicts.json` |
-| score gradient and overlaps | `score_gradient.py` | `score_gradient_*.json` |
-| OLMo cross-family geometry | `geometry_olmo.py` | `geometry_olmo.json` |
-| OLMo decoding, nulls, superposition | `snr_sweep.py` run on OLMo-2-1B | `olmo_goNogo.json` |
-| massive coordinates, droppers, cleaned held-out $$d'$$ | `outlier_check.py` | `outlier_check.json` |
-| shrinkage intensity and its decomposition | `extract_shrinkage.py`, `shrinkage_decomposition.py` | `shrinkage_intensity.json`, `shrinkage_decomposition.json` |
-| $$\rho$$ sweep and cross-validated $$\rho$$ | `shrinkage_sweep.py`, `shrinkage_cv.py` | `shrinkage_sweep.json`, `shrinkage_cv.json` |
-| $$400$$- and $$100$$-draw steering nulls | `extend_null.py` | `steer_ckpt/*__NULL.json` |
-| fixed-seed bootstrap intervals on the overlaps | `regen_gradient_ci.py` | `score_gradient_*.json` |
+| scale ladder, layer sweeps, transfer, superposition, Cover | `recoverability.py sweep` | `snr_sweep.json` |
+| OLMo decoding, nulls, superposition | `recoverability.py sweep` run on OLMo-2-1B | `olmo_goNogo.json` |
+| distractor transfer | `recoverability.py transfer-likely` | `transfer_likely.json` |
+| unsteered judgment readout on `cities`, `common_claim`, `counterfact` | `recoverability.py verdicts` | `check_model_verdicts.json` |
+| per-dataset shuffled-label fits and their spectra | `dimensional_slack.py by-dataset` | `cover_by_dataset.json` |
+| $$d'_{\text{in}}$$ against $$2\sqrt{\mathrm{PR}/N}$$, and AUROC against $$\Phi(d'/\sqrt2)$$ | `dimensional_slack.py gaussian-check` | `cover_gaussian_check.json` |
+| pool-size control on the collapse constant | `dimensional_slack.py pool-control` | `cover_pool_control.json` |
+| synthetic in-sample versus held-out $$d'$$ at planted $$d' = 1$$ | `dimensional_slack.py insample-attenuation` | `check_insample_attenuation.json` |
+| steering sweeps and $$\chi$$ | `causal_steering.py sweep`, `causal_steering.py chi` | `steer_ckpt/` |
+| $$400$$- and $$100$$-draw steering nulls | `causal_steering.py extend-null` | `steer_ckpt/*__NULL.json` |
+| spectra, PR, alignment | `rogue_dimension.py observables` | `geometry_observables.json` |
+| the same observables at every layer | `rogue_dimension.py all-layers` | `geometry_all_layers.json` |
+| massive coordinates and droppers at every layer | `rogue_dimension.py massive` | `massive_all_layers.json` |
+| the same observables on `companies`, `common_claim`, `conj` | `rogue_dimension.py extra-datasets` | `geometry_extra_datasets.json` |
+| massive coordinates, droppers, cleaned held-out $$d'$$ | `rogue_dimension.py outliers` | `outlier_check.json` |
+| rogue-dimension steering and decoding of $$\hat v_1$$, $$\hat\theta_\perp$$ | `rogue_dimension.py steer-arms` | `rogue_dimension.json` |
+| OLMo cross-family geometry | `rogue_dimension.py olmo` | `geometry_olmo.json` |
+| score gradient and overlaps | `rogue_dimension.py gradient` | `score_gradient_*.json` |
+| fixed-seed bootstrap intervals on the overlaps | `rogue_dimension.py gradient-ci` | `score_gradient_*.json` |
+| shrinkage intensity and its decomposition | `corrected_estimator.py intensity`, `corrected_estimator.py decomposition` | `shrinkage_intensity.json`, `shrinkage_decomposition.json` |
+| $$\rho$$ sweep and cross-validated $$\rho$$ | `corrected_estimator.py rho-sweep`, `corrected_estimator.py rho-cv` | `shrinkage_sweep.json`, `shrinkage_cv.json` |
 | the twelve datasets | `fetch_geometry_of_truth.py` | |
-| figures | `fig_*.py`, `make_cluster_figures.py` | `truth_*.png` |
+| figures, one file per section | `figures/framework.py`, `figures/recoverability.py`, `figures/dimensional_slack.py`, `figures/causal_steering.py`, `figures/rogue_dimension.py` (`all` draws a file's figures) | `truth_*.png` |
 
 **Reading the gradient decomposition.** The identity $$\chi(w) = c\,(w \cdot g)$$
 comes with two caveats. First, it is a small-$$h$$ statement,
