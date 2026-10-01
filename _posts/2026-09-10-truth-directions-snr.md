@@ -1770,6 +1770,7 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | distractor transfer | `recoverability.py transfer-likely` | `transfer_likely.json` |
 | unsteered judgment readout on `cities`, `common_claim`, `counterfact` | `recoverability.py verdicts` | `check_model_verdicts.json` |
 | per-dataset shuffled-label fits and their spectra | `dimensional_slack.py by-dataset` | `cover_by_dataset.json` |
+| the shuffled-label law and collapse figure | `figures/dimensional_slack.py shuffled-collapse` | `truth_shuffled_collapse.png` |
 | $$d'_{\text{in}}$$ against $$2\sqrt{\mathrm{PR}/N}$$, and AUROC against $$\Phi(d'/\sqrt2)$$ | `dimensional_slack.py gaussian-check` | `cover_gaussian_check.json` |
 | pool-size control on the collapse constant | `dimensional_slack.py pool-control` | `cover_pool_control.json` |
 | synthetic in-sample versus held-out $$d'$$ at planted $$d' = 1$$ | `dimensional_slack.py insample-attenuation` | `check_insample_attenuation.json` |
