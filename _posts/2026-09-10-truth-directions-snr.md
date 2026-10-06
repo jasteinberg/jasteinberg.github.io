@@ -36,7 +36,7 @@ Systems neuroscience has spent decades asking what a downstream reader can recov
 
 ## Activations and class statistics
 
-For each experiment, I start by fixing a model and dataset. Each dataset consists of $$N$$ pairs of labeled statements $$(x_{i}, y_i)$$ where the truth labels $$y \in \{0, 1\}$$. For each statement, I get the residual stream activations by passing it through the model once and summarizing it by the residual-stream activation at its final token for each layer, i.e.
+For each experiment, I start by fixing a model and dataset. Each dataset consists of $$N$$ pairs of labeled statements $$(x_{i}, y_i)$$ with the truth labels $$y \in \{0, 1\}$$. For each statement, I get the residual stream activations by passing it through the model once and summarizing it by the residual-stream activation at its final token for each layer, i.e.
 $$x_{i,L} \in \mathbb{R}^{d}$$, where $$d$$ is the model's hidden width, $$i$$ the statement index, and $$L$$ the corresponding residual stream layer. 
 
 Throughout the post, a **hat** denotes a quantity estimated from a finite sample, with population expectations taken over the data-generating distribution of activations at the probed layer. A table of every symbol
@@ -193,8 +193,7 @@ $$\mathrm{AUROC} = \Phi(0.71) \approx 0.76$$, and $$d' = 3$$ to $$\approx 0.98$$
 variances are not required: for balanced classes the variance of $$z_1 - z_0$$ is
 $$2\,u^{\top}\Sigma u$$ whether or not the two class covariances agree. Away from the
 Gaussian case the identity is only a guide, which is why both are reported. On the data
-here it holds to within $$3\%$$ under shuffled labels even where the projections carry
-excess kurtosis above $$1$$, as *Dimensional slack and sample size* reports.
+here it holds to within $$3\%$$ under shuffled labels for `cities`, `larger_than` and `sp_en_trans` even where the projections carry excess kurtosis above $$1$$, as *Dimensional slack and sample size* reports. This is described in *Appendix: The effective-dimension prefactor*. It also holds for `counterfact` but only after removing the statements which drop the massive activations. These statements are the subject of *The origin of the rogue dimension*.
 
 ## Separability, capacity and readout
 
@@ -512,7 +511,7 @@ For both `cities` and `counterfact` the held-out AUROC at the best layer shows t
 **The direction transfers, but only within a polarity and a family.** Fitting the
 mass-mean direction on one main-tier set and evaluating it on another reproduces the
 within-dataset signal on the diagonal, $$0.93$$ to $$0.98$$ for the single-frame sets and
-down to $$0.57$$ for `counterfact`, but the off-diagonal is *organized*, not merely weak.
+down to $$0.55$$ for `counterfact`, but the off-diagonal is *organized*, not merely weak.
 Three structures are visible in the full nine-by-nine matrix. First, between a
 statement type and its logical negation the transfer is anti-predictive: `cities`
 scores AUROC $$0.08$$ on `neg_cities` and `larger_than` scores $$0.07$$ on
@@ -520,14 +519,14 @@ scores AUROC $$0.08$$ on `neg_cities` and `larger_than` scores $$0.07$$ on
 polarity flips. The `neg_cities` direction is anti-predictive not on `cities` alone but
 on the compound and claim-like sets as well, $$0.02$$ to $$0.33$$ across five of them.
 Second, the sets fall into two families that do not speak to each other. The numeric
-comparisons transfer to nothing outside their own pair, $$0.32$$ to $$0.64$$ in both
+comparisons transfer to nothing outside their own pair, $$0.34$$ to $$0.63$$ in both
 directions, while `cities`, the two compound sets, `common_claim`, `companies` and
 `counterfact` form a block that transfers within itself at $$0.52$$ to $$0.94$$. Third,
 that block is asymmetric, and the asymmetry belongs to the receiver rather than to the
-direction. The `cities` column is uniformly high, $$0.84$$ to $$0.94$$ from every other
+direction. The `cities` column is uniformly high, $$0.77$$ to $$0.94$$ from every other
 member, because a transferred score is $$\Phi(d'/\sqrt2)$$ with the *target's* gap and
 noise inside $$d'$$, and `cities` has the largest gap in the benchmark. A direction that
-reads its own set at $$0.57$$ still reads `cities` at $$0.87$$. Transfer AUROC scores the
+reads its dataset at $$0.55$$ still reads `cities` at $$0.77$$. Transfer AUROC scores the
 receiver's signal-to-noise as much as the direction's alignment, so the matrix has to
 be read by rows and columns together. The mass-mean direction is genuinely there, but a
 single vector approximates a structure carrying at least a separate polarity axis and
@@ -548,9 +547,8 @@ truth-related variance.
 
 The sweep covers all twelve sets, not only the nine of the transfer matrix. Every
 templated set with a single frame clears its null comfortably (plain AUROC
-$$0.93$$–$$0.98$$ at its selected layer). The two free-form sets sit at the bottom
-of the table ($$d'_{\mathrm{mm}} = 0.64$$ and $$0.20$$). `companies_true_false`
-shows the largest plain/whitened gap in the benchmark, a second instance of the
+$$0.93$$–$$0.98$$ at its selected layer). `companies_true_false`
+shows the largest plain/whitened gap in the benchmark after `counterfact`, a second instance of the
 rogue-dimension pattern, decoded rather than steered. The full table and
 per-dataset commentary are in the appendix *Results on the full twelve-dataset benchmark*.
 
@@ -564,22 +562,15 @@ from the truth sets is the depth at which it is recoverable. Plausibility is alr
 readable in the embedding ($$0.700$$ at layer $$0$$), peaks at layers $$11$$ and $$12$$ (the AUROC at $$11$$, the margin at $$12$$), and then
 decays through the second half of the network to $$0.657$$ by layer $$28$$. `cities`
 runs the other way: inside the null through the early layers, clear of it by
-mid-network, peaking at $$0.973$$ at layer $$29$$. In one model, the direction that
-reads probability and the direction that reads truth are strongest at opposite ends of
-the depth axis, which is a reason to doubt that the deep-layer truth direction is
-plausibility in disguise.
+mid-network, peaking at $$0.973$$ at layer $$29$$. 
 
 ![Depth profiles of the plausibility axis and the truth axis, plotted as the margin $$m = \mathrm{AUROC} - p_{95}$$ against fractional depth $$L/L_{\max}$$. The margin rather than the raw score, because the null widens with depth and AUROC is therefore not comparable across layers. Left, pythia-2.8b: `likely` peaks at layer $$12$$ ($$m = 0.297$$) and `cities` at layer $$29$$ ($$m = 0.252$$), at opposite ends of the depth axis, and the two curves cross near $$L/L_{\max} = 0.7$$. Right, pythia-410m (dotted) and pythia-1.4b (solid): the ordering reverses — `cities` peaks at layers $$11$$ and $$7$$ of $$24$$, before `likely` at layers $$15$$ and $$13$$ — and the late-depth truth structure appears only as a secondary rise over the final layers, still climbing at layer $$24$$, which is the last block at both widths, so whether it would peak is not resolved by this sweep. Stars mark the selected layer, hollow circles the embedding, which is excluded from selection.](/assets/figures/truth_plausibility_depth.png)
 
-One limit on that reading, and one further test, should be stated. The limit is that
-the profiles are cleanest at 2.8b. Marks & Tegmark designed the `likely` dataset for a cross-dataset test: fit a direction on a truth dataset and evaluate it on `likely`, where plausibility is decorrelated from truth. A direction that had
-been reading plausibility all along should separate `likely`. However, none of the fitted directions achieve this. Across all nine main-tier sets, a direction fitted at that set's own
-selected layer and evaluated on held-out `likely` gives AUROC between $$0.44$$ and
-$$0.60$$, and not one clears the random-direction null on `likely` at the corresponding
-layer ($$p_{95} \approx 0.58$$–$$0.60$$). The largest is `larger_than` at $$0.598$$ against a
-null of $$0.600$$. `cities` gives $$0.559$$ and `counterfact` $$0.480$$. The reverse direction
-agrees: the `likely`-fitted direction scores $$0.43$$–$$0.54$$ on the nine truth sets. The plausibility axis and the truth directions are therefore separately readable and mutually uninformative. This is what the distractor was constructed to detect, and it comes
-out clean.
+Marks & Tegmark designed the `likely` dataset for a cross-dataset test: fit a direction on a truth dataset and evaluate it on `likely`, where plausibility is decorrelated from truth. A direction that had been reading plausibility all along should separate `likely`. However, none of the fitted directions achieve this. Across all nine main-tier sets, a direction fitted at that set's own
+selected layer and evaluated on held-out `likely` gives AUROC between $$0.41$$ and
+$$0.60$$, and only `counterfact` clears the random-direction null on `likely` at the corresponding
+layer ($$p_{95} \approx 0.58$$–$$0.60$$), and only after sign-folding. The largest is `larger_than` at $$0.598$$ against a
+null of $$0.600$$. `cities` gives $$0.559$$ and `counterfact` $$0.406$$. However, since the `likely` null is sign-folded, the held-out AUROC of `counterfact` folds to $$0.594$$ against $$p_{95} \approx 0.584$$ at layer 31, indicating that the `counterfact` direction marginally separates `likely`, but it does so backwards. The reverse direction agrees: the `likely`-fitted direction scores $$0.43$$–$$0.54$$ on the nine truth sets. The plausibility axis and the truth directions are therefore separately readable and nearly mutually uninformative. The depth profile of truth and plausibility are cleanest at 2.8b so this is where using plausibility as a distractor is most useful as a test
 
 ## Dimensional slack and sample size
 
@@ -593,9 +584,8 @@ The control is the *control task* of
 real-task and control-task performance is what they call *selectivity*. Their diagnosis
 and their prescription concern probe **capacity**: a probe expressive enough to memorize
 the control task is too expressive to trust, so a smaller one should be used. However, the mass-mean probe only fits the two class means, and on `counterfact` at $$N = 100$$ it still separates shuffled labels with AUROC
-$$0.80$$ on pythia-2.8b ($$0.795 \pm 0.042$$ over sixteen permutations), which is what
-the true labels reach in sample at the same $$N$$. There is no capacity to shrink. The
-freedom is in the ambient dimension.
+$$0.83$$ on pythia-2.8b ($$0.825 \pm 0.067$$ over sixteen permutations), which is close to what
+the true labels reach in sample at the same $$N$$. Since the mass-mean probe only fits two parameters, the freedom is in the ambient dimension.
 
 This control is the one place in the post where a direction is scored on the points it
 was fitted to. Everywhere else a direction is fitted on a training split and scored
@@ -607,14 +597,14 @@ mass-mean direction extracts from pure noise scales as
 
 $$
 \mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2}
-\;\approx\; 0.045 \left(\frac{N}{2d}\right)^{-0.49}.
+\;\approx\; 0.046 \left(\frac{N}{2d}\right)^{-0.50}.
 $$
 
 The exponent follows from the estimator alone. $$\hat\theta$$ is a difference of two
 sample means, each concentrating at the $$\sqrt{N}$$ rate, so the noise it carries has
 magnitude $$O(\sqrt{d/N})$$ whatever the activations look like, and the excess must
 fall as $$N^{-1/2}$$ at fixed $$d$$. Measured across four models and $$N$$ from $$100$$
-to $$32{,}000$$, it comes back $$-0.49$$. The phenomenon is *dimensional slack*, the
+to $$32{,}000$$, it comes back $$-0.50$$. The phenomenon is *dimensional slack*, the
 room that $$d \gg N$$ leaves for a direction built from a sample's own fluctuations to
 separate that sample, since the fluctuations that define the direction are the ones
 being scored. It is not capacity.
@@ -624,25 +614,25 @@ $$\varepsilon$$ of excess AUROC,
 
 $$
 N \;>\; 2d\left(\frac{a}{\varepsilon}\right)^{1/\lvert b\rvert}
-\;=\; 2d\left(\frac{0.045}{\varepsilon}\right)^{2.0} ,
+\;=\; 2d\left(\frac{0.046}{\varepsilon}\right)^{2.0} ,
 $$
 
 which at the widths in this post and the standard 7B width gives the following. The
-table uses the unrounded fit, $$a = 0.0446$$ and $$b = -0.487$$, and the rounded values
+table uses the unrounded fit, $$a = 0.0456$$ and $$b = -0.497$$, and the rounded values
 reproduce each entry to within about $$2\%$$.
 
 | $$d_{\text{model}}$$ | $$N$$ for $$\varepsilon = 0.05$$ | $$\varepsilon = 0.02$$ | $$\varepsilon = 0.01$$ |
 |---|---|---|---|
-| $$512$$ | $$809$$ | $$5{,}305$$ | $$22{,}024$$ |
-| $$2{,}048$$ | $$3{,}233$$ | $$21{,}220$$ | $$88{,}093$$ |
-| $$2{,}560$$ | $$4{,}041$$ | $$26{,}525$$ | $$110{,}117$$ |
-| $$4{,}096$$ | $$6{,}465$$ | $$42{,}440$$ | $$176{,}186$$ |
-| $$8{,}192$$ | $$12{,}930$$ | $$84{,}879$$ | $$352{,}372$$ |
+| $$512$$ | $$849$$ | $$5{,}359$$ | $$21{,}597$$ |
+| $$2{,}048$$ | $$3{,}396$$ | $$21{,}436$$ | $$86{,}390$$ |
+| $$2{,}560$$ | $$4{,}245$$ | $$26{,}795$$ | $$107{,}987$$ |
+| $$4{,}096$$ | $$6{,}792$$ | $$42{,}873$$ | $$172{,}780$$ |
+| $$8{,}192$$ | $$13{,}584$$ | $$85{,}746$$ | $$345{,}560$$ |
 
 The curated true/false datasets in this literature hold $$N \approx 1{,}200$$
 statements. For a $$d = 4096$$ model, the width of the 7B models these probes are
-usually run on, noise alone buys in-sample AUROC $$0.55$$ until $$N \approx 6{,}500$$
-and $$0.52$$ until $$N \approx 42{,}000$$. Every dataset in the benchmark is between five
+usually run on, noise alone buys in-sample AUROC $$0.55$$ until $$N \approx 6{,}800$$
+and $$0.52$$ until $$N \approx 43{,}000$$. Every dataset in the benchmark is between five
 and thirty times too small for an in-sample AUROC in the seventies to mean what it
 appears to mean. Held-out scoring removes the inflation but not its source. The fitted
 direction is the same object either way, and at these sizes it is mostly noise: the
@@ -652,123 +642,11 @@ direction's honest score, which is why held-out $$d'$$ errs low where in-sample 
 errs high.
 
 The control also behaves correctly at the other end of the ladder. On pythia-70m the
-true and shuffled curves lie on top of each other at every $$N$$, which expected from a model with no recoverable direction.
+true and shuffled curves lie on top of each other at every $$N$$, which is expected from a model with no recoverable direction.
 
-The prefactor is where the dataset enters. What it quantifies is the number of
-directions the noise effectively occupies. A spectrum concentrated on a few axes leaves
-a random labeling less room to find a separator than a flat one does, so the ambient
-width $$d$$ is the right count only when the spectrum is flat. In general the count is
-the participation ratio of the within-class covariance, and the amplitude should
-collapse across datasets once $$N$$ is measured in units of it.
+![The shuffled-label law. In-sample excess AUROC of the mass-mean direction under shuffled labels on `counterfact`, four Pythia widths, against $$N/2d$$, with the pooled fit $$0.046\,(N/2d)^{-0.50}$$ and Cover's capacity marked. The three pythia-70m points with negative excess are not drawn.](/assets/figures/truth_shuffled_law.png){: .fig-single}
 
-A second sweep tests the exponent and the prefactor across datasets. The control is
-scored in sample, so no half has to be held back and the grid can run to the full set.
-Repeating it on pythia-2.8b at each dataset's own best layer, over a seven-point
-geometric grid from $$N = 100$$ to that dataset's total with sixteen label permutations
-per point, and fitting
-$$\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2} \approx a\,(N/2d)^{b}$$ on each, gives
-
-| dataset | $$N_{\max}$$ | $$a$$ | $$b$$ | $$R^{2}$$ | $$\mathrm{PR}$$ | $$\hat\lambda_1/\operatorname{tr}\hat C$$ |
-|---|---|---|---|---|---|---|
-| `counterfact_true_false` | $$3000$$ | $$0.045$$ | $$-0.490 \pm 0.019$$ | $$0.993$$ | $$30.3$$ | $$0.11$$ |
-| `cities` | $$1496$$ | $$0.053$$ | $$-0.446 \pm 0.009$$ | $$0.998$$ | $$34.6$$ | $$0.11$$ |
-| `larger_than` | $$1980$$ | $$0.027$$ | $$-0.484 \pm 0.014$$ | $$0.996$$ | $$8.9$$ | $$0.28$$ |
-| `sp_en_trans` | $$354$$ | $$0.064$$ | $$-0.413 \pm 0.044$$ | $$0.947$$ | $$16.8$$ | $$0.23$$ |
-
-The exponents look scattered, and taken at face value `cities` sits six standard errors
-from $$-\tfrac12$$. They are scattered not by dataset but by how far up in $$N$$ each
-grid reaches, because the power law is asymptotic and its small-$$N$$ end is shallower
-than $$-\tfrac12$$. Refitting `counterfact` over truncated windows makes this explicit:
-
-$$
-b = -0.385 \pm 0.029 \;\; (N \le 400), \qquad
--0.445 \pm 0.019 \;\; (N \le 1500), \qquad
--0.490 \pm 0.019 \;\; (\text{all } N).
-$$
-
-Each of the other three then matches `counterfact` restricted to its own reach.
-`cities` stops at $$1496$$ and gives $$-0.446$$ against $$-0.445$$, `larger_than`
-reaches $$1980$$ and gives $$-0.484$$ against $$-0.465$$, and `sp_en_trans` stops at
-$$354$$ and gives $$-0.413$$ against $$-0.385$$, within its own error. With the fitting
-window matched the four agree, so the dataset-independence of the exponent is measured
-rather than only argued from the estimator, and the best estimate of the asymptotic
-value is the one with the longest lever arm, $$-0.490 \pm 0.019$$ over $$1.5$$ decades.
-That is the predicted $$N^{-1/2}$$ to within half a standard error, and both it and its
-amplitude $$0.045$$ reproduce the pooled four-model fit above.
-
-For the amplitude, $$a$$ is the wrong statistic to compare across datasets, since each
-$$a$$ is defined at its own fitted $$b$$. It is also not a free parameter. Under shuffled
-labels there is no signal, so within a class $$x \sim \mathcal{N}(0, \Sigma)$$, and the
-mass-mean direction is a signed sum of the samples,
-
-$$
-\hat\theta \;=\; \hat\mu_{+} - \hat\mu_{-} \;=\; \frac{2}{N}\sum_i \epsilon_i x_i ,
-\qquad \epsilon_i = \pm 1 ,
-$$
-
-so $$\hat\theta \sim \mathcal{N}\!\left(0, \tfrac{4}{N}\Sigma\right)$$ and
-
-$$
-\mathbb{E}\lVert\hat\theta\rVert^{2} = \frac{4}{N}\operatorname{tr}\Sigma ,
-\qquad
-\mathbb{E}\,\hat\theta^{\top}\Sigma\,\hat\theta = \frac{4}{N}\operatorname{tr}\Sigma^{2} .
-$$
-
-The in-sample separation it produces is the projected class gap, which is its own
-squared length, over the projected within-class spread,
-
-$$
-d'_{\text{in}} \;=\; \frac{\lVert\hat\theta\rVert^{2}}{\sqrt{\hat\theta^{\top}\Sigma\hat\theta}}
-\;\simeq\; \frac{2}{\sqrt{N}}\,\frac{\operatorname{tr}\Sigma}{\sqrt{\operatorname{tr}\Sigma^{2}}}
-\;=\; 2\sqrt{\frac{\mathrm{PR}}{N}} ,
-$$
-
-which is where the participation ratio enters:
-$$\mathrm{PR} = (\operatorname{tr}\Sigma)^{2}/\operatorname{tr}\Sigma^{2}$$ is the count
-of directions the noise occupies, and it equals $$d$$ only for a flat spectrum. With
-$$\mathrm{AUROC} = \Phi(d'/\sqrt{2})$$ and $$\Phi(x) \simeq \tfrac12 + x/\sqrt{2\pi}$$ at
-small argument,
-
-$$
-\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2}
-\;\simeq\; \frac{d'_{\text{in}}}{2\sqrt{\pi}}
-\;=\; \frac{1}{\sqrt{\pi}}\sqrt{\frac{\mathrm{PR}}{N}} ,
-$$
-
-so the collapse constant is predicted rather than fitted:
-
-$$
-C \;\equiv\; \Bigl(\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2}\Bigr)\sqrt{\frac{N}{\mathrm{PR}}}
-\;=\; \frac{1}{\sqrt{\pi}} \;=\; 0.564 .
-$$
-
-Measured, $$C$$ is flat to about $$\pm 10\%$$ within a dataset over a thirtyfold range in
-$$N$$, and runs from $$0.51$$ to $$0.65$$ across `counterfact`, `cities` and
-`larger_than`, against a factor $$2.0$$ in $$a$$ and $$3.9$$ in $$\mathrm{PR}$$. The
-dependence on the spectrum runs the way the count predicts and against the intuitive
-direction: `larger_than` is the most concentrated set, $$\mathrm{PR} = 8.9$$ with
-$$28\%$$ of the within-class variance on one axis, and it carries the smallest amplitude
-of the three.
-
-![Left: the shuffled-label law. In-sample excess AUROC of the mass-mean direction under shuffled labels on `counterfact`, four Pythia widths, against $$N/2d$$, with the pooled fit $$0.045\,(N/2d)^{-0.49}$$ and Cover's capacity marked. The three pythia-70m points with negative excess are not drawn. The 70m points sit below the pooled line throughout, which is the across-model form of the question the right panel settles across datasets: whether the ambient width is the right denominator. Right: the effective-dimension collapse on pythia-2.8b, each dataset at its own best layer, against $$N/\mathrm{PR}$$. The line is $$\pi^{-1/2}\sqrt{\mathrm{PR}/N}$$ with no free parameter. `counterfact`, `cities` and `larger_than` fall on it across a thirtyfold range in $$N$$ and a fourfold range in $$\mathrm{PR}$$; `sp_en_trans` sits above it by $$36$$–$$60\%$$. Error bars are the standard error over sixteen permutations.](/assets/figures/truth_shuffled_collapse.png)
-
-`sp_en_trans` does not join the collapse. It sits at $$C = 0.77$$ to $$0.90$$, well above
-$$1/\sqrt{\pi}$$, where the other three bracket it. The derivation factors into two
-independent steps, and measuring them separately localizes the miss. The distributional
-step holds: $$\mathrm{AUROC}$$ tracks $$\Phi(d'_{\text{in}}/\sqrt{2})$$ to within $$3\%$$
-on all four datasets, this one included, despite its projections carrying the largest
-excess kurtosis of the four ($$+0.8$$ to $$+1.2$$ against $$-0.7$$ to $$+0.2$$ elsewhere).
-The discrepancy is in the second-moment step: the measured $$d'_{\text{in}}$$ runs
-$$1.47$$ to $$1.62$$ times $$2\sqrt{\mathrm{PR}/N}$$ here, against $$1.03$$ to $$1.17$$
-on the other three.
-
-The sweep varies the dataset at fixed model and identifies the quantity that
-sets the prefactor at a given width. It does not test whether $$\mathrm{PR}$$ should
-replace $$2d$$ across the scale ladder, where the two co-vary, and the pythia-70m points
-below the pooled line in the figure are that question in its across-model form. The
-inversion table therefore remains a guide at the ambient width, read upward for a
-dataset whose within-class noise is spread out and downward for one whose noise is
-concentrated.
+The excess here falls approximately as $$N^{-1/2}$$ on every dataset tested, with fitted exponents between $$-0.41$$ and $$-0.48$$. For `cities` and `larger_than`, the excess $$\pi^{-1/2}\sqrt{\mathrm{PR}/N}$$ is set by the participation ratio of the within-class covariance rather than by $$d$$, and is predicted with no free parameter. `counterfact` also satisfies this prediction once the statements dropping massive activations are excluded from the dataset, while `sp_en_trans` sits $$36$$–$$60\%$$ above it. The derivation and the per-dataset fits are in the appendix *The effective-dimension prefactor*.
 
 ## A causal test of the mass-mean direction
 
@@ -776,7 +654,7 @@ The decoding analysis says when a truth direction is *readable*. Steering asks w
 along $$\hat\theta$$ moves the model's behavior toward the true completion. The two
 need not agree. On `counterfact_true_false` at the deep layers of pythia-2.8b the
 mass-mean direction is neither readable nor correctly causal. For the readout, the held-out AUROC at layer $$28$$ is $$0.502$$ against a null of
-$$0.560$$, and it stays inside the null at every layer except for the last. As an intervention
+$$0.560$$, and it stays inside the null at every layer. As an intervention
 it produces a significant effect, but with the incorrect sign.
 
 As defined above, steering is reported as the antisymmetric response $$A$$ in units of the
@@ -785,8 +663,8 @@ steering null fixes the bar $$A$$ must clear. Across ten seeds at layer $$28$$, 
 displacement of one class gap, the mass-mean direction returns
 
 $$
-A(1) < 0 \;\text{ in } 8/10 \text{ seeds, each at } p \le 0.003,
-\qquad \operatorname{med}_{\text{seeds}} A(1) = -0.062,
+A(1) < 0 \;\text{ in } 8/10 \text{ seeds, each at } p \le 0.048,
+\qquad \operatorname{med}_{\text{seeds}} A(1) = -0.031,
 \qquad \sigma_{\text{null}} = 0.012,
 $$
 
@@ -794,7 +672,7 @@ where $$p$$ is the fraction of the $$400$$-draw random-direction null of $$A(1)$
 least as extreme in the same direction, evaluated seed by seed.
 
 The linear steering susceptibility $$\chi$$, the through-origin slope of $$A$$
-against $$h$$ over $$h \le 4$$, is $$-0.023$$ at this layer. It is a diluted summary of
+against $$h$$ over $$h \le 4$$, is $$-0.017$$ at this layer. It is a diluted summary of
 the same effect. The response is not linear in $$h$$, and by $$h = 4$$, four class gaps
 out, $$A$$ has already fallen back toward zero, which is the regime *The scale of an
 intervention* warned about.
@@ -807,12 +685,8 @@ directly comparable. In this post, I additionally split the steering response in
 parts, to separate the degradation from the signed effect and compare against a random-direction
 null to determine which susceptibilities are distinguishable from chance.
 
-where $$p$$ is the fraction of the $$400$$-draw random-direction null of $$A(1)$$ at
-least as extreme in the same direction, evaluated seed by seed.
-The seed median sits five null standard deviations below zero, and the two positive seeds sit inside the
-null. Layer $$24$$ gives the same sign less cleanly: $$7/10$$
-seeds negative with a median $$A(1) = -0.037$$ against a null standard deviation of
-$$0.015$$, and one seed strongly positive. The effect is not null. It is
+The seed median sits two and a half null standard deviations below zero, and the two positive seeds sit inside the
+null. The effect is not null. It is
 *significantly wrong-signed*. Displacing an activation toward the
 true-class centroid, along the very vector the estimator returns for truth, makes the model
 measurably **less** likely to produce the true completion.
@@ -826,10 +700,7 @@ Read naively, this is a failure of the causal linear picture. Displacing along t
 This means that the same activations, at the same layer, contain a direction along which displacement moves the model toward the true
 completion which the mass-mean estimator does not return. Instead, it returns $$\hat v_1$$,
 the axis of largest within-class variance, with which $$\hat\theta$$ shares a cosine of
-$$0.994$$ at this depth. Replacing the mass-mean estimate by the Fisher rule, downweighting the salient axis, or deleting the salient axis outright, inside the same linear class, recovers the correct sign. What makes the plain estimator produce a
-negative direction at layer $$28$$ is not settled here. Change the estimator, either by downweighting the salient axis or by
-deleting it outright, and the correct sign comes back out of the same data. The claim is
-about which part of the geometry the estimator points at, not about how much truth the
+$$0.994$$ at this depth. Replacing the mass-mean estimate by the Fisher rule, downweighting the salient axis, or deleting the salient axis outright, inside the same linear class, recovers the correct sign. The mechanism responsible for the plain estimator producing a negative direction at layer $$28$$ is not settled here. The claim is about which part of the geometry the estimator is aligned with, not about how much truth the
 layer encodes. How well the corrected direction reads is a separate question, quantified
 in the next section by its held-out AUROC against the decoding null.
 
@@ -837,14 +708,10 @@ in the next section by its held-out AUROC against the decoding null.
 steering response $$A(h)$$ on `counterfact_true_false` / pythia-2.8b at $$L=28$$. The plain mass-mean
 direction (red) drives $$A$$ significantly negative, so steering toward the true centroid
 suppresses the true completion, while the whitened direction (blue), differing only
-by the covariance correction, drives it positive. Gray band: 5th–95th percentiles
+by the covariance correction, drives it positive. The rank-one direction $$\hat\theta_\perp$$ (orange) is linear and above whitened throughout. Gray band: 5th–95th percentiles
 of the random-direction null, so a point outside it in its own direction is a
 one-sided clearance at 5%. Right: steering susceptibility $$\chi$$,
-across depth, median over ten seeds with inter-quartile bars, the median rather than
-the mean because the plain direction's seeds are bimodal, eight clustered near $$-0.024$$ and
-two positive, so a mean lands on a value no seed exhibits. Plain is wrong-signed at
-$$L=24, 28$$ ($$2$$–$$3/10$$ seeds positive), whitened is correct-signed throughout ($$\ge 9/10$$), with
-$$L=20$$ the crossover.](/assets/figures/truth_steering_signflip.png)
+across depth, median over ten seeds with inter-quartile bars. Plain is wrong-signed and clears the null at $$L=16$$ and $$L=28$$ ($$2/10$$ seeds positive at each), and sits inside the null at $$L=20$$ and $$24$$. Whitened is wrong-signed at $$L=16$$ and correct-signed for $$L=20, 24, 28$$ ($$\ge 9/10$$ seeds positive), clearing at $$20$$ and $$28$$. $$\hat\theta_\perp$$ is likewise wrong-signed at $$L=16$$ and correct-signed from $$L=20$$ on ($$\ge 9/10$$), clearing at $$24$$ and $$28$$.](/assets/figures/truth_steering_signflip.png)
 
 ## The rogue dimension
 
@@ -882,9 +749,7 @@ $$
 \lvert\cos(\hat\theta, \hat v_1)\rvert = 0.994 .
 $$
 
-A single eigendirection carries $$98\%$$ of the within-class
-variance. It is $$535$$ times larger than the next, and the mass-mean direction is
-almost perfectly aligned with it. Therefore, the estimator has not returned a truth direction, it has returned $$\hat v_1$$, the dominant axis of the within-class noise. On this
+Therefore, the estimator has not returned a truth direction, it has returned $$\hat v_1$$, the dominant axis of the within-class noise. On this
 dataset there is essentially no class-gap signal for $$\hat\delta$$ to align with, so the
 finite-sample $$\hat\delta$$ is dominated by its projection onto the highest-variance
 axis. The participation ratio
@@ -901,24 +766,17 @@ Contrasting the spreads and class gaps between the two datasets for two represen
 $$8$$ the `counterfact` class gap is $$47$$ times the `cities` gap but its separation $$d'_{\mathrm{mm}}$$ is still lower than `cities`, because its spread is $$59$$ times larger. By layer $$28$$
 the `counterfact` gap is down to $$2.4$$ times the `cities` gap, but the spread is still $$83$$ times
 larger, resulting in the separation being lower by a factor of thirty-five.
-
-These observables are computed on the full set
-rather than the held-out half, since they describe the geometry rather than a probe's
-performance, and the held-out $$d'_{\mathrm{mm}}$$ at `counterfact` layer $$28$$ is
-$$0.080$$ against the $$0.089$$ quoted here. The two part company at the end of the network, where the held-out values are $$0.081$$,
-$$0.120$$ and $$0.196$$ at layers $$30$$, $$31$$ and $$32$$ against $$0.091$$, $$0.210$$
-and $$0.500$$ on the full set. The rogue dimension is the default
-condition, not a pathology. It is also not a property of `counterfact` alone:
+The rogue dimension is not a property of `counterfact` alone:
 `companies_true_false` and `common_claim_true_false` carry the same signature at layers
 $$24$$ and $$28$$, $$\mathrm{PR}$$ within $$0.05$$ of $$1$$ and alignment above $$0.8$$,
 and escape it by layer $$31$$ where their class gap has grown, as the appendix *Results
 on the full twelve-dataset benchmark* records.
 
-Recoverability is therefore not whether the class gap grows, it is whether it becomes large relative to the within-class spread. The two datasets reach that by opposite routes. On `cities` the gap outgrows the noise. On `counterfact` the spread collapses.
+Recoverability is determined by the class gap becoming large relative to the within-class spread. The two datasets reach that by opposite routes. On `cities` the gap outgrows the noise. On `counterfact` the spread collapses.
 
 
 The rank-one direction $$\hat\theta_\perp$$ tracks the whitened direction: on `counterfact` it sits at chance through layer $$24$$ and
-reaches $$0.574$$ at layer $$28$$, and on `cities` it is already at $$0.921$$ by layer
+reaches $$0.568$$ at layer $$28$$, and on `cities` it is already at $$0.919$$ by layer
 $$12$$. Deleting the axis and downweighting it do the same work.
 
 There is a sharper way to explain why the plain probe cannot leave the band on
@@ -943,7 +801,8 @@ that of a random direction, and the spread above that median, $$p_{95}$$ from $$
 operationally, and it is why more data would not lift $$\hat\theta$$ clear of the band
 while the alignment holds: the null and the estimate move together.
 
-![Held-out AUROC against depth for both estimators on pythia-2.8b, with the per-layer random-direction null shaded from $$1/2$$ to its 95th percentile. The height above the band is the margin $$m$$ that layer selection maximizes and points inside the band correspond to layers where the truth direction is not recoverable. Left, `counterfact`: the mass-mean direction sits inside the band until layer $$32$$, while the whitened direction leaves it at layer $$26$$ and reaches $$0.716$$ at layer $$31$$. Right, `cities`: the mass-mean direction leaves the band for good at layer $$14$$ and the whitened one at layer $$7$$, saturating near $$0.98$$ and $$0.99$$. Stars are the rank-one corrected direction $$\hat\theta_\perp$$, which projects $$\hat v_1$$ out of the estimator and is measured on a six-layer grid rather than at every layer. Dashed lines mark the first layer from which each direction stays clear of its null. Note the different vertical scale of the achievement: the same correction that lifts `counterfact` from chance to $$0.72$$ is barely needed where the class gap is strong.](/assets/figures/truth_depth_arms.png)
+![Held-out AUROC against depth for both estimators on pythia-2.8b, with the per-layer random-direction null shaded from $$1/2$$ to its 95th percentile. The height above the band is the margin $$m$$ that layer selection maximizes and points inside the band correspond to layers where the truth direction is not recoverable. Left, `counterfact`: the mass-mean direction sits inside the band at every layer, while the whitened direction leaves it at layer $$26$$ and reaches $$0.716$$ at layer $$31$$. Right, `cities`: the mass-mean direction leaves the band for good at layer $$14$$ and the whitened one at layer $$7$$, saturating near $$0.98$$ and $$0.99$$. Stars are the rank-one corrected direction $$\hat\theta_\perp$$, which projects $$\hat v_1$$ out of the estimator and is measured on a six-layer grid rather than at every layer. Dashed lines mark the first layer from which each direction stays clear of its null. Note the different vertical scale of the achievement: the same correction that lifts `counterfact` from chance to $$0.72$$ is barely needed where the class gap is strong.](/assets/figures/truth_depth_arms.png)
+
 
 ![Within-class geometry on `cities` (top) and `counterfact` (bottom), pythia-2.8b layer 28. Left: activations in the plane of the top two within-class principal axes $$x\cdot\hat v_1$$, $$x\cdot\hat v_2$$, colored by truth label. On `counterfact` a single axis carries nearly all the variance. Middle: the mass-mean projection $$x\cdot\hat\theta$$, with its separation $$d'$$ and its alignment $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$, near 1 on `counterfact` where the estimator has aligned with the leading variance axis. Right: the within-class eigenvalue spectrum, $$\hat\lambda_1/\hat\lambda_2$$. The eleven points standing clear of the bulk on `counterfact` — i.e. the scattered group near $$x\cdot\hat v_1 \approx -200$$ in the bottom-left panel and the small bar near $$x\cdot\hat\theta \approx 200$$ in the bottom-middle one — are the statements that do not receive the massive activation. They are crucial in determining the magnitude of the leading eigendirection setting the axis range of both panels.](/assets/figures/truth_clusters.png)
 
@@ -959,17 +818,8 @@ weak.
 
 The obvious objection is that this is a fact about Pythia. However, the same observables on
 [OLMo-2-1B](https://huggingface.co/allenai/OLMo-2-0425-1B), a different architecture and
-training corpus at a third of the parameters, reproduce the pattern. Both `cities` and `counterfact` have the same qualitative behavior as on Pythia, and the
-numbers are reported in the appendix *Replication on OLMo-2-1B*.
+training corpus at a third of the parameters, reproduce the pattern. Both `cities` and `counterfact` have the same qualitative behavior as on Pythia for decoding. However, on OLMo `cities` also has a dominant within-class axis at every layer that the estimator does not align with. The numbers are reported in the appendix *Replication on OLMo-2-1B*. 
 
-The superposition probe set up in *Separability, capacity and readout* separates the datasets on Pythia. On `cities` the separation
-decays steadily once the leading components go, $$d'_{\mathrm{mm}} = 2.93 \to 0.25$$, and
-`larger_than` decays likewise. On `neg_cities` it is untouched until the top two are
-removed ($$3.03$$ at $$k = 2$$) and only then collapses, so its truth direction sits below
-the most salient axes rather than in them. `counterfact_true_false` does neither. Its
-$$d'_{\mathrm{mm}}$$ *rises*, $$0.20 \to 0.44$$, so stripping the leading directions makes
-the truth signal **better**. `companies_true_false` exhibits the same effect more strongly, $$d'_{\mathrm{mm}} = 0.17 \to 1.09$$
-at $$k = 8$$ before falling back to $$0.55$$ at $$k = 64$$.
 
 ![The salience knob: $$d'$$ of the mass-mean direction after projecting out the top-$$k$$ principal components, at each dataset's best layer on pythia-2.8b. On `cities`, `neg_cities` and `larger_than` the separation decays as the leading directions are removed — the truth signal is partly contained in the salient subspace. On `counterfact` it rises instead, so the leading directions are not carrying the truth signal but obscuring it.](/assets/figures/truth_superposition.png){: .fig-single}
 
@@ -994,8 +844,7 @@ $$1198$$ statements sit at a near-constant value and eleven sit far below it. Co
 $$38.4 \pm 2.1$$ on the eleven. With $$p = 11/1198$$ the formula predicts $$9800$$ against a measured
 coordinate variance of $$9788$$. Summed over the four coordinates it gives $$11{,}271$$
 against $$\hat\lambda_1 = 11{,}413$$, and $$\hat v_1$$ carries $$98.6\%$$ of its mass in
-their span. At layer $$28$$ the same holds with eight such coordinates: $$7249$$ against
-$$\hat\lambda_1 = 7500$$, with $$96.6\%$$ of $$\hat v_1$$ in their span. In this case $$\hat v_1$$ carries no truth content. It is, to within a few
+their span. In this case $$\hat v_1$$ carries no truth content. It is, to within a few
 percent, the *indicator of which statements failed to receive the massive activation*.
 The mass-mean estimator's $$0.994$$ alignment with it is an alignment with an eleven-out-of-1198
 membership function.
@@ -1024,8 +873,7 @@ in the appendix *Identification and removal of the eleven outlier statements*.
 The dropped activation mechanism also predicts where the rogue dimension should vanish. The number of massive coordinates grows with depth, from three at layer $$3$$ to nine
 at layer $$21$$, is eight from layer $$22$$ through layer $$29$$, falls to five at layer $$30$$, and
 from layer $$31$$ on there are none. The count is the same on
-both datasets at every layer. The eleven `counterfact` statements stop being exceptional, and the two-point variance that
-generated $$\hat\lambda_1$$ disappears. As a result, the rogue dimension disappears at layer $$31$$ as
+both datasets at every layer. The rogue dimension disappears at layer $$31$$ as
 does most of the class gap. $$\lVert\hat\delta\rVert$$ falls by about seventy percent
 across that boundary, which implies that most of the apparent class gap on
 `counterfact` was from the eleven statements with missing massive activations in the earlier layers of the network. `cities` carries the same coordinates over the same span, but they are never dropped by any statement in the dataset. Hence `cities` never acquires a rogue dimension at any depth.
@@ -1037,9 +885,7 @@ participation ratio runs between $$14$$ and $$35$$ and the alignment
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ between $$0.07$$ and $$0.41$$, nowhere near
 the pinned condition at 2.8b. Layers $$17$$ to $$23$$
 carry a single massive coordinate that two to four statements drop, so the mechanism
-fires and produces nothing. One coordinate at $$136$$ to $$177$$ times the median cannot
-dominate a spectrum the way three to nine coordinates running from $$543$$ to $$1728$$
-times the median do over twenty-eight layers. Droppers are necessary for a rogue dimension and not
+fires and produces nothing. The statements dropping massive activations are necessary for a rogue dimension and not
 sufficient, now shown at two model sizes.
 
 This is also why `counterfact` decoding does not improve monotonically with scale. The
@@ -1047,7 +893,8 @@ rogue dimension is absent at 1.4b and present at 2.8b, so the larger model is th
 where the mass-mean estimator is captured.
 
 
-![The lifetime of the rogue dimension, pythia-2.8b. Top: the alignment $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ of the difference-in-means direction with the leading within-class eigenvector. Bottom: the participation ratio, log scale. The shaded region marks the layers at which a coordinate qualifies as a massive activation under the criterion of the appendix *Identification and removal of the eleven outlier statements*, layers $$3$$ to $$30$$, and it is the same region on both datasets because the same coordinates qualify on both. What differs is that eleven `counterfact` statements fail to receive the activation at every layer of the region. `counterfact` is therefore pinned at $$\mathrm{PR} \approx 1$$ and alignment near $$1$$ for twenty-eight layers and rises above the null only once the activation is gone. Since all statements in `cities` carry all of the massive coordinates, it acquires no rogue dimension, and the estimator separates from the salient direction from mid-network onward.](/assets/figures/truth_rogue_lifetime.png){: .fig-single}
+![The lifetime of the rogue dimension, pythia-2.8b. Top: the alignment $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ of the difference-in-means direction with the leading within-class eigenvector. Bottom: the participation ratio, log scale. The shaded region marks the layers at which a coordinate qualifies as a massive activation under the criterion of the appendix *Identification and removal of the eleven outlier statements*, layers $$3$$ to $$30$$, and it is the same region on both datasets because the same coordinates qualify on both. What differs is that eleven `counterfact` statements fail to receive the activation at every layer of the region. `counterfact` is therefore pinned at $$\mathrm{PR} \approx 1$$ and alignment near $$1$$ for twenty-eight layers and leaves that state only once the activation is gone. Since all statements in `cities` carry all of the massive coordinates, it acquires no rogue dimension, and the estimator separates from the salient direction from mid-network onward.](/assets/figures/truth_rogue_lifetime.png){: .fig-single}
+
 
 
 
@@ -1055,8 +902,8 @@ While $$\hat\theta$$ and $$\hat v_1$$ are aligned geometrically, it is unclear w
 leading eigenvector of the within-class covariance. Because $$\hat v_1$$ is fit after both class
 means are removed, it is defined purely by within-class scatter and carries no
 information about which statements are true. At layer $$28$$ the antisymmetric response
-to $$\hat v_1$$ is $$-0.051$$ against $$\hat\theta$$'s $$-0.047$$. At layer $$20$$ the two agree to
-within $$10^{-4}$$ ($$-0.0390$$ against $$-0.0391$$). At every depth measured they track each
+to $$\hat v_1$$ is $$-0.033$$ against $$\hat\theta$$'s $$-0.028$$. At layer $$20$$ the two agree to
+within $$10^{-3}$$ ($$-0.0165$$ against $$-0.0159$$). At every depth measured they track each
 other to within a few thousandths. They decode alike too, at held-out
 $$\mathrm{AUROC} = 0.511$$ for $$\hat v_1$$ against $$0.514$$ for $$\hat\theta$$ in the
 six-layer rogue-dimension sweep, both inside the null. The $$0.994$$ alignment is a
@@ -1069,7 +916,7 @@ along truth. It is displacing the activation along the dominant axis of the with
 noise, which perturbs the forward pass in a way that happens to suppress the true completion.
 A nuisance direction carries no information about the label, so nothing requires its
 behavioral effect to come out positive. Nothing requires it to be reproducible either,
-but here it is: the same negative sign appears across ten seeds, at two `counterfact`
+but here it is: the same negative sign appears in eight of ten seeds, at two `counterfact`
 layers, and at mid-depth on `cities`. Whatever produces it is systematic rather than
 arbitrary, and the label-blindness of $$\hat v_1$$ says only that truth is not what
 produces it.
@@ -1096,9 +943,7 @@ $$g$$ along which the model's true-versus-false margin moves. It does not test w
 $$w$$ is a truth direction. 
 
 Every susceptibility quoted above is therefore a
-projection of one vector. This is why the $$\hat v_1$$ and $$\hat\theta$$ measurements agreeing
-to within $$10^{-4}$$ at layer $$20$$ is a restatement of their $$0.999$$ alignment rather
-than independent confirmation.
+projection of one vector.
 
 Decomposing in the plane of the next section,
 $$\hat\theta = \cos\varphi\,\hat v_1 + \sin\varphi\,\hat e_2$$, linearity gives
@@ -1130,30 +975,18 @@ $$10{,}000$$ bootstrap resamples under a fixed seed, and
 the scale to keep in mind is that a random direction gives $$\lvert\cos\rvert \approx
 1/\sqrt{d} = 0.020$$ at $$d = 2560$$.
 
-At layer $$28$$, $$\cos(g,\hat v_1) = -0.011$$ with $$95\%$$ confidence interval
-$$[-0.038, +0.020]$$. The overlap is consistent with zero. That has two consequences. Projecting $$\hat v_1$$ out
+At layer $$28$$, $$\cos(g,\hat v_1) = -0.008$$ with $$95\%$$ confidence interval
+$$[-0.044, +0.032]$$. The overlap is consistent with zero. That has two consequences. Projecting $$\hat v_1$$ out
 removes essentially none of the behavioral channel, which is what licenses the
 correction. A channel consistent with zero cannot produce the wrong sign at first
-order, so $$A(\hat v_1) = -0.051$$ at this layer is not a linear effect. It is beyond first order in the displacement.
-
-At layer $$20$$ the overlap is resolved: $$\cos(g,\hat v_1) = -0.049$$, confidence
-interval $$[-0.061, -0.030]$$, and $$\cos(g,\hat\theta)$$ is the same through the $$0.999$$
-alignment. The linear prediction $$c\,(\hat\theta\cdot g) = -0.078$$ then lands
-within about $$20\%$$ of the seed median $$A(0.5)/0.5 = -0.064$$ (the seed mean is $$-0.041$$). The through-origin susceptibility
-hides this, because the response reverses sign with displacement, from $$-0.032$$ at
-$$h = 0.5$$ ($$7/10$$ seeds negative, $$2.5$$ null standard deviations) through zero near
-$$h = 1$$ to $$+0.016$$ at $$h = 2$$ ($$9/10$$ seeds positive), so the slope fit over
-$$h \le 4$$ comes out null. The two layers therefore differ in kind. At layer $$20$$ the
-wrong sign is a first-order effect confined to the linear window. At layer $$28$$ the
-same prediction gives $$-0.002$$ against a measured $$-0.039$$ at $$h = 0.5$$, and the
-wrong sign persists to $$h = 2$$ before its magnitude falls at $$h = 4$$.
+order, so $$A(\hat v_1) = -0.033$$ at this layer is not a linear effect. It is beyond first order in the displacement.
 
 The overlap with $$g$$ also separates the two estimators. On `counterfact` the whitened
-direction has a positive overlap at every layer from $$20$$ on, $$+0.040$$
-$$[+0.017, +0.056]$$ at $$L20$$, $$+0.065$$ $$[+0.034, +0.079]$$ at $$L24$$ and $$+0.064$$
-$$[+0.028, +0.080]$$ at $$L28$$, while the plain direction is consistent with zero at
+direction has a positive overlap at every layer from $$20$$ on, $$+0.049$$
+$$[+0.025, +0.064]$$ at $$L20$$, $$+0.060$$ $$[+0.030, +0.073]$$ at $$L24$$ and $$+0.064$$
+$$[+0.031, +0.079]$$ at $$L28$$, while the plain direction is consistent with zero at
 $$L24$$ and $$L28$$. On `cities` it is the plain direction that has the positive overlap
-at layer $$28$$, $$+0.050$$ $$[+0.032, +0.062]$$, while the whitened direction does not. In
+at layer $$28$$, $$+0.051$$ $$[+0.039, +0.060]$$, while the whitened direction does not. In
 both datasets the direction that steers correctly is the direction whose overlap with
 $$g$$ is positive, and the overlap is measured without displacing an activation. The
 sign and not the magnitude is what carries this: at `counterfact` layer $$20$$ both
@@ -1164,18 +997,17 @@ $$\hat\theta_\perp$$ is exactly $$\hat e_2$$, so its susceptibility is predicted
 $$\cos(g, \hat e_2)$$ alone, measured before anything is steered. On `counterfact` the
 prediction has the right sign at all six layers of the rogue-dimension sweep, and where
 the overlap is resolved the steering is significant and agrees with it. At layer $$8$$
-the overlap is negative, $$-0.048$$ $$[-0.062, -0.025]$$, the prediction is
-$$c\,(\hat e_2\cdot g) = -0.12$$, and $$\hat\theta_\perp$$ steers significantly
-wrong-signed, $$A(1) = -0.104$$ over three seeds ($$p = 0.02$$ against a $$100$$-draw
-null). At layers $$24$$ and $$28$$ the overlap is positive, $$+0.059$$ and $$+0.073$$,
-and $$\hat\theta_\perp$$ steers correctly, $$+0.032$$ and $$+0.043$$ against a predicted
-$$+0.054$$ at both. At layers $$12$$ through $$20$$ the overlap's interval spans zero and
-the steering stays inside its null. Removing $$\hat v_1$$ corrects the sign only where
+the overlap is negative, $$-0.062$$ $$[-0.076, -0.037]$$, the prediction is
+$$c\,(\hat e_2\cdot g) = -0.16$$, and $$\hat\theta_\perp$$ steers significantly
+wrong-signed, $$A(1) = -0.105$$ over ten seeds ($$p = 0.04$$ against a $$100$$-draw
+null). At layers $$24$$ and $$28$$ the overlap is positive, $$+0.053$$ and $$+0.069$$,
+and $$\hat\theta_\perp$$ steers correctly, $$+0.043$$ and $$+0.055$$ against a predicted
+$$+0.050$$ and $$+0.055$$. Removing $$\hat v_1$$ corrects the sign only where
 what remains of the class gap overlaps $$g$$ positively.
 
 `cities` also reproduces the mid-depth dip from the other side. Its plain overlap turns
-significantly *negative* at layer $$20$$, $$-0.035$$ $$[-0.041, -0.027]$$, which is the same
-window where the steering sweep finds $$\chi = -0.0062$$, an independent confirmation of
+significantly *negative* at layer $$20$$, $$-0.038$$ $$[-0.044, -0.030]$$, which is the same
+window where the steering sweep finds $$\chi = -0.0079$$, an independent confirmation of
 an anomaly that the steering measurement alone left uncertain.
 
 There is a geometric reading of the two directions that makes the inversion of Marks &
@@ -1228,10 +1060,7 @@ $$
 This shows that whitening is simply a rotation within $$P$$. The measured
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert = 0.994$$ puts $$\varphi_{\mathrm{mm}} = 6.3^{\circ}$$.
 With $$\kappa = \hat\lambda_1/\hat\lambda_2 = 535$$ this gives
-$$\varphi_{\mathrm F} = 89.0^{\circ}$$. These are full-sample values of $$\hat C$$. The whitening
-actually applied uses the shrunk $$\hat\Sigma$$ of the training half, where
-$$\kappa = 463$$ and $$\varphi_{\mathrm{mm}} = 6.8^{\circ}$$, and it returns the same
-$$89.0^{\circ}$$ and the same predicted gain below. The whitened direction is orthogonal to $$\hat v_1$$
+$$\varphi_{\mathrm F} = 89.0^{\circ}$$. The whitened direction is orthogonal to $$\hat v_1$$
 to within a degree, which is why $$\hat\theta_{\mathrm F}$$ and $$\hat\theta_\perp$$ produce the same sign flip:
 in this regime they are the same vector, and the full-rank correction reduces to the
 rank-one one.
@@ -1257,7 +1086,7 @@ $$
 \;\approx\; \frac{1 + \kappa r^{2}}{(1+r^{2})^{2}},
 $$
 
-which at $$\kappa = 535$$ gives $$2.7\times$$. Measured on `counterfact` at layer $$28$$,
+which at $$\kappa = 535$$ and $$r = 0.11$$ gives $$7.3$$, a gain of $$2.7\times$$ in $$d'$$. Measured on `counterfact` at layer $$28$$,
 $$d'_{\mathrm{mm}} = 0.080 \to d'_{\mathrm F} = 0.384$$, a factor of $$4.8$$. The formula
 predicts the right order and underestimates the measured gain. Inverting it for an
 effective $$\kappa$$ is worked through in the methods appendix, under *The
@@ -1278,14 +1107,9 @@ are both available before any steering is run. The diagnosis has been tested on 
 dataset (`counterfact`) that satisfies the criterion, and one (`cities`) that does not,
 and held in both. Two further main-tier sets,
 `companies_true_false` and `common_claim_true_false`, satisfy the criterion at layers
-$$24$$ and $$28$$ but cannot be tested causally with this harness. Their statements
-have no relation structure from which to build a pair of completions, so the
-behavioral score of *The scale of an intervention* cannot be formed. The alternative
-would be to score the model's own judgment of whether a statement is true, but
-unsteered that judgment separates true from false at AUROC $$0.57$$ on `common_claim`,
-against $$0.78$$ on `cities`, so there is almost no behavior there for a displacement to
-move. So they meet the criterion, but the prediction it makes for them cannot be
-checked. `cities` at layer $$28$$ violates both conditions ($$\mathrm{PR} = 29.7$$,
+$$24$$ and $$28$$ but their statements have no relation structure from which to build a pair of completions, so the
+behavioral score of *The scale of an intervention* cannot be formed. This is discussed in 
+*Appendix: results on the full twelve-dataset benchmark*. `cities` at layer $$28$$ violates both conditions ($$\mathrm{PR} = 29.7$$,
 $$\lvert\cos\rvert = 0.159$$). There the formula predicts a gain of $$1.00\times$$ at
 $$\kappa = 1.42$$ and $$r = 6.2$$, since both directions already sit on the broad top of
 the quotient, and the measured $$1.22\times$$ is a small gain from the rest of the
@@ -1297,24 +1121,20 @@ gives
 
 $$
 A(1) > 0 \;\text{ in } 10/10 \text{ seeds}, \qquad
-\operatorname{med}_{\text{seeds}} A(1) = +0.025 = 2.1\,\sigma_{\text{null}}, \qquad
-p = 0.010,
+\operatorname{med}_{\text{seeds}} A(1) = +0.028 = 2.3\,\sigma_{\text{null}}, \qquad
+p = 0.005,
 $$
 
-with $$8/10$$ seeds individually clearing the null at $$5\%$$. Layer $$24$$ gives the
-same picture: $$10/10$$ positive, $$7/10$$ clearing, $$p = 0.020$$. Here $$\chi$$
-coincides with $$A(1)$$ at $$+0.025$$, because the whitened response is linear in $$h$$
-over the whole sweep, $$0.013$$, $$0.025$$, $$0.050$$, $$0.099$$ at $$h = 0.5, 1, 2, 4$$,
-where the plain direction's response fell off at $$h = 4$$. The corrected steering behavior is
-smaller than the wrong-signed steering behavior it replaces, two null standard deviations against
-five, but it is monotone where the uncorrected steering was not. The rank-one correction
+with $$7/10$$ seeds individually clearing the null at $$5\%$$.  Here $$\chi$$
+coincides with $$A(1)$$ at $$+0.030$$, because the whitened response is linear in $$h$$
+over the whole sweep. The corrected steering behavior is
+about the same size as the wrong-signed steering behavior it replaces, two null standard deviations against
+two and a half, but it is monotone where the uncorrected steering was not. The rank-one correction
 $$\hat\theta_\perp$$, measured independently in the rogue-dimension sweep, agrees. At
-layer $$28$$ its three seeds give $$A(1) = +0.045$$, $$+0.036$$ and $$+0.048$$, each at
-$$p \le 0.0025$$ against the same $$400$$-draw null, so on its own it carries $$A$$ from
+layer $$28$$ its ten seeds give a median $$A(1) = +0.055$$ ($$4.5\,\sigma_{\text{null}}$$), all ten positive and each at
+$$p < 0.0025$$ against the same $$400$$-draw null, so on its own it carries $$A$$ from
 significantly negative to significantly positive, and it raises held-out decoding AUROC
-at layer $$28$$ from $$0.51$$, the mass-mean value inside the null, to $$0.57$$. The crossover occurs at layer
-$$20$$. Whitened steering there is correctly signed in $$9/10$$ seeds
-but does not clear the null, $$p = 0.12$$, which corresponds to a transition region.
+at layer $$28$$ from $$0.51$$, the mass-mean value inside the null, to $$0.57$$.
 
 ## Steering without a rogue dimension
 
@@ -1330,48 +1150,34 @@ sharpen a readout is instead doing the work of recovering the direction.
 The inversion is a property of a regime and not a refutation of Marks & Tegmark. This is demonstrated by `cities` as the control. There the two directions behave as mass-mean
 probing intends. At pythia-2.8b layer $$28$$, the same model and depth at which
 `counterfact` inverts, the plain direction steers correctly in $$10/10$$ seeds
-($$\chi = +0.030$$) while the whitened direction is weak and inconsistent
-($$\chi = -0.003$$, $$4/10$$). On pythia-1.4b the contrast is starker still, with
-$$\chi = +0.46$$ plain against $$-0.013$$ whitened at layer $$12$$. Read across the whole
+($$\chi = +0.040$$) while the whitened direction is weak and inconsistent
+($$\chi = -0.004$$, $$4/10$$). Read across the whole
 depth sweep, the two datasets mirror each other. On `cities`, plain steering clears
-its null at three layers, $$12$$ and $$28$$ clearly and $$24$$ weakly ($$\chi = +0.009$$,
-$$10/10$$ seeds positive, $$p = 0.020$$), and is correctly signed at all three. On
-`counterfact`, plain steering clears its null at two layers, $$24$$ and $$28$$, and is
-wrong-signed at both. At every other layer of either dataset it sits inside the null.
+its null at layer $$28$$. On `counterfact`, plain steering clears its null at two layers, $$16$$ and $$28$$, and is
+wrong-signed at both. At every other layer of either dataset it sits inside the null. 
 At layer $$28$$ the two datasets share the model, the depth and the estimator, and
 their significant effects point in opposite directions. When no single eigenmode
 dominates the within-class covariance, the mean difference *is* the causal feature and
 the inverse covariance only adds estimation noise, which is what Marks & Tegmark report, on datasets of exactly this kind. The inversion is confined to the regime where $$\hat\delta$$ has aligned with $$\hat v_1$$, corresponding to the presence of a rogue dimension in the dataset.
 
-Two points in the `cities` panel deserve naming, since they are visible and read at
-first glance like counterexamples. At layers $$16$$ and $$20$$ the plain direction becomes
-mildly negative with $$\chi = -0.0031$$ and $$-0.0062$$. Both estimates are consistent across
-seeds ($$9/10$$ and $$8/10$$ negative), so the sign is not noise. However, both sit an order of magnitude below the $$+0.0296$$ the same direction produces
-at layer $$28$$, and neither clears the steering null. The regime
-claim is that the *significant* effects on `cities` are correctly signed, not that
-every layer's point estimate is positive.
+![Steering susceptibility $$\chi$$ on pythia-2.8b, plain (red) against whitened (blue), median over seeds with inter-quartile bars. Left, `cities`: the plain difference-in-means direction carries the causal effect and whitening degrades it which is the intended behavior of mass-mean probing. The mild negative excursions of the plain direction at layer $$20$$ do not clear the steering null and are about five times smaller than its layer-$$28$$ effect. Right, `counterfact_true_false`: at depth the assignment inverts, the plain direction steers significantly wrong-signed at layer $$28$$ while the whitened direction steers correctly. This is the same model, estimators, and protocol and only the within-class geometry differs.](/assets/figures/truth_regime_control.png)
 
-![Steering susceptibility $$\chi$$ on pythia-2.8b, plain (red) against whitened (blue), median over seeds with inter-quartile bars. Left, `cities`: the plain difference-in-means direction carries the causal effect and whitening degrades it which is the intended behavior of mass-mean probing. The mild negative excursions of the plain direction at layers $$16$$ and $$20$$ do not clear the steering null and are an order of magnitude below its layer-$$28$$ effect. Right, `counterfact_true_false`: at depth the assignment inverts, the plain direction steers significantly wrong-signed while the whitened direction steers correctly. This is the same model, estimators, and protocol and only the within-class geometry differs.](/assets/figures/truth_regime_control.png)
 
 ## Discussion
 A mass-mean truth direction can align with a causal truth direction, but it can also contain a large component along the most salient axis of the activations, with a signal-to-noise
 analysis required to tell the two apart on any given benchmark. In this work I have focused on four consequences of this observation. I started by demonstrating that for the standard datasets in this literature, in-sample
-separation is inflated by dimensional slack that scales as $$N^{-1/2}$$ with a prefactor
-set by the effective dimension of the noise, requiring one to form a null distribution from scoring random vectors on held-out data in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset or model layer, the mass-mean
-estimator aligns with the leading within-class eigenvector. On `counterfact` that direction fails to decode truth and steers behavior with a significant wrong sign, five null standard deviations deep at one class gap. However, I show that the same activations used to obtain the mass-mean direction contain a direction that steers correctly, and it can be reached without leaving the linear class, either by the Fisher direction or by projecting out the
+separation is inflated by dimensional slack that scales as $$N^{-1/2}$$ requiring one to form a null distribution from scoring random vectors on held-out data in order to assess the significance of the probe score. I then showed that when the class gap is weak for a particular dataset or model layer, the mass-mean
+estimator aligns with the leading within-class eigenvector. On `counterfact` that direction fails to decode truth and steers behavior with a significant wrong sign, two and a half null standard deviations deep at one class gap. However, I show that the same activations used to obtain the mass-mean direction contain a direction that steers correctly, and it can be reached without leaving the linear class, either by the Fisher direction or by projecting out the
 leading eigenvector.
 
 
 Three things should be noted before comparing to other reports.
 The corrected effect I find is modest. At one class gap the plain direction's median response
-is $$-0.062$$, five null standard deviations, and the whitened direction's is $$+0.025$$,
-two. While the correction flips the sign of the effect, the corrected effect is less than half the magnitude of the incorrect result, so the correction
+is $$-0.031$$, two and a half null standard deviations, and the whitened direction's is $$+0.028$$,
+two. While the correction flips the sign of the effect, the corrected effect is modest so the correction
 restores a sign rather than supplying a large causal lever.
 
-Likewise, the decoding gain is significant but also small in magnitude. At layer $$28$$, along with correcting the steering behavior, whitening raises the held-out AUROC from $$0.502$$ to $$0.624$$ against a null of $$0.560$$. More generally, the whitened direction stays above its null from layer $$26$$ to the end of the network, peaking at $$0.716$$ against $$0.552$$ at layer $$31$$.
-Set beside `cities`, where the same direction reads $$0.99$$, this is a weak readout. The overall
-claim is a corrected sign and a confirmed mechanism, not a recovered truth direction of
-practical use. The incorrect steering behavior from the original mass-mean estimator could also imply that a richer, perhaps nonlinear, intervention is required. However, in my analysis I found that there are two corrections to the linear estimator for which this is not needed, projecting out the nuisance direction and whitening, which both enable decoding and correct the steering behavior.
+The held-out AUROC of the whitened `counterfact` direction at its selected layer $$31$$ reads $$0.72$$ against $$0.98$$ at layer $$29$$ for the whitened `cities` direction so this is a weak readout. The overall claim is a corrected sign and a confirmed mechanism, not a recovered truth direction of practical use. The incorrect steering behavior from the original mass-mean estimator could also imply that a richer, perhaps nonlinear, intervention is required. However, in my analysis I found that there are two corrections to the linear estimator for which this is not needed, projecting out the nuisance direction and whitening, which both enable decoding and correct the steering behavior.
 
 
 Finally, the criterion that diagnoses this failure, a within-class spectrum with one dominant
@@ -1398,17 +1204,13 @@ what they find at low $$d'_{\mathrm{mm}}$$. Every dataset in Braun et al.'s stud
 net positive effect, with low separability showing up as per-example scatter around
 that mean. In those cases they conclude that the behavior is not represented by a
 coherent linear direction.
-`counterfact` at layers $$24$$ and $$28$$, with $$d'_{\mathrm{mm}} = 0.08$$, sits at the
+`counterfact` at layers $$16$$ and $$28$$, with $$d'_{\mathrm{mm}} = 0.08$$, sits at the
 unsteerable end of their scale but steers with a negative mean that clears its null. This implies
-that the behavior is linearly represented, since the whitened direction steers it correctly at
-the same layer. What has failed is the estimator. The shallow `counterfact` layers, $$L \le 16$$, are closer to the regime Braun et al.
-describe, but not the same one. Whitening leaves the effect inside the null they define, and
-projecting out $$\hat v_1$$ does not restore the sign: at layer $$8$$ it steers
-significantly wrong-signed. That is not an absence of linear signal. It is the sign of
+that the behavior is linearly represented, since at layer $$28$$ the whitened direction steers it correctly. What has failed is the estimator. However, the correction does not hold at every depth. At layer $$8$$ whitening leaves the effect inside the random-direction null, and projecting out $$\hat v_1$$ does not restore the sign but steers significantly wrong-signed. This is not an absence of linear signal. It is the sign of
 $$\hat e_2\cdot g$$, which at that depth is negative, as shown in *Susceptibility and the score gradient*. The per-sample form of the anomaly is documented by
 [Tan et al. (2024)](https://arxiv.org/abs/2407.12404), who find that for several
 concepts, close to half the inputs steer in the direction opposite to the one intended.
-The `counterfact` effect at layers $$24$$ and $$28$$ is that variance surfacing as a
+The `counterfact` effect at layers $$16$$ and $$28$$ is that variance surfacing as a
 wrong-signed dataset-level mean that clears its null, with a proposed mechanism.
 
 [Ying et al. (2026)](https://arxiv.org/abs/2602.20273) compare two kinds of truth
@@ -1536,26 +1338,23 @@ sweep covers all twelve. At pythia-2.8b, each at its own selected layer:
 | `smaller_than` | 31 | 0.974 | 2.79 | 1.000 | 0.786 |
 | `larger_than` | 28 | 0.929 | 2.05 | 1.000 | 0.735 |
 | `cities_cities_disj` | 29 | 0.836 | 1.42 | 0.836 | 0.586 |
-| `cities_cities_conj` | 26 | 0.810 | 1.30 | 0.930 | 0.597 |
+| `cities_cities_conj` | 32 | 0.820 | 1.28 | 0.932 | 0.606 |
 | `common_claim_true_false` | 31 | 0.757 | 0.64 | 0.722 | 0.611 |
 | `companies_true_false` | 31 | 0.699 | 0.17 | 0.855 | 0.585 |
-| `counterfact_true_false` | 32 | 0.566 | 0.20 | 0.701 | 0.556 |
+| `counterfact_true_false` | 31 | 0.550 | 0.12 | 0.716 | 0.552 |
 | `likely` | 12 | 0.890 | 1.75 | 0.929 | 0.593 |
+
 
 The two translation sets sit at $$N = 354$$ rather than $$1198$$ and clear their random null by
 as wide a margin as the single-frame sets. Every templated set with a single frame clears its null comfortably. The two free-form sets are the bottom of
 the table: `common_claim_true_false` at $$d'_{\mathrm{mm}} = 0.64$$ and `counterfact_true_false` at
-$$0.20$$. `companies_true_false` is interesting because it has a plain $$d'_{\mathrm{mm}}$$ of $$0.17$$, at
-the floor with `counterfact`, but a whitened AUROC of $$0.855$$, the largest gap between
-the two estimators anywhere in the table. Together with its rising superposition curve, this
-makes it a second instance of the rogue-dimension pattern in decoding. Since the dataset includes only statements and labels, with no contrastive completions from
-which to build a behavioral score, it does not include a causal measurement. The spectrum confirms
+$$0.12$$. `companies_true_false` is interesting because it has a plain $$d'_{\mathrm{mm}}$$ of $$0.17$$, a bit above `counterfact`'s floor, but a whitened AUROC of $$0.855$$, the largest gap between the two estimators in the table after `counterfact`. Together with its rising superposition curve, this
+makes it a second instance of the rogue-dimension pattern in decoding. The spectrum confirms
 it. At layers $$24$$ and $$28$$, `companies_true_false` has $$\mathrm{PR} = 1.01$$ and
 $$1.02$$, $$\hat\lambda_1/\hat\lambda_2$$ near $$2000$$ and $$1250$$, and
-$$\lvert\cos(\hat\theta,\hat v_1)\rvert = 0.98$$ and $$0.93$$, with $$d'_{\mathrm{mm}}$$ of
-$$0.02$$ and $$0.03$$. That is `counterfact`'s signature at the same depths. By layer
+$$\lvert\cos(\hat\theta,\hat v_1)\rvert = 0.98$$ and $$0.93$$, with in-sample $$d'_{\mathrm{mm}}$$ of $$0.02$$ and $$0.03$$. That is `counterfact`'s signature at the same depths. By layer
 $$31$$, where selection lands, it has escaped: $$\mathrm{PR} = 3.2$$, the alignment down
-to $$0.18$$, $$d'_{\mathrm{mm}}$$ up to $$0.51$$. `common_claim_true_false` is a third
+to $$0.18$$, in-sample $$d'_{\mathrm{mm}}$$ up to $$0.51$$. Since the dataset includes only statements and labels, with no contrastive completions from which to build a behavioral score, it does not include a causal measurement. `common_claim_true_false` is a third
 instance, locked at layers $$24$$ and $$28$$ ($$\mathrm{PR} = 1.02$$ and $$1.05$$,
 alignment $$0.95$$ and $$0.83$$) and escaping by layer $$31$$ ($$\mathrm{PR} = 12.1$$,
 alignment $$0.21$$). `cities_cities_conj`, by contrast, never locks ($$\mathrm{PR}$$ from
@@ -1569,6 +1368,120 @@ under the Gaussian identity, not the $$0.699$$ measured. This is the largest
 departure in the table, and a sign that the projected class-conditionals on this
 dataset are far from the Gaussian idealization.
 
+## Appendix: the effective-dimension prefactor
+
+The dataset enters in the determination of the prefactor which quantifies the number of
+directions effectively occupied by the noise. A spectrum concentrated on a few axes leaves
+a random labeling less room to find a separator than a flat one does, so the ambient
+width $$d$$ is the right count only when the spectrum is flat. In general the count is
+the participation ratio of the within-class covariance, and the amplitude should
+collapse across datasets once $$N$$ is measured in units of it.
+
+A second sweep tests the exponent and the prefactor across datasets. The control is
+scored in sample, so no half has to be held back and the grid can run to the full set.
+Repeating it on pythia-2.8b at each dataset's own best layer, over a seven-point
+geometric grid from $$N = 100$$ to that dataset's total (capped at $$3000$$) with sixteen label permutations
+per point, and fitting
+$$\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2} \approx a\,(N/2d)^{b}$$ on each, gives
+
+| dataset | $$N_{\max}$$ | $$a$$ | $$b$$ | $$R^{2}$$ | $$\mathrm{PR}$$ | $$\hat\lambda_1/\operatorname{tr}\hat C$$ |
+|---|---|---|---|---|---|---|
+| `counterfact_true_false` | $$3000$$ | $$0.056$$ | $$-0.468 \pm 0.019$$ | $$0.992$$ | $$8.5$$ | $$0.33$$ |
+| `counterfact_true_false`, without the 31 statements dropping massive activations | $$2969$$ | $$0.065$$ | $$-0.449 \pm 0.015$$ | $$0.994$$ | $$53.7$$ | $$0.070$$ |
+| `cities` | $$1496$$ | $$0.053$$ | $$-0.446 \pm 0.009$$ | $$0.998$$ | $$34.6$$ | $$0.11$$ |
+| `larger_than` | $$1980$$ | $$0.027$$ | $$-0.484 \pm 0.014$$ | $$0.996$$ | $$8.9$$ | $$0.28$$ |
+| `sp_en_trans` | $$354$$ | $$0.064$$ | $$-0.413 \pm 0.044$$ | $$0.947$$ | $$16.8$$ | $$0.23$$ |
+
+
+The exponents look scattered, and taken at face value `cities` sits six standard errors
+from $$-\tfrac12$$. They are scattered not by dataset but by how far up in $$N$$ each
+grid reaches, because the power law is asymptotic and its small-$$N$$ end is shallower
+than $$-\tfrac12$$. Refitting `counterfact` over truncated windows makes this explicit:
+
+$$
+b = -0.364 \pm 0.102 \;\; (N \le 400), \qquad
+-0.439 \pm 0.034 \;\; (N \le 1500), \qquad
+-0.468 \pm 0.019 \;\; (\text{all } N).
+$$
+
+
+Each of the other three then matches `counterfact` restricted to its own range of $$N$$.
+`cities` stops at $$1496$$ and gives $$-0.446$$ against $$-0.439$$, `larger_than`
+reaches $$1980$$ and gives $$-0.484$$ against $$-0.458$$, and `sp_en_trans` stops at
+$$354$$ and gives $$-0.413$$ against $$-0.364$$, within its own error. The four agree within error, so the dataset-independence of the exponent is measured from the estimator.
+
+For the amplitude, $$a$$ is the wrong statistic to compare across datasets, since each
+$$a$$ is defined at its own fitted $$b$$. It is also not a free parameter. Under shuffled
+labels there is no signal, so within a class $$x \sim \mathcal{N}(0, \Sigma)$$, and the
+mass-mean direction is a signed sum of the samples,
+
+$$
+\hat\theta \;=\; \hat\mu_{+} - \hat\mu_{-} \;=\; \frac{2}{N}\sum_i \epsilon_i x_i ,
+\qquad \epsilon_i = \pm 1 ,
+$$
+
+so $$\hat\theta \sim \mathcal{N}\!\left(0, \tfrac{4}{N}\Sigma\right)$$ and
+
+$$
+\mathbb{E}\lVert\hat\theta\rVert^{2} = \frac{4}{N}\operatorname{tr}\Sigma ,
+\qquad
+\mathbb{E}\,\hat\theta^{\top}\Sigma\,\hat\theta = \frac{4}{N}\operatorname{tr}\Sigma^{2} .
+$$
+
+The in-sample separation it produces is the projected class gap, which is its own
+squared length, over the projected within-class spread,
+
+$$
+d'_{\text{in}} \;=\; \frac{\lVert\hat\theta\rVert^{2}}{\sqrt{\hat\theta^{\top}\Sigma\hat\theta}}
+\;\simeq\; \frac{2}{\sqrt{N}}\,\frac{\operatorname{tr}\Sigma}{\sqrt{\operatorname{tr}\Sigma^{2}}}
+\;=\; 2\sqrt{\frac{\mathrm{PR}}{N}} ,
+$$
+
+which is where the participation ratio enters:
+$$\mathrm{PR} = (\operatorname{tr}\Sigma)^{2}/\operatorname{tr}\Sigma^{2}$$ is the count
+of directions the noise occupies, and it equals $$d$$ only for a flat spectrum. With
+$$\mathrm{AUROC} = \Phi(d'/\sqrt{2})$$ and $$\Phi(x) \simeq \tfrac12 + x/\sqrt{2\pi}$$ at
+small argument,
+
+$$
+\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2}
+\;\simeq\; \frac{d'_{\text{in}}}{2\sqrt{\pi}}
+\;=\; \frac{1}{\sqrt{\pi}}\sqrt{\frac{\mathrm{PR}}{N}} ,
+$$
+
+so the collapse constant is predicted rather than fitted:
+
+$$
+C \;\equiv\; \Bigl(\mathrm{AUROC}_{\text{shuffled}} - \tfrac{1}{2}\Bigr)\sqrt{\frac{N}{\mathrm{PR}}}
+\;=\; \frac{1}{\sqrt{\pi}} \;=\; 0.564 .
+$$
+
+Measured, $$C$$ is flat to about $$\pm 10\%$$ within a dataset over a thirtyfold range in
+$$N$$, and runs from $$0.49$$ to $$0.65$$ across `counterfact` (with the statements dropping massive activations excluded), `cities` and
+`larger_than`, against a factor $$2.4$$ in $$a$$ and $$6.0$$ in $$\mathrm{PR}$$. The
+dependence on the spectrum runs the way the count predicts and against the intuitive
+direction: `larger_than` is the most concentrated set, $$\mathrm{PR} = 8.9$$ with
+$$28\%$$ of the within-class variance on one axis, and it carries the smallest amplitude
+of the three.
+
+![The effective-dimension collapse on pythia-2.8b, each dataset at its own best layer, against $$N/\mathrm{PR}$$. The line is $$\pi^{-1/2}\sqrt{\mathrm{PR}/N}$$ with no free parameter. `counterfact` (once the statements missing the massive activation are dropped), `cities` and `larger_than` fall on it across a thirtyfold range in $$N$$ and a sixfold range in $$\mathrm{PR}$$; `sp_en_trans` sits above it by $$36$$–$$60\%$$. Error bars are the standard error over sixteen permutations.](/assets/figures/truth_pr_collapse.png)
+
+
+![The statements dropping massive activations on `counterfact`, pythia-2.8b. Top: class-centred projections onto the leading within-class eigenvector $$\hat v_1$$ at layer $$31$$, in units of the bulk standard deviation. The $$31$$ statements flagged at layer $$28$$ by the label-free rule of the methods appendix sit $$34$$ to $$89$$ standard deviations out, while no other statement passes $$4.3$$, and they carry $$97\%$$ of $$\hat\lambda_1$$. Bottom left: excess kurtosis of the shuffled-label projections at layers $$30$$ to $$32$$, with all statements (hollow) and with the $$31$$ excluded (filled). With them it approaches the two-point value $$1/p - 6 = 91$$ for $$p = 31/3000$$, and without them it stays within $$0.3$$ of zero. Bottom right: step B of the Gaussian check, the measured AUROC excess over the prediction $$\Phi(d'/\sqrt{2})$$, with the $$\pm 3\%$$ band. Excluding the $$31$$ statements brings it within $$1\%$$ at every layer and $$N$$.](/assets/figures/truth_dropper_gaussian.png){: .fig-single}
+
+When the collapse constant is predicted using the full dataset, `counterfact` misses the prediction due to the $$31$$ statements dropping massive activations. One can see that they carry essentially all of the variance along $$\hat v_1$$ and likewise the excess kurtosis of the shuffled-label projections. Excluding them puts it back on the parameter-free line with `cities` and `larger_than`. 
+
+
+`sp_en_trans` does not join the collapse. It sits at $$C = 0.77$$ to $$0.90$$, well above
+$$1/\sqrt{\pi}$$, where the other three bracket it. The derivation factors into two
+independent steps, and measuring them separately localizes the miss. The distributional
+step holds: $$\mathrm{AUROC}$$ tracks $$\Phi(d'_{\text{in}}/\sqrt{2})$$ to within $$3\%$$
+on all four datasets (`counterfact` with the statements dropping massive activations excluded), this one included, despite its projections carrying the largest
+excess kurtosis of the four ($$+0.8$$ to $$+1.2$$ against $$-0.7$$ to $$+0.2$$ elsewhere).
+The discrepancy is in the second-moment step: the measured $$d'_{\text{in}}$$ runs
+$$1.47$$ to $$1.62$$ times $$2\sqrt{\mathrm{PR}/N}$$ here, against $$1.03$$ to $$1.17$$
+on the other three. 
+
 ## Appendix: identification and removal of the eleven outlier statements
 
 The eleven outlier statements are identifiable without reference to $$\hat v_1$$. The set is
@@ -1576,7 +1489,7 @@ defined coordinate-first, without referring to the covariance, the class means,
 or the labels. A coordinate is massive if $$\lvert\operatorname{med}_i x_{ij}\rvert$$
 exceeds both an absolute threshold and a large multiple of the median activation, and a
 statement is flagged if it deviates from the modal value on any massive coordinate. This criterion returns exactly the eleven statements of the projection-based set, at
-every layer measured. Layer-invariance makes it a property of the
+every layer measured, on the $$1198$$ statements used throughout. On the $$3000$$-statement sample of the effective-dimension appendix it flags $$31$$. Layer-invariance makes it a property of the
 input rather than of any particular representation.
 
 Refitting on a training half with the eleven excluded and scoring on
@@ -1621,15 +1534,18 @@ I do not know what distinguishes the eleven statements on pythia-2.8b from the o
 To check that the rogue dimension is not a fact about Pythia, I ran the observables of
 *The rogue dimension* on [OLMo-2-1B](https://huggingface.co/allenai/OLMo-2-0425-1B), which has a
 different architecture, a different training corpus and a third of the parameters. `counterfact`
-stays locked to the leading axis at every depth except the final layer,
+stays locked to the leading axis at every depth,
 $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ between $$0.64$$ and $$0.94$$ from layer $$2$$ to layer
-$$15$$ (it falls to $$0.04$$ at layer $$16$$), with $$d'_{\mathrm{mm}} \approx 0.1$$. Its plain probe never clears its own null (held-out
+$$16$$, with $$d'_{\mathrm{mm}} \approx 0.1$$. Its plain probe never clears its own null (held-out
 $$\mathrm{AUROC} = 0.529$$ at its best layer, against a null 95th percentile of $$0.547$$),
 while whitening lifts it to $$0.647$$. `cities` clears the null, as it does in Pythia: the alignment
-falls to $$\lvert\cos\rvert \approx 0.3$$, the participation ratio climbs $$1.4 \to 17.7$$, and
-the plain probe reaches $$0.903$$. The superposition probe agrees from the other side.
+falls to $$\lvert\cos\rvert \approx 0.3$$ and
+the plain probe reaches $$0.920$$. The superposition probe agrees from the other side.
 Stripping the leading components *raises* $$d'_{\mathrm{mm}}$$ on `counterfact`
-($$0.07 \to 0.31$$) and destroys it on `cities` ($$1.85 \to 0.54$$).
+($$0.07 \to 0.31$$). 
+
+![The rogue-dimension observables on OLMo-2-1B, layers $$1$$ to $$16$$, where layer $$16$$ is the last block's output before the final norm. Top: the alignment $$\lvert\cos(\hat\theta,\hat v_1)\rvert$$ of the mass-mean direction with the leading within-class eigenvector. Middle: the participation ratio. Both datasets have a dominant within-class axis from layer $$2$$ on, but only on `counterfact` does the estimator align with it. Bottom: the held-out decoding margin $$\mathrm{AUROC} - p_{95}$$ against each layer's random-direction null, plain (solid) and whitened (dashed). The plain `counterfact` direction stays below its null at every layer, and whitening lifts it clearly above from layer $$11$$ on.](/assets/figures/truth_olmo_replication.png){: .fig-single}
+
 
 ## Appendix: methods in detail
 
@@ -1704,17 +1620,17 @@ for $$k \in \{0,1,2,4,8,16,32,64\}$$, refit the mass-mean direction in the resid
 subspace, and report $$d'_{\mathrm{mm}}$$ against $$k$$. The PCA basis is fit on the
 training half only.
 
-**Massive coordinates and droppers.** Two conventions for "massive" appear in this
+**Massive coordinates and the statements dropping them.** Two conventions for "massive" appear in this
 post. In the rogue-dimension section a
 coordinate's magnitude is quoted as $$\lvert\text{mean}_i\, x_{ij}\rvert$$ divided by the
 median of that quantity across coordinates — the $$1446\times$$ and $$563\times$$ figures.
-The dropper test instead calls coordinate $$j$$ massive when
+The test for statements dropping massive activations instead calls coordinate $$j$$ massive when
 $$\lvert\operatorname{med}_i x_{ij}\rvert$$ exceeds both $$100$$ in absolute terms and
 $$100\times$$ the median activation magnitude $$\operatorname{med}_{ij}\lvert x_{ij}\rvert$$,
-and flags statement $$i$$ as a dropper when
+and flags statement $$i$$ as dropping the massive activation when
 $$\lvert x_{ij} - \operatorname{med}_i x_{ij}\rvert > \tfrac12\lvert\operatorname{med}_i x_{ij}\rvert$$
 for some massive $$j$$. The two ratios agree to about one percent on this data
-($$1446$$ against $$1456$$ at layer $$8$$ and $$560$$ against $$564$$ at layer $$28$$). The
+($$1446$$ against $$1456$$ at layer $$8$$ and $$563$$ against $$560$$ at layer $$28$$). The
 relative factor is $$100\times$$ rather than the $$1000\times$$ of Sun et al. because the
 dominant coordinate runs $$1456$$–$$1693\times$$ the median at layers $$8$$–$$20$$ but
 only $$564$$–$$587\times$$ at layers $$24$$–$$28$$, so the literal constant stops firing at
@@ -1724,7 +1640,7 @@ set.
 **Shuffled-label control.** The labels are permuted and the mass-mean direction refit.
 This control is scored **in-sample by design**: a held-out shuffled direction scores
 $$\tfrac12$$ by construction, which would hide exactly the inflation the control exists
-to expose. The pooled fit $$0.045\,(N/2d)^{-0.49}$$ is run on `counterfact` across all
+to expose. The pooled fit $$0.046\,(N/2d)^{-0.50}$$ is run on `counterfact` across all
 four models with one permutation per $$(\text{model}, N)$$ point, thirty-six points in
 all, of which the three pythia-70m points whose in-sample excess came out negative are
 dropped because the fit is in log space. The per-dataset fits are a separate sweep on pythia-2.8b alone, at each
@@ -1741,9 +1657,7 @@ $$c = \lVert\hat\delta\rVert$$ estimated on the training half, so $$h = 1$$ disp
 an activation by the distance between class means. The behavioral score is
 $$\ell = \log P(\text{true completion}) - \log P(\text{false completion})$$, summed over
 completion tokens given the prompt. Pairs are drawn as $$250$$ per seed from a fixed pool
-of $$400$$. Ten seeds are used per cell, except the rogue-dimension sweep of $$\hat v_1$$ and
-$$\hat\theta_\perp$$, which has three.
-$$A$$ and $$S$$ are the odd and even parts of the response in $$h$$, and
+of $$400$$. Ten seeds are used per cell, except the rogue-dimension sweep of $$\hat v_1$$ which has three for every layer except for layer $$28$$ which has $$10$$. $$A$$ and $$S$$ are the odd and even parts of the response in $$h$$, and
 $$\chi$$ is the through-origin least-squares slope of $$A$$ against $$h$$ over the four
 magnitudes, so $$\chi$$ is weighted toward the large-$$h$$ end and is not a pure
 $$h\to0$$ derivative. Rank $$p$$ values are computed on $$A$$ at $$h = 1$$, each seed
@@ -1770,7 +1684,10 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | distractor transfer | `recoverability.py transfer-likely` | `transfer_likely.json` |
 | unsteered judgment readout on `cities`, `common_claim`, `counterfact` | `recoverability.py verdicts` | `check_model_verdicts.json` |
 | per-dataset shuffled-label fits and their spectra | `dimensional_slack.py by-dataset` | `cover_by_dataset.json` |
-| the shuffled-label law and collapse figure | `figures/dimensional_slack.py shuffled-collapse` | `truth_shuffled_collapse.png` |
+| the shuffled-label law figure | `figures/dimensional_slack.py shuffled-law` | `truth_shuffled_law.png` |
+| the effective-dimension collapse figure | `figures/dimensional_slack.py pr-collapse` | `truth_pr_collapse.png` |
+| shuffled-label sweep on `counterfact` without the statements dropping massive activations | `followup/cover_no_droppers.py` | `cover_no_droppers.json` |
+| excess kurtosis at layers $$30$$ to $$32$$, with and without the statements dropping massive activations | `followup/kurtosis_droppers.py` | `kurtosis_droppers.json` |
 | $$d'_{\text{in}}$$ against $$2\sqrt{\mathrm{PR}/N}$$, and AUROC against $$\Phi(d'/\sqrt2)$$ | `dimensional_slack.py gaussian-check` | `cover_gaussian_check.json` |
 | pool-size control on the collapse constant | `dimensional_slack.py pool-control` | `cover_pool_control.json` |
 | synthetic in-sample versus held-out $$d'$$ at planted $$d' = 1$$ | `dimensional_slack.py insample-attenuation` | `check_insample_attenuation.json` |
@@ -1778,10 +1695,13 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | $$400$$- and $$100$$-draw steering nulls | `causal_steering.py extend-null` | `steer_ckpt/*__NULL.json` |
 | spectra, PR, alignment | `rogue_dimension.py observables` | `geometry_observables.json` |
 | the same observables at every layer | `rogue_dimension.py all-layers` | `geometry_all_layers.json` |
-| massive coordinates and droppers at every layer | `rogue_dimension.py massive` | `massive_all_layers.json` |
+| massive coordinates and the statements dropping them, at every layer | `rogue_dimension.py massive` | `massive_all_layers.json` |
 | the same observables on `companies`, `common_claim`, `conj` | `rogue_dimension.py extra-datasets` | `geometry_extra_datasets.json` |
-| massive coordinates, droppers, cleaned held-out $$d'$$ | `rogue_dimension.py outliers` | `outlier_check.json` |
+| massive coordinates, the statements dropping them, cleaned held-out $$d'$$ | `rogue_dimension.py outliers` | `outlier_check.json` |
+| statements dropping massive activations against statements with an internal period | `followup/dropper_periods.py` | `dropper_periods.json` |
+| projections of the statements dropping massive activations onto $$\hat v_1$$, layers $$30$$ to $$32$$ | `followup/dropper_projection.py` | `dropper_projection.npz` |
 | rogue-dimension steering and decoding of $$\hat v_1$$, $$\hat\theta_\perp$$ | `rogue_dimension.py steer-arms` | `rogue_dimension.json` |
+| $$\hat\theta_\perp$$ seeds $$3$$ to $$9$$, and the ten-seed table | `rogue_dimension.py steer-arms --arms theta_perp --seeds 3,4,5,6,7,8,9`, `followup/theta_perp_table.py` | `rogue_theta_perp_seeds3-9.json`, `theta_perp_table.json` |
 | OLMo cross-family geometry | `rogue_dimension.py olmo` | `geometry_olmo.json` |
 | score gradient and overlaps | `rogue_dimension.py gradient` | `score_gradient_*.json` |
 | fixed-seed bootstrap intervals on the overlaps | `rogue_dimension.py gradient-ci` | `score_gradient_*.json` |
@@ -1790,22 +1710,22 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | the twelve datasets | `fetch_geometry_of_truth.py` | |
 | figures, one file per section | `figures/framework.py`, `figures/recoverability.py`, `figures/dimensional_slack.py`, `figures/causal_steering.py`, `figures/rogue_dimension.py` (`all` draws a file's figures) | `truth_*.png` |
 
+
 **Reading the gradient decomposition.** The identity $$\chi(w) = c\,(w \cdot g)$$
 comes with two caveats. First, it is a small-$$h$$ statement,
 while the measured $$\chi$$ is fit through the origin over
-$$h \in \{0.5, 1, 2, 4\}$$. The two agree to two percent on `cities` at layer
-$$28$$ — $$c\,(\hat\theta \cdot g) = +0.029$$ against a measured $$\chi = +0.030$$ —
-and disagree by an order of magnitude on `counterfact`, $$-0.002$$ against $$-0.023$$.
+$$h \in \{0.5, 1, 2, 4\}$$. The two agree to about three percent on `cities` at layer
+$$28$$ — $$c\,(\hat\theta \cdot g) = +0.041$$ against a measured $$\chi = +0.040$$ —
+and disagree by an order of magnitude on `counterfact`, $$-0.000$$ against $$-0.017$$.
 Where the class signal is tiny, the fitted susceptibility picks up curvature at the
 large-$$h$$ end, so the decomposition should be read for signs and orderings
 rather than magnitudes.
 
 Second, the rotation plane of the main text, $$\mathrm{span}\{\hat v_1, \hat e_2\}$$,
 contains the estimators but not the causal direction. At the four cells where a rank test is quoted, only
-$$5$$–$$7\%$$ of $$g$$'s norm falls in the plane (the range over all twelve
-layer–dataset cells is $$0.5$$–$$10\%$$), against the $$\sqrt{2/d} = 0.028$$ a random
-2-plane would capture. That is a factor of two above chance, not zero and not most of
-it. The plane describes what the estimator does, not the geometry of the causal
+$$3$$–$$7\%$$ of $$g$$'s norm falls in the plane (the range over all twelve
+layer–dataset cells is $$2$$–$$8\%$$), against the $$\sqrt{2/d} = 0.028$$ a random
+2-plane would capture. This is a factor of two above chance for three of the cells which is nonzero but not most of the causal direction. So the plane describes the effect of the estimator but not the geometry of the causal
 channel.
 
 **The $$\kappa_{\mathrm{eff}}$$ inversion.** The gain formula of *A corrected linear estimator* predicts $$2.7\times$$ at $$\kappa = 535$$ against a measured
@@ -1908,6 +1828,8 @@ smoother than $$d'$$, is left open.
 | $$g$$ | mean gradient of the behavioral score, $$\langle\nabla_x \ell\rangle$$ |
 | $$\chi$$ | steering susceptibility, $$\mathrm{d}A/\mathrm{d}h$$ at $$h \to 0$$, equals $$c\,(w\cdot g)$$; measured as the through-origin slope of $$A$$ against $$h$$ |
 | seed / draw | resampling of the train/test split / of a random direction |
+
+*Corrected October 6, 2026: Due to a layer-indexing error, interventions and gradients were applied one layer after the layer the directions were fitted at, and the top layer was read after the final norm. The numbers throughout the steering, rogue-dimension and OLMo sections and the appendices, plus a few layer-specific statements have been corrected. However the qualitative conclusions are unchanged.*
 
 ## References
 
