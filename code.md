@@ -9,5 +9,6 @@ Code for my current projects. Each repository is public on
 
 - [interp-repo](https://github.com/jasteinberg/interp-repo) — from-scratch interpretability
   methods and small-scale circuit studies
-- [rl-alignment-repo](https://github.com/jasteinberg/rl-alignment-repo) — RL/alignment building blocks and truth-direction probing
+- [rl-foundations-repo](https://github.com/jasteinberg/rl-foundations-repo) - tabular control, policy gradient, PPO, reward modelling
+- [truth-directions-steering-repo](https://github.com/jasteinberg/rl-alignment-repo) — truth-direction probing and steering 
 - [scaling-experiments-repo](https://github.com/jasteinberg/scaling-experiments-repo) — finite-size-scaling tests of "emergent abilities" in LLMs
