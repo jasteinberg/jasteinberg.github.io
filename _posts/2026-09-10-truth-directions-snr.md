@@ -1686,8 +1686,8 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | per-dataset shuffled-label fits and their spectra | `dimensional_slack.py by-dataset` | `cover_by_dataset.json` |
 | the shuffled-label law figure | `figures/dimensional_slack.py shuffled-law` | `truth_shuffled_law.png` |
 | the effective-dimension collapse figure | `figures/dimensional_slack.py pr-collapse` | `truth_pr_collapse.png` |
-| shuffled-label sweep on `counterfact` without the statements dropping massive activations | `followup/cover_no_droppers.py` | `cover_no_droppers.json` |
-| excess kurtosis at layers $$30$$ to $$32$$, with and without the statements dropping massive activations | `followup/kurtosis_droppers.py` | `kurtosis_droppers.json` |
+| shuffled-label sweep on `counterfact` without the statements dropping massive activations | `dimensional_slack.py no-droppers` | `cover_no_droppers.json` |
+| excess kurtosis at layers $$30$$ to $$32$$, with and without the statements dropping massive activations | `dimensional_slack.py kurtosis-droppers` | `kurtosis_droppers.json` |
 | $$d'_{\text{in}}$$ against $$2\sqrt{\mathrm{PR}/N}$$, and AUROC against $$\Phi(d'/\sqrt2)$$ | `dimensional_slack.py gaussian-check` | `cover_gaussian_check.json` |
 | pool-size control on the collapse constant | `dimensional_slack.py pool-control` | `cover_pool_control.json` |
 | synthetic in-sample versus held-out $$d'$$ at planted $$d' = 1$$ | `dimensional_slack.py insample-attenuation` | `check_insample_attenuation.json` |
@@ -1698,10 +1698,10 @@ overlap is reported with a $$95\%$$ bootstrap interval over pairs, $$10{,}000$$ 
 | massive coordinates and the statements dropping them, at every layer | `rogue_dimension.py massive` | `massive_all_layers.json` |
 | the same observables on `companies`, `common_claim`, `conj` | `rogue_dimension.py extra-datasets` | `geometry_extra_datasets.json` |
 | massive coordinates, the statements dropping them, cleaned held-out $$d'$$ | `rogue_dimension.py outliers` | `outlier_check.json` |
-| statements dropping massive activations against statements with an internal period | `followup/dropper_periods.py` | `dropper_periods.json` |
-| projections of the statements dropping massive activations onto $$\hat v_1$$, layers $$30$$ to $$32$$ | `followup/dropper_projection.py` | `dropper_projection.npz` |
+| statements dropping massive activations against statements with an internal period | `rogue_dimension.py dropper-periods` | `dropper_periods.json` |
+| projections of the statements dropping massive activations onto $$\hat v_1$$, layers $$30$$ to $$32$$ | `rogue_dimension.py dropper-projection` | `dropper_projection.npz` |
 | rogue-dimension steering and decoding of $$\hat v_1$$, $$\hat\theta_\perp$$ | `rogue_dimension.py steer-arms` | `rogue_dimension.json` |
-| $$\hat\theta_\perp$$ seeds $$3$$ to $$9$$, and the ten-seed table | `rogue_dimension.py steer-arms --arms theta_perp --seeds 3,4,5,6,7,8,9`, `followup/theta_perp_table.py` | `rogue_theta_perp_seeds3-9.json`, `theta_perp_table.json` |
+| $$\hat\theta_\perp$$ seeds $$3$$ to $$9$$, and the ten-seed table | `rogue_dimension.py steer-arms --arms theta_perp --seeds 3,4,5,6,7,8,9`, `rogue_dimension.py theta-perp-table` | `rogue_theta_perp_seeds3-9.json`, `theta_perp_table.json` |
 | OLMo cross-family geometry | `rogue_dimension.py olmo` | `geometry_olmo.json` |
 | score gradient and overlaps | `rogue_dimension.py gradient` | `score_gradient_*.json` |
 | fixed-seed bootstrap intervals on the overlaps | `rogue_dimension.py gradient-ci` | `score_gradient_*.json` |
