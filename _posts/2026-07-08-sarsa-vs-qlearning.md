@@ -16,7 +16,7 @@ I find the difference resolves into two numbers that should be considered separa
 </div>
 
 *Code and executed notebooks:
-[rl-alignment-repo](https://github.com/jasteinberg/rl-alignment-repo).*
+[rl-foundations-repo](https://github.com/jasteinberg/rl-foundations-repo).*
 
 **Related work.** The cliff-walking task is Example 6.6 of
 [Sutton & Barto](http://incompleteideas.net/book/the-book-2nd.html); what follows
@@ -173,7 +173,7 @@ Q[s[0], s[1], a] += alpha * (target - Q[s[0], s[1], a])
 The full implementation — the named RNG streams spawned from a single
 `SeedSequence`, the paired-seed loop over $M = 100$ seeds, greedy evaluation at
 $\varepsilon = 0$, and the figure code — is in the
-[notebook](https://github.com/jasteinberg/rl-alignment-repo/tree/main/notebooks/tabular_control).
+[notebook](https://github.com/jasteinberg/rl-foundations-repo/tree/main/notebooks/tabular_control).
 
 ## Results
 
@@ -221,6 +221,6 @@ clean comparison at matched exploration, not the variance it happens to save.
 The full analysis — the common-random-numbers coupling modes, the first-divergence
 diagnostic, the annealing/GLIE study of when SARSA's greedy policy actually
 shortens, and the minimum-exposure solution set SARSA samples from — is in the
-[tabular-control notebook](https://github.com/jasteinberg/rl-alignment-repo/tree/main/notebooks/tabular_control).
+[tabular-control notebook](https://github.com/jasteinberg/rl-foundations-repo/tree/main/notebooks/tabular_control).
 
 *<small>Claude (Anthropic) produced an initial draft from my description of the ideas, which I rewrote in full. It also supplied the numbers quoted in the text from the analysis artifacts and checked them. I ran the experiments and vouch for every claim here.</small>*

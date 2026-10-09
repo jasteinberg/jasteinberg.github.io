@@ -1551,7 +1551,7 @@ Stripping the leading components *raises* $$d'_{\mathrm{mm}}$$ on `counterfact`
 
 Script names refer to the
 public repository,
-[jasteinberg/rl-alignment-repo](https://github.com/jasteinberg/rl-alignment-repo),
+[jasteinberg/truth-directions-steering-repo](https://github.com/jasteinberg/truth-directions-steering-repo),
 which holds the scripts below, the shared library they import, and the committed
 artifacts each number is read from.
 

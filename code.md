@@ -7,7 +7,7 @@ permalink: /code/
 Code for my current projects. Each repository is public on
 [GitHub](https://github.com/jasteinberg).
 
-- [truth-directions-steering-repo](https://github.com/jasteinberg/rl-alignment-repo) — truth-direction probing and steering 
+- [truth-directions-steering-repo](https://github.com/jasteinberg/truth-directions-steering-repo) — truth-direction probing and steering 
 - [evalcore](https://github.com/jasteinberg/evalcore) — evaluation and interpretability-sweep harness for LLMs
 - [interp-repo](https://github.com/jasteinberg/interp-repo) — from-scratch interpretability
   methods and small-scale circuit studies
