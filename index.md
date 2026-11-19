@@ -24,7 +24,7 @@ layout: page
   <p class="profile-intro">
   Most recently, I worked as a quantitative researcher in high-frequency
   trading, designing and running large-scale experiments for forecast
-  model development and deploying models into production. I am currently focused on AI research, with particular interests in alignment, reinforcement learning, and interpretability of LLMs and agentic AI systems. My most recent projects are documented in my <a href="/blog/">blog</a>. My latest work is an analysis of the recoverability of linear truth directions in LLMs and anomalous behavioral effects of steering along the directions returned by different estimators.
+  model development and deploying models into production. I am currently focused on AI research, with particular interests in interpretability, honesty, and alignment, with particular interests in how AI systems' internal representations shape their behavior both within a single agent and in collectives of interacting agents. From November 2026 to February 2027, I will join the Principles of Intelligent Behavior in Biological and Social Systems (PIBBSS) AI safety fellowship in Cape Town. My most recent projects are documented in my <a href="/blog/">blog</a>. My latest work is an analysis of the recoverability of linear truth directions in LLMs and anomalous behavioral effects of steering along the directions returned by different estimators.
   </p>
   </div>
 </div>
