@@ -5,7 +5,7 @@ permalink: /reviews/
 ---
 
 <p class="reviews-intro">
-Living reference documents providing full derivations, geometric interpretations, and synthesis across original sources — updated as understanding in the field evolves.
+Living reference documents providing full derivations, geometric interpretations, and synthesis across original sources
 </p>
 
 <div class="post-list">
