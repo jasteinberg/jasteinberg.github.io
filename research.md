@@ -16,7 +16,7 @@ I am interested in how complex systems with many interacting degrees of freedom 
 <img class="research-hero"
      style="--hero-w: 320px"
      src="{{ site.baseurl }}/assets/spherical_cows_ads.png"
-     alt="A Poincaré-disk tiling of spherical cows — anti-de Sitter space">
+     alt="">
 
 <p class="research-hero-caption">
 A tessellation of anti-de Sitter space by spherical cows.
